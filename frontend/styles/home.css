@@ -4,6 +4,11 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "Sora";
+  src: url("../../fonts/Sora-VariableFont_wght.ttf") format("truetype");
+}
 :root {
   --primary: #000;
   --border: #ececec;
@@ -11,14 +16,14 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "KouzanBrush", "Sora", "Inter", sans-serif;
   margin: 0;
 }
 
 header {
   display: flex;
   justify-content: space-between;
-  padding: 20px 5%;
+  padding: 1rem 5%;
   background-color: #1f1f1f;
   color: #f5f5f5;
 }
@@ -32,8 +37,11 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-  color: white;
+}
+
+.logo-container:hover .logo-kanji,
+.logo-container:hover .logo-text {
+  color: #820000;
 }
 
 .logo-kanji {
@@ -42,6 +50,7 @@ a {
   color: #ffffff;
   margin-bottom: -5px;
   font-weight: bolder;
+  transition: color 0.3s;
 }
 
 .logo-text {
@@ -53,12 +62,30 @@ a {
   text-transform: uppercase;
   text-align: center;
   margin-top: 7px;
+  transition: color 0.3s;
 }
 
-/* Hero */
+nav {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+}
+
+#profile-icon,
+#cart-icon {
+  font-size: 2rem;
+  margin-left: 20px;
+  color: white;
+  transition: color 0.3s;
+}
+#profile-icon:hover,
+#cart-icon:hover {
+  color: #820000;
+}
+
 .hero {
   height: 400px;
-  background: url("../Img/heroSection.jpg") center/cover no-repeat;
+  background: url("../assets/Img/heroSection.jpg") center/cover no-repeat;
   color: white;
   display: flex;
   flex-direction: column;
@@ -68,18 +95,37 @@ a {
   text-align: center;
 }
 
-.hero h1 {
+.hero-title {
+  font-family: "KouzanBrush";
   font-size: 3rem;
-  letter-spacing: 10px;
+  letter-spacing: 1.75rem;
   margin: 0;
+  font-weight: bolder;
 }
+
+.hero-text {
+  font-family: "Sora", sans-serif;
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+
 .btn-buy {
   background: white;
   border: none;
-  padding: 10px 30px;
-  margin-top: 20px;
+  padding: 1rem 3rem;
+  margin-top: 0.5rem;
   cursor: pointer;
+  font-size: 1rem;
   font-weight: bold;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  font-family: "Sora", sans-serif;
+  transition: background-color 0.3s;
+}
+
+.btn-buy:hover {
+  background-color: #820000;
+  color: white;
 }
 
 .promo-badge {
@@ -94,14 +140,15 @@ a {
 
 /* Grids */
 .container {
-  padding: 50px 5%;
+  padding: 5rem 5%;
 }
 
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 50px;
+  gap: 2rem;
+  margin-bottom: 5rem;
+  text-align: center;
 }
 
 .img-placeholder {
@@ -139,8 +186,8 @@ a {
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 30px;
-  margin-bottom: 50px;
+  gap: 3rem;
+  margin-bottom: 5rem;
 }
 
 .product-card img {
