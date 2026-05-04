@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/UserContext";
-import type { CartItem } from "../types";
+import CartSummary from "./CartSummary";
+import type { CartItem } from "../../types";
 
 function Header() {
   const navigate = useNavigate();
@@ -27,51 +27,34 @@ function Header() {
   };
 
   return (
-    <header className="site-header">
-      <h1>CustomShop</h1>
-      <p>Tienda de productos personalizados</p>
-      <nav>
-        {!customer ? (
-          <button onClick={() => navigate("/login")}>Iniciar sesión</button>
-        ) : (
-          <>
-            <p>Bienvenida, {customer.email}</p>
-            <button
-              onClick={() =>
-                navigate(
-                  customer.role === "customer"
-                    ? "/mis-pedidos"
-                    : "/mis-pedidos",
-                )
-              }
-            >
-              {customer.role === "customer"
-                ? "Mis pedidos"
-                : "Historial de pedidos"}
-            </button>
-            {customer.role === "admin" && (
-              <>
-                <button onClick={() => navigate("/admin/users")}>
-                  Panel admin
-                </button>
-                <button onClick={() => navigate("/admin/users")}>
-                  Usuarios
-                </button>
-              </>
-            )}
-            {customer.role === "employee" && (
-              <button onClick={() => navigate("/intranet")}>
-                Panel de empleados
-              </button>
-            )}
-            {(customer.role === "admin" || customer.role === "employee") && (
-              <button onClick={() => navigate("/admin/orders")}>Pedidos</button>
-            )}
-            <button onClick={handleLogout}>Cerrar sesión</button>
-          </>
-        )}
+    <header>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      />
+      <div className="logo-container">
+        <a href="./home.html">
+          <div className="logo-kanji">無印</div>
+          <div className="logo-text">MUIN</div>
+        </a>
+      </div>
+      <nav className="nav-icons">
+        <CartSummary
+          items={cart}
+          onAddToCart={() => {}}
+          onDecreaseQuantity={() => {}}
+          onConfirm={() => {
+            if (customer) {
+              navigate("/checkout");
+            } else {
+              navigate("/login");
+            }
+          }}
+        />
+        <span className="material-symbols-outlined" id="profile-icon">
+          <a href="./profile.html">person</a>
+        </span>
       </nav>
-      {cartCount > 0 && <p>Carrito: {cartCount} items</p>}
     </header>
   );
 }
