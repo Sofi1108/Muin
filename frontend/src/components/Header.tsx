@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import CartSummary from "./CartSummary";
 import type { CartItem } from "../../types";
 
+import "../App.css";
+import { useUser } from "../context/UserContext";
+
 function Header() {
   const navigate = useNavigate();
   const PORT = 3000;

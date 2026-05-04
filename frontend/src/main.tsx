@@ -14,7 +14,7 @@ import App from "./App.tsx";
 // import OrdersPanel from "./components/OrdersPanel.tsx";
 // import NotFound from "./components/NotFound.tsx";
 // import { UserProvider } from "./context/UserContext.tsx";
-import "./index.css";
+import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
