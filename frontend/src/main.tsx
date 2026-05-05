@@ -16,13 +16,16 @@ import App from "./App.tsx";
 // import { UserProvider } from "./context/UserContext.tsx";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UserProvider } from "./context/UserContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/*" element={<App />} />
-      </Routes>
+      <UserProvider>
+        <Routes>
+          <Route path="/*" element={<App />} />
+        </Routes>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

@@ -26,14 +26,14 @@ export default function Cart({
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
       />
-      <div className="cart-icon">
+      <div className="material-symbols-outlined" id="cart-icon">
         shopping_cart
         {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
       </div>
       <div className="cart-popup">
-        <h3>Carrito</h3>
+        <h3>Cart</h3>
         {items.length === 0 ? (
-          <p className="cart-empty">Carrito vacío</p>
+          <p className="cart-empty">Empty</p>
         ) : (
           <>
             <div className="cart-items">
@@ -79,7 +79,7 @@ export default function Cart({
                   onConfirm();
                 }}
               >
-                Ir a pagar
+                Payment
               </button>
             </div>
           </>

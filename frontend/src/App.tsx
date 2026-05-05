@@ -9,6 +9,7 @@ import CartButton from "./components/CartButton";
 import ProductDetail from "./components/ProductDetail";
 import CartSummary from "./components/CartSummary";
 import "./App.css";
+import HeroSection from "./components/HeroSection";
 
 function App() {
   const navigate = useNavigate();
@@ -111,12 +112,7 @@ function App() {
           path="/"
           element={
             <>
-              <CartSummary
-                items={cart}
-                onAddToCart={addToCart}
-                onDecreaseQuantity={decreaseQuantity}
-                onConfirm={() => alert("Compra confirmada")}
-              />
+              <HeroSection />
               <div className="products-grid">
                 {products.map((product) => (
                   <div key={product.id} className="product-card-container">

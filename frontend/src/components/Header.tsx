@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import CartSummary from "./CartSummary";
-import type { CartItem } from "../../types";
 
-import "../App.css";
+import type { CartItem } from "../../types";
 import { useUser } from "../context/UserContext";
+
+import CartSummary from "./CartSummary";
+import Profile from "./Profile";
+import Logo from "./Logo";
+
+import "../styles/Header.css";
 
 function Header() {
   const navigate = useNavigate();
@@ -35,13 +39,9 @@ function Header() {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
       />
-      <div className="logo-container">
-        <a href="./home.html">
-          <div className="logo-kanji">無印</div>
-          <div className="logo-text">MUIN</div>
-        </a>
-      </div>
+      <Logo onSelect={() => navigate("/")} />
       <nav className="nav-icons">
+        <Profile />
         <CartSummary
           items={cart}
           onAddToCart={() => {}}
@@ -54,9 +54,6 @@ function Header() {
             }
           }}
         />
-        <span className="material-symbols-outlined" id="profile-icon">
-          <a href="./profile.html">person</a>
-        </span>
       </nav>
     </header>
   );
