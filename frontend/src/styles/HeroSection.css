@@ -29,6 +29,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hero-section h1 {
@@ -47,7 +48,7 @@ body {
 }
 
 .hero-button {
-  font-family: Sora, sans-serif;
+  font-family: sora, sans-serif;
   color: white;
   background: #1f1f1f;
   border: none;

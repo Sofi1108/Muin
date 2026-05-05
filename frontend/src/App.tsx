@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Routes, Route } from "react-router-dom";
 
+import "./App.css";
+
 import type { Product, CartItem } from "../types";
 
 import Header from "./components/Header";
@@ -8,8 +10,8 @@ import ProductCard from "./components/ProductCard";
 import CartButton from "./components/CartButton";
 import ProductDetail from "./components/ProductDetail";
 import CartSummary from "./components/CartSummary";
-import "./App.css";
 import HeroSection from "./components/HeroSection";
+import Categories from "./components/Categories";
 
 function App() {
   const navigate = useNavigate();
@@ -113,6 +115,7 @@ function App() {
           element={
             <>
               <HeroSection />
+              <Categories />
               <div className="products-grid">
                 {products.map((product) => (
                   <div key={product.id} className="product-card-container">
@@ -123,6 +126,7 @@ function App() {
                       onRemoveFromCart={removeFromCart}
                       onDecreaseQuantity={decreaseQuantity}
                     />
+
                     <ProductCard
                       product={product}
                       onSelect={(id) => navigate(`/product/${id}`)}
