@@ -21,6 +21,7 @@ import { UserProvider } from "./context/UserContext.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
+      {/*Aqui irá el cookie provider*/}
       <UserProvider>
         <Routes>
           <Route path="/*" element={<App />} />

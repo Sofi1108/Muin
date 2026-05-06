@@ -12,6 +12,7 @@ import ProductDetail from "./components/ProductDetail";
 import CartSummary from "./components/CartSummary";
 import HeroSection from "./components/HeroSection";
 import Categories from "./components/Categories";
+import ComingSoon from "./components/ComingSoon";
 
 function App() {
   const navigate = useNavigate();
@@ -129,7 +130,7 @@ function App() {
 
                     <ProductCard
                       product={product}
-                      onSelect={(id) => navigate(`/product/${id}`)}
+                      onSelect={(id) => navigate(`/products/${id}`)}
                     />
                   </div>
                 ))}
@@ -139,7 +140,15 @@ function App() {
         />
 
         <Route
-          path="/product/:id"
+          path="/products/accessories"
+          element={
+            <>
+              <ComingSoon />
+            </>
+          }
+        />
+        <Route
+          path="/products/:id"
           element={
             <>
               <ProductDetail

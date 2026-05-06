@@ -135,86 +135,78 @@ export default function PrivacyPolicy(): ReactNode {
           <li>
             <p>
               <strong>
-                <span>Pasarelas de pago:</span>
+                <span>Payment gateways:</span>
               </strong>
-              <span>
-                &nbsp;(Ej. Stripe, PayPal) para procesar transacciones.
-              </span>
+              <span>&nbsp;(Ej. Stripe, PayPal) to process transactions.</span>
             </p>
           </li>
           <li>
             <p>
               <strong>
-                <span>Empresas de log&iacute;stica:</span>
+                <span>Logistics companies:</span>
               </strong>
-              <span>
-                &nbsp;(Ej. FedEx, DHL) para entregar los productos
-                personalizados.
-              </span>
+              <span>(e.g., FedEx, DHL) to deliver customized products.</span>
             </p>
           </li>
           <li>
             <p>
               <strong>
-                <span>Servicios de Hosting:</span>
+                <span>Hosting services:</span>
               </strong>
-              <span>&nbsp;Donde se aloja la web y la intranet.</span>
+              <span>Where the website and intranet are hosted.</span>
             </p>
           </li>
           <li>
             <p>
               <strong>
-                <span>Autoridades:</span>
+                <span>Authorities:</span>
               </strong>
-              <span>&nbsp;En caso de requerimientos legales.</span>
+              <span>In case of legal requirements.</span>
             </p>
           </li>
         </ul>
         <h2>
           <strong>
-            <span>5. Derechos ARCO (o equivalentes)</span>
+            <span>5. ARCO Rights (or equivalent)</span>
           </strong>
         </h2>
         <p>
           <span>
-            Es obligatorio explicar c&oacute;mo el usuario (cliente o empleado)
-            puede ejercer sus derechos:
+            It is mandatory to explain how the user (client or employee) can
+            exercise their rights:
           </span>
         </p>
         <ul>
           <li>
             <p>
               <strong>
-                <span>Acceso:</span>
+                <span>Access:</span>
               </strong>
-              <span>&nbsp;Saber qu&eacute; datos tienes de ellos.</span>
+              <span>To know what data you have about them.</span>
             </p>
           </li>
           <li>
             <p>
               <strong>
-                <span>Rectificaci&oacute;n:</span>
+                <span>Rectification:</span>
               </strong>
-              <span>&nbsp;Corregir informaci&oacute;n err&oacute;nea.</span>
+              <span>To correct erroneous information.</span>
             </p>
           </li>
           <li>
             <p>
               <strong>
-                <span>Cancelaci&oacute;n/Supresi&oacute;n:</span>
+                <span>Cancellation/Deletion:</span>
               </strong>
-              <span>&nbsp;Solicitar que se borren sus datos.</span>
+              <span>Request that your data be erased.</span>
             </p>
           </li>
         </ul>
         <p>
           <strong>
-            <span>Oposici&oacute;n:</span>
+            <span>Objetion:</span>
           </strong>
-          <span>
-            &nbsp;Negarse a un uso espec&iacute;fico (como el env&iacute;o de
-            boletines).
-          </span>
+          <span>Refuse a specific use (such as recieving newsletters).</span>
         </p>
       </div>
     </>

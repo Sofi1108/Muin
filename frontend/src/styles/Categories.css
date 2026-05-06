@@ -1,0 +1,40 @@
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1rem 5%;
+}
+
+.column {
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.column:hover {
+  transform: scale(1.05);
+}
+
+.categories img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.categories img:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.categories span {
+  display: block;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
