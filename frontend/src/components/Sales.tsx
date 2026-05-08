@@ -17,7 +17,7 @@ function CommingSoon() {
         <div className="icon-box">
           <span className="material-symbols-outlined">rocket_launch</span>
         </div>
-        <h1 className="comming-soon-header">COMING SOON</h1>
+        <h1 className="comming-soon-header">NOT SALES YET</h1>
         <div className="divider"></div>
         <p className="comming-soon-message">
           We are working hard to bring you this feature. Stay tuned for updates

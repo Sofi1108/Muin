@@ -13,6 +13,12 @@ import CartSummary from "./components/CartSummary";
 import HeroSection from "./components/HeroSection";
 import Categories from "./components/Categories";
 import ComingSoon from "./components/ComingSoon";
+import Sales from "./components/Sales";
+import Footer from "./components/Footer";
+import PrivacyTerms from "./components/PrivacyTerms";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import CookiesPolicy from "./components/CookiesPolicy";
+import NotFound from "./components/NotFound";
 
 function App() {
   const navigate = useNavigate();
@@ -110,6 +116,7 @@ function App() {
   return (
     <>
       <Header />
+
       <Routes>
         <Route
           path="/"
@@ -148,6 +155,14 @@ function App() {
           }
         />
         <Route
+          path="/products/sales"
+          element={
+            <>
+              <Sales />
+            </>
+          }
+        />
+        <Route
           path="/products/:id"
           element={
             <>
@@ -160,7 +175,12 @@ function App() {
             </>
           }
         />
+        <Route path="/privacy-terms" element={<PrivacyTerms />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/cookies-policy" element={<CookiesPolicy />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </>
   );
 }

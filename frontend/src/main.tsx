@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
+import NotFound from "./components/NotFound.tsx";
 // import PrivateRoute from "./components/PrivateRoute.tsx";
 // import CheckoutPage from "./components/CheckoutPage.tsx";
 // import IntranetLayout from "./components/IntranetLayout.tsx";
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <UserProvider>
         <Routes>
           <Route path="/*" element={<App />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </UserProvider>
     </BrowserRouter>

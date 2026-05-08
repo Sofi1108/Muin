@@ -1,0 +1,195 @@
+:root {
+  --footer-bg: #1a1a1a;
+  --card-bg: #242424;
+  --divider-color: #333333;
+  --accent-color: #820000;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #666666;
+}
+
+.main-footer {
+  background-color: var(--footer-bg);
+  padding: 3rem 5% 2rem;
+  color: var(--text-primary);
+  font-family: "Sora", sans-serif;
+}
+
+.footer-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.footer-card {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  /* Mantiene h3 arriba y autor abajo */
+  justify-content: space-between;
+  min-height: 15rem;
+  transition: transform 0.3s ease;
+}
+
+.footer-card:hover {
+  transform: translateY(-0.3rem);
+}
+
+.footer-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.review-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  /* Esto asegura que ocupe el mismo espacio que el nav */
+  flex-grow: 1;
+}
+
+.card-author {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: auto;
+}
+
+.footer {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.footer:hover {
+  color: var(--accent-color);
+  text-shadow: var(--accent-color) 0px 0px 0.2rem;
+}
+.post-date {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.footer-legal-inline {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.footer-legal-inline a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  /* Transición suave para color y sombra */
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.footer-legal-inline a:hover {
+  text-decoration: underline;
+  color: #820000;
+  text-shadow: #820000 0px 0px 0.2rem;
+}
+
+/* LA LÍNEA VERTICAL */
+.footer-legal-inline a:not(:last-child)::after {
+  content: "|";
+  margin-left: 0.5rem;
+  margin-right: 0.2rem;
+  color: #d2d2d7;
+  text-decoration: none;
+  cursor: default;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center; /* Centrado vertical matemático */
+  justify-content: center; /* O flex-start según prefieras */
+  gap: 1.5rem;
+  /* Importante: para que el logo japonés no empuje la línea hacia arriba */
+  line-height: 1;
+}
+
+/* Línea divisoria */
+.footer-divider {
+  height: 0.06rem;
+  background-color: var(--divider-color);
+  width: 100%;
+  max-width: 80rem;
+  margin: 2.5rem auto 1.5rem;
+}
+
+.footer-bottom-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.social-icon {
+  background-color: var(--divider-color);
+  color: var(--text-primary);
+  width: 2.8rem;
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: var(--accent-color);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(130, 0, 0, 0.3);
+}
+
+.japanese-logo {
+  font-size: 1.4rem;
+  opacity: 0.9;
+  letter-spacing: 0.2rem;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.japanese-logo:hover {
+  opacity: 1;
+  color: var(--accent-color);
+  text-shadow: var(--accent-color) 0px 0px 0.2rem;
+}
+
+@media (max-width: 30rem) {
+  .main-footer {
+    padding: 2rem 5% 1.5rem;
+  }
+
+  .footer-card {
+    padding: 1.5rem;
+  }
+}
