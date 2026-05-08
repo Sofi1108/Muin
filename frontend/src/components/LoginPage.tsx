@@ -1,4 +1,4 @@
-//--PENDIENTE DE MODIFICAR
+//--PENDIENTE DE CSS --PENDIENTE DE AÑADIR A LA PAGINA
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -35,11 +35,11 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
-      <h2>Iniciar Sesión</h2>
+      <h2>Log In here</h2>
       {error && <p className="error-msg">{error}</p>}
       <form onSubmit={handleLogin} className="auth-form">
         <div>
-          <label>Email o Usuario:</label>
+          <label>Mail or Username:</label>
           <input
             type="text"
             value={identifier}
@@ -48,7 +48,7 @@ export default function LoginPage() {
           />
         </div>
         <div>
-          <label>Contraseña:</label>
+          <label>Password:</label>
           <input
             type="password"
             value={password}
@@ -57,11 +57,11 @@ export default function LoginPage() {
           />
         </div>
         <button type="submit" className="btn-primary">
-          Entrar
+          Log in
         </button>
       </form>
       <p className="auth-footer">
-        ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+        Don't have an account? <Link to="/register">Register now</Link>
       </p>
     </div>
   );

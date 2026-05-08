@@ -193,9 +193,7 @@ app.post("/api/auth/logout", (req: Request, res: Response) => {
 
 //--CARGAR PRODUCTOS
 app.get("/api/products", async (req: Request, res: Response) => {
-  const result = await pool.query(
-    "SELECT * FROM PRODUCTOS WHERE deleted_at IS NULL ORDER BY id",
-  );
+  const result = await pool.query("SELECT * FROM PRODUCTO");
   res.json(result.rows); // ← devuelve las filas de la BD
 });
 
@@ -217,25 +215,34 @@ app.get(
 //--CARGAR PRODUCTOS DE CATEGORIA CAMISAS
 
 app.get("/api/products/shirts", async (req: Request, res: Response) => {
-  const result = await pool.query(
-    "SELECT * FROM PRODUCTO WHERE deleted_at IS NULL AND nombre_producto='camiseta' ORDER BY id",
-  );
-  res.json(result.rows); // ← devuelve las filas de la BD
-  if (result.rows.length === 0) {
-    return res.status(404).json({ error: "Producto no encontrado" });
+  try {
+    const result = await pool.query(
+      "SELECT * FROM PRODUCTO WHERE Nombre_Producto ILIKE '%camiseta%' ORDER BY id_producto",
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "No shirts found" });
+    }
+
+    res.json(result.rows); // Devuelve el array completo de camisetas
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
-  res.json(result.rows[0]);
 });
 
-//--CARGAR PRODUCTOS DE CATEGORIA HOODIES
-
+//-- CARGAR PRODUCTOS DE CATEGORIA HOODIES
 app.get("/api/products/hoodies", async (req: Request, res: Response) => {
-  const result = await pool.query(
-    "SELECT * FROM PRODUCTO WHERE deleted_at IS NULL AND nombre_producto='sudadera' ORDER BY id",
-  );
-  res.json(result.rows); // ← devuelve las filas de la BD
-  if (result.rows.length === 0) {
-    return res.status(404).json({ error: "Producto no encontrado" });
+  try {
+    const result = await pool.query(
+      "SELECT * FROM PRODUCTO WHERE Nombre_Producto ILIKE '%sudadera%' ORDER BY id_producto",
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "No hoodies found" });
+    }
+
+    res.json(result.rows); // Devuelve el array completo de sudaderas
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
-  res.json(result.rows[0]);
 });

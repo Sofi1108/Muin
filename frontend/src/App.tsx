@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Routes, Route } from "react-router-dom";
-
 import "./App.css";
-
-import type { Product, CartItem } from "../types";
 
 import Header from "./components/Header";
 import ProductCard from "./components/ProductCard";
 import CartButton from "./components/CartButton";
 import ProductDetail from "./components/ProductDetail";
-import CartSummary from "./components/CartSummary";
 import HeroSection from "./components/HeroSection";
 import Categories from "./components/Categories";
+import Shirts from "./components/Shirts";
+import Hoodies from "./components/Hoodies";
 import ComingSoon from "./components/ComingSoon";
 import Sales from "./components/Sales";
 import Footer from "./components/Footer";
@@ -20,45 +18,18 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiesPolicy from "./components/CookiesPolicy";
 import NotFound from "./components/NotFound";
 
+import type { Product, CartItem } from "../types";
+
 function App() {
   const navigate = useNavigate();
   const PORT = 3000;
   const ROUTE = `http://localhost:${PORT}/`;
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [newName, setNewName] = useState("");
-  const [newPrice, setNewPrice] = useState("");
-  const [newCategory, setNewCategory] = useState("");
-  const [newStock, setNewStock] = useState("");
-  const [newDescription, setNewDescription] = useState("");
   const [cart, setCart] = useState<CartItem[]>(() => {
     const saved = sessionStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
   });
-
-  // // Verificar sesión al montar
-  // useEffect(() => {
-  //   const verifySession = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await fetch(`${ROUTE}api/auth/me`, {
-  //         credentials: "include",
-  //       });
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         setCustomer(data.customer);
-  //       } else if (res.status === 401) {
-  //         setCustomer(null);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error verificando sesión:", error);
-  //       setCustomer(null);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   verifySession();
-  // }, []);
 
   const loadProducts = (): void => {
     fetch(`${ROUTE}api/products`)
@@ -70,7 +41,6 @@ function App() {
   useEffect(() => {
     loadProducts();
   }, []);
-
   useEffect(() => {
     sessionStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -78,17 +48,12 @@ function App() {
   const addToCart = (product: Product): void => {
     setCart((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
-
       if (existing) {
-        if (existing.quantity >= product.stock) {
-          return prev;
-        }
-
+        if (existing.quantity >= product.stock) return prev;
         return prev.map((i) =>
           i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
         );
       }
-
       return [...prev, { product, quantity: 1 }];
     });
   };
@@ -97,91 +62,93 @@ function App() {
     setCart((prev) => prev.filter((i) => i.product.id !== productId));
   };
 
-  const updateQuantity = (productId: number, delta: number): void => {
+  const decreaseQuantity = (productId: number): void => {
     setCart((prev) =>
       prev
         .map((i) =>
-          i.product.id === productId
-            ? { ...i, quantity: i.quantity + delta }
-            : i,
+          i.product.id === productId ? { ...i, quantity: i.quantity - 1 } : i,
         )
         .filter((i) => i.quantity > 0),
     );
   };
 
-  const decreaseQuantity = (productId: number): void => {
-    updateQuantity(productId, -1);
-  };
-
   return (
-    <>
+    <div id="app-wrapper">
       <Header />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <HeroSection />
-              <Categories />
-              <div className="products-grid">
-                {products.map((product) => (
-                  <div key={product.id} className="product-card-container">
-                    <CartButton
-                      product={product}
-                      cart={cart}
-                      onAddToCart={addToCart}
-                      onRemoveFromCart={removeFromCart}
-                      onDecreaseQuantity={decreaseQuantity}
-                    />
+      <main className="main-content">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <HeroSection />
+                <Categories />
+                <div className="products-grid">
+                  {products.map((product) => (
+                    <div key={product.id} className="product-card-container">
+                      <CartButton
+                        product={product}
+                        cart={cart}
+                        onAddToCart={addToCart}
+                        onRemoveFromCart={removeFromCart}
+                        onDecreaseQuantity={decreaseQuantity}
+                      />
+                      <ProductCard
+                        product={product}
+                        onSelect={(id) => navigate(`/products/${id}`)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+            }
+          />
 
-                    <ProductCard
-                      product={product}
-                      onSelect={(id) => navigate(`/products/${id}`)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </>
-          }
-        />
-
-        <Route
-          path="/products/accessories"
-          element={
-            <>
-              <ComingSoon />
-            </>
-          }
-        />
-        <Route
-          path="/products/sales"
-          element={
-            <>
-              <Sales />
-            </>
-          }
-        />
-        <Route
-          path="/products/:id"
-          element={
-            <>
+          <Route
+            path="/products/shirts"
+            element={
+              <Shirts
+                cart={cart}
+                onAddToCart={addToCart}
+                onRemoveFromCart={removeFromCart}
+                onDecreaseQuantity={decreaseQuantity}
+              />
+            }
+          />
+          <Route
+            path="/products/hoodies"
+            element={
+              <Hoodies
+                cart={cart}
+                onAddToCart={addToCart}
+                onRemoveFromCart={removeFromCart}
+                onDecreaseQuantity={decreaseQuantity}
+              />
+            }
+          />
+          <Route path="/products/accessories" element={<ComingSoon />} />
+          <Route path="/products/sales" element={<Sales />} />
+          <Route
+            path="/products/:id"
+            element={
               <ProductDetail
                 cart={cart}
                 onAddToCart={addToCart}
                 onRemoveFromCart={removeFromCart}
                 onDecreaseQuantity={decreaseQuantity}
               />
-            </>
-          }
-        />
-        <Route path="/privacy-terms" element={<PrivacyTerms />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/cookies-policy" element={<CookiesPolicy />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+            }
+          />
+          <Route path="/privacy-terms" element={<PrivacyTerms />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/cookies-policy" element={<CookiesPolicy />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+
       <Footer />
-    </>
+    </div>
   );
 }
 

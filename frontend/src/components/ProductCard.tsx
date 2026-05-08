@@ -1,4 +1,5 @@
 import type { Product } from "../../types";
+import "../styles/product-card.css";
 
 interface ProductCardProps {
   product: Product;
@@ -8,22 +9,29 @@ interface ProductCardProps {
 function ProductCard({ product, onSelect }: ProductCardProps) {
   return (
     <div
-      className="products-card"
+      className="product-card"
       onClick={() => onSelect && onSelect(product.id)}
     >
-      <img src={product.image_url} alt={product.name} />
-      <div className="Textos">
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p className="price">{Number(product.price).toFixed(2)}€</p>
-        <p>{product.category}</p>
-        <p
-          className={`stock ${product.stock > 0 ? "in-stock" : "out-of-stock"}`}
-        >
-          {product.stock > 0
-            ? `En stock - ${product.stock} unidades`
-            : "Sin stock - 0 unidades"}
-        </p>
+      <div className="product-image-container">
+        {product.image_url ? (
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="product-img"
+          />
+        ) : (
+          <div className="product-placeholder">
+            <div className="placeholder-x"></div>
+          </div>
+        )}
+      </div>
+      <div className="product-info">
+        <h2 className="product-name">{product.name.toUpperCase()}</h2>
+        <p className="product-price">{Number(product.price).toFixed(2)}€</p>
+
+        {product.stock <= 0 && (
+          <span className="out-of-stock-label">OUT OF STOCK</span>
+        )}
       </div>
     </div>
   );
