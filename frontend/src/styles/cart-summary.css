@@ -1,19 +1,23 @@
 #cart-icon {
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-left: 1.5rem;
   color: white;
-  transition: color 0.3s;
   cursor: pointer;
+  transition:
+    color 0.3s,
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .cart-widget:hover #cart-icon {
   color: #820000;
-  text-shadow: #820000 0px 0px 0.2rem;
+  text-shadow: #1f1f1f 0px 0px 0.2rem;
+  transform: scale(1.27);
 }
 
 .cart-popup {
+  z-index: 1;
   position: absolute;
-  top: 3rem;
+  top: 5rem;
   right: 0;
   background-color: white;
   border: 1px solid #e2e8f0;
@@ -21,6 +25,9 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   width: 28rem;
   max-height: 40rem;
+  flex: 1 1 calc(50% - 16px);
+  max-width: calc(100% - 16px);
+  right: 8px;
   display: flex;
   flex-direction: column;
   opacity: 0;

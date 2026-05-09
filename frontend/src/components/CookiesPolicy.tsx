@@ -5,7 +5,7 @@ const CookiesPolicy: React.FC = () => {
   return (
     <div className="policy-page-wrapper">
       <div className="policy-container">
-        <header className="policy-header">
+        <header className="policy-header" id="policy-header">
           <div className="header-column">
             <span className="column-label">Document</span>
             <h1 className="column-value">MUIN Cookie Policy</h1>

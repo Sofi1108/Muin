@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import "../styles/Footer.css";
 import {
   FaYoutube,
@@ -7,7 +6,7 @@ import {
   FaXTwitter,
   FaLinkedinIn,
 } from "react-icons/fa6";
-
+import { HashLink as Link } from "react-router-hash-link";
 const Footer = () => {
   const reviews = [
     {
@@ -55,19 +54,22 @@ const Footer = () => {
 
       <div className="footer-bottom-section">
         <div className="social-links">
-          <a href="#" className="social-icon">
+          <a href="https://www.youtube.com" className="social-icon">
             <i className="fa-brands fa-youtube"></i>
           </a>
-          <a href="#" className="social-icon">
+          <a
+            href="https://www.facebook.com/?locale=es_ES"
+            className="social-icon"
+          >
             <i className="fa-brands fa-facebook"></i>
           </a>
-          <a href="#" className="social-icon">
-            <i className="fa-brands fa-twitter"></i>
+          <a href="https://x.com/home?lang=es" className="social-icon">
+            <i className="fa-brands fa-x"></i>
           </a>
-          <a href="#" className="social-icon">
+          <a href="https://www.instagram.com/?hl=es" className="social-icon">
             <i className="fa-brands fa-instagram"></i>
           </a>
-          <a href="#" className="social-icon">
+          <a href="https://es.linkedin.com" className="social-icon">
             <i className="fa-brands fa-linkedin"></i>
           </a>
         </div>
@@ -77,9 +79,9 @@ const Footer = () => {
             無印
           </Link>
           <nav className="footer-legal-inline">
-            <Link to="/privacy-terms">Privacy Terms</Link>
-            <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/cookies-policy">Cookies Policy</Link>
+            <Link to="/privacy-terms#legal-header">Privacy Terms</Link>
+            <Link to="/privacy-policy#policy-header">Privacy Policy</Link>
+            <Link to="/cookies-policy#policy-header">Cookies Policy</Link>
           </nav>
         </div>
       </div>

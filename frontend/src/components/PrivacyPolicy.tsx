@@ -6,7 +6,7 @@ export default function PrivacyPolicy(): ReactNode {
     <div className="policy-page-wrapper">
       <div className="policy-container">
         {/* Header estilo Apple con 3 frases/columnas */}
-        <header className="policy-header">
+        <header className="policy-header" id="policy-header">
           <div className="header-column">
             <span className="column-label">Document</span>
             <h1 className="column-value">Privacy Policy</h1>
