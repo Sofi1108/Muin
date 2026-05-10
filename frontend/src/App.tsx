@@ -7,6 +7,7 @@ import ProductCard from "./components/ProductCard";
 import CartButton from "./components/CartButton";
 import ProductDetail from "./components/ProductDetail";
 import HeroSection from "./components/HeroSection";
+import HeroSectionSmall from "./components/HeroSectionSmall";
 import Categories from "./components/Categories";
 import Shirts from "./components/Shirts";
 import Hoodies from "./components/Hoodies";
@@ -17,12 +18,6 @@ import PrivacyTerms from "./components/PrivacyTerms";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiesPolicy from "./components/CookiesPolicy";
 import NotFound from "./components/NotFound";
-import IntranetHome from "./components/IntranetHome";
-import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
-import PrivateRoute from "./components/PrivateRoute";
-import ProfilePage from "./components/ProfilePage";
-import LoginPage from "./components/LoginPage";
-import RegisterPage from "./components/RegisterPage";
 
 import type { Product, CartItem } from "../types";
 
@@ -100,10 +95,10 @@ function App() {
                         onRemoveFromCart={removeFromCart}
                         onDecreaseQuantity={decreaseQuantity}
                       />
-                      <ProductCard
+                      {/* <ProductCard
                         product={product}
                         onSelect={(id) => navigate(`/products/${id}`)}
-                      />
+                      /> */}
                     </div>
                   ))}
                 </div>
@@ -112,38 +107,64 @@ function App() {
           />
 
           <Route
+            path="/profile"
+            element={
+              <>
+                <ProfilePage />
+              </>
+            }
+          />
+
+          <Route
             path="/products/shirts"
             element={
-              <Shirts
-                cart={cart}
-                onAddToCart={addToCart}
-                onRemoveFromCart={removeFromCart}
-                onDecreaseQuantity={decreaseQuantity}
-              />
+              <>
+                <HeroSectionSmall />
+                <Shirts
+                  cart={cart}
+                  onAddToCart={addToCart}
+                  onRemoveFromCart={removeFromCart}
+                  onDecreaseQuantity={decreaseQuantity}
+                />
+              </>
             }
           />
           <Route
             path="/products/hoodies"
             element={
-              <Hoodies
-                cart={cart}
-                onAddToCart={addToCart}
-                onRemoveFromCart={removeFromCart}
-                onDecreaseQuantity={decreaseQuantity}
-              />
+              <>
+                <HeroSectionSmall />
+                <Hoodies
+                  cart={cart}
+                  onAddToCart={addToCart}
+                  onRemoveFromCart={removeFromCart}
+                  onDecreaseQuantity={decreaseQuantity}
+                />
+              </>
             }
           />
-          <Route path="/products/accessories" element={<ComingSoon />} />
+          <Route
+            path="/products/accessories"
+            element={
+              <>
+                <HeroSectionSmall />
+                <ComingSoon />
+              </>
+            }
+          />
           <Route path="/products/sales" element={<Sales />} />
           <Route
             path="/products/:id"
             element={
-              <ProductDetail
-                cart={cart}
-                onAddToCart={addToCart}
-                onRemoveFromCart={removeFromCart}
-                onDecreaseQuantity={decreaseQuantity}
-              />
+              <>
+                <HeroSectionSmall />
+                <ProductDetail
+                  cart={cart}
+                  onAddToCart={addToCart}
+                  onRemoveFromCart={removeFromCart}
+                  onDecreaseQuantity={decreaseQuantity}
+                />
+              </>
             }
           />
           <Route path="/privacy-terms" element={<PrivacyTerms />} />

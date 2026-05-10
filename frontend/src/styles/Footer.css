@@ -167,6 +167,8 @@
 }
 
 .japanese-logo {
+  color: white;
+  text-decoration: none;
   font-size: 1.4rem;
   opacity: 0.9;
   letter-spacing: 0.2rem;

@@ -1,4 +1,8 @@
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
 import { useUser } from "../context/UserContext";
 import "../styles/profile-page.css";
 
@@ -26,6 +30,7 @@ function ProfilePage() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="profile-page-container">
       <div className="profile-content">
         {/* Header */}
@@ -72,6 +77,58 @@ function ProfilePage() {
         </div>
       </div>
     </div>
+=======
+    <>
+      <div className="profile-page-container">
+        <div className="profile-content">
+          {/* Header */}
+          <div className="profile-header">
+            <button className="btn-back" onClick={handleGoBack}>
+              ← Back
+            </button>
+            <h1>My Profile</h1>
+            <div style={{ width: "60px" }} />
+          </div>
+
+          {/* Profile Info Card */}
+          <div className="profile-card">
+            <div className="profile-avatar">
+              <span className="material-symbols-outlined">account_circle</span>
+            </div>
+
+            <div className="profile-info">
+              <div className="info-group">
+                <label>Email</label>
+                <p>{customer?.email || "N/A"}</p>
+              </div>
+
+              <div className="info-group">
+                <label>Role</label>
+                <p className={`role-badge ${customer?.role}`}>
+                  {customer?.role || "N/A"}
+                </p>
+              </div>
+
+              <div className="info-group">
+                <label>User ID</label>
+                <p>{customer?.id || "N/A"}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="profile-actions">
+            <button className="btn-primary" onClick={() => navigate("/")}>
+              Go to Home
+            </button>
+            <button className="btn-danger" onClick={handleLogout}>
+              Log Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
   );
 }
 

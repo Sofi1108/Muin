@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
+<<<<<<< HEAD
 import "../styles/intranet-home.css";
+=======
+//import "../styles/intranet-home.css";
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
 
 interface ScheduleEntry {
   time: string;
@@ -18,12 +22,33 @@ const IntranetHome = () => {
   // Puedes reemplazar esto con una llamada a API
   const scheduleData: ScheduleEntry[] = [
     { time: "08:00 AM", activity: "Team Standup", role: "admin" },
+<<<<<<< HEAD
     { time: "09:00 AM", activity: "Customer Support - Shift 1", role: "employee" },
     { time: "10:00 AM", activity: "Product Review Meeting", role: "admin" },
     { time: "11:00 AM", activity: "Customer Support - Shift 2", role: "employee" },
     { time: "12:00 PM", activity: "Lunch Break", role: "employee" },
     { time: "01:00 PM", activity: "Strategy Planning", role: "admin" },
     { time: "02:00 PM", activity: "Customer Support - Shift 3", role: "employee" },
+=======
+    {
+      time: "09:00 AM",
+      activity: "Customer Support - Shift 1",
+      role: "employee",
+    },
+    { time: "10:00 AM", activity: "Product Review Meeting", role: "admin" },
+    {
+      time: "11:00 AM",
+      activity: "Customer Support - Shift 2",
+      role: "employee",
+    },
+    { time: "12:00 PM", activity: "Lunch Break", role: "employee" },
+    { time: "01:00 PM", activity: "Strategy Planning", role: "admin" },
+    {
+      time: "02:00 PM",
+      activity: "Customer Support - Shift 3",
+      role: "employee",
+    },
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
     { time: "03:00 PM", activity: "Project Updates", role: "admin" },
     { time: "04:00 PM", activity: "Training Session", role: "employee" },
     { time: "05:00 PM", activity: "End of Shift", role: "employee" },
@@ -31,9 +56,27 @@ const IntranetHome = () => {
 
   // Datos de ejemplo del calendario de vacaciones
   const holidaysData = [
+<<<<<<< HEAD
     { date: "2026-05-25", name: "Holiday 1", description: "Holiday description" },
     { date: "2026-06-15", name: "Holiday 2", description: "Holiday description" },
     { date: "2026-07-20", name: "Holiday 3", description: "Holiday description" },
+=======
+    {
+      date: "2026-05-25",
+      name: "Holiday 1",
+      description: "Holiday description",
+    },
+    {
+      date: "2026-06-15",
+      name: "Holiday 2",
+      description: "Holiday description",
+    },
+    {
+      date: "2026-07-20",
+      name: "Holiday 3",
+      description: "Holiday description",
+    },
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
   ];
 
   // Filtrar horario según rol
@@ -98,7 +141,13 @@ const IntranetHome = () => {
           <div className="schedule-header">
             <h2>Weekly Schedule</h2>
             <span className="schedule-info">
+<<<<<<< HEAD
               {customer?.role === "admin" ? "Admin & Employee Schedule" : "Employee Schedule"}
+=======
+              {customer?.role === "admin"
+                ? "Admin & Employee Schedule"
+                : "Employee Schedule"}
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
             </span>
           </div>
           <div className="schedule-table-wrapper">
@@ -117,7 +166,13 @@ const IntranetHome = () => {
                     <td className="activity-cell">{entry.activity}</td>
                     {customer?.role === "admin" && (
                       <td className="role-cell">
+<<<<<<< HEAD
                         <span className={`role-badge ${entry.role}`}>{entry.role}</span>
+=======
+                        <span className={`role-badge ${entry.role}`}>
+                          {entry.role}
+                        </span>
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
                       </td>
                     )}
                   </tr>
@@ -145,11 +200,21 @@ const IntranetHome = () => {
               </div>
 
               <div className="calendar-weekdays">
+<<<<<<< HEAD
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                   <div key={day} className="weekday">
                     {day}
                   </div>
                 ))}
+=======
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                  (day) => (
+                    <div key={day} className="weekday">
+                      {day}
+                    </div>
+                  ),
+                )}
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
               </div>
 
               <div className="calendar-days">
@@ -157,7 +222,11 @@ const IntranetHome = () => {
                   const isHoliday = holidaysData.some(
                     (h) =>
                       h.date ===
+<<<<<<< HEAD
                       `${year}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+=======
+                      `${year}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+>>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
                   );
                   return (
                     <div
