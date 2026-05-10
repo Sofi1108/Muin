@@ -10,8 +10,6 @@ import "../styles/Categories.css";
 
 function Categories() {
   const navigate = useNavigate();
-  const PORT = 3000;
-  const ROUTE = `http://localhost:${PORT}/`;
 
   return (
     <div className="categories">

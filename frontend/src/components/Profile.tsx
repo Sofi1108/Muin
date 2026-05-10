@@ -6,8 +6,16 @@ function Profile() {
   const { customer } = useUser();
   const navigate = useNavigate();
 
+  const handleProfileClick = () => {
+    if (customer) {
+      navigate("/profile");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
-    <div className="Profile">
+    <div className="Profile" onClick={handleProfileClick} style={{ cursor: "pointer" }}>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"

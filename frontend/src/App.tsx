@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Routes, Route } from "react-router-dom";
-import "./App.css";
+import "./styles/App.css";
 
 import Header from "./components/Header";
 import ProductCard from "./components/ProductCard";
@@ -17,6 +17,12 @@ import PrivacyTerms from "./components/PrivacyTerms";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiesPolicy from "./components/CookiesPolicy";
 import NotFound from "./components/NotFound";
+import IntranetHome from "./components/IntranetHome";
+import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
+import PrivateRoute from "./components/PrivateRoute";
+import ProfilePage from "./components/ProfilePage";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
 
 import type { Product, CartItem } from "../types";
 
@@ -143,6 +149,32 @@ function App() {
           <Route path="/privacy-terms" element={<PrivacyTerms />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/cookies-policy" element={<CookiesPolicy />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <IntranetHome />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/work-council"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <IntranetWorkCouncil />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
