@@ -1,0 +1,90 @@
+import type { CartItem, Product } from "../../types";
+import "../styles/cart-summary.css";
+
+interface CartProps {
+  items: CartItem[];
+  onAddToCart: (product: Product) => void;
+  onDecreaseQuantity?: (productId: number) => void;
+  onConfirm: () => void;
+}
+
+export default function Cart({
+  items,
+  onDecreaseQuantity,
+  onAddToCart,
+  onConfirm,
+}: CartProps) {
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0,
+  );
+
+  return (
+    <div className="cart-widget">
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      />
+      <div className="material-symbols-outlined" id="cart-icon">
+        shopping_cart
+        {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+      </div>
+      <div className="cart-popup">
+        <h3>Cart</h3>
+        {items.length === 0 ? (
+          <p className="cart-empty">Empty</p>
+        ) : (
+          <>
+            <div className="cart-items">
+              {items.map((item) => (
+                <div key={item.product.id} className="cart-item">
+                  <span className="item-name">{item.product.name}</span>
+                  <span className="item-qty">x{item.quantity}</span>
+                  <span className="item-price">
+                    ${(item.product.price * item.quantity).toFixed(2)}
+                  </span>
+
+                  <button
+                    className="item-btn btn-add"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddToCart(item.product);
+                    }}
+                    disabled={item.quantity >= item.product.stock}
+                  >
+                    ➕
+                  </button>
+
+                  <button
+                    className="item-btn btn-remove"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDecreaseQuantity?.(item.product.id);
+                    }}
+                  >
+                    ❌
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="cart-footer">
+              <div className="cart-total">
+                Total: <strong>${totalPrice.toFixed(2)}</strong>
+              </div>
+              <button
+                className="checkout-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onConfirm();
+                }}
+              >
+                Payment
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
