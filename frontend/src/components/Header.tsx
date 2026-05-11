@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import type { CartItem } from "../../types";
+import type { CartItem, Product } from "../../types";
 import { useUser } from "../context/UserContext";
 
 import CartSummary from "./CartSummary";
@@ -9,13 +9,17 @@ import Logo from "./Logo";
 
 import "../styles/Header.css";
 
-function Header() {
+interface HeaderProps {
+  cart: CartItem[];
+  onAddToCart: (product: Product) => void;
+  onDecreaseQuantity: (productId: number) => void;
+}
+
+function Header({ cart, onAddToCart, onDecreaseQuantity }: HeaderProps) {
   const navigate = useNavigate();
   const PORT = 3000;
   const ROUTE = `http://localhost:${PORT}/`;
 
-  const raw = sessionStorage.getItem("cart");
-  const cart: CartItem[] = raw ? JSON.parse(raw) : [];
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const { customer, setCustomer } = useUser();
@@ -44,14 +48,11 @@ function Header() {
         <Profile />
         <CartSummary
           items={cart}
-          onAddToCart={() => {}}
-          onDecreaseQuantity={() => {}}
+          onAddToCart={onAddToCart}
+          onDecreaseQuantity={onDecreaseQuantity}
           onConfirm={() => {
-            if (customer) {
-              navigate("/checkout");
-            } else {
-              navigate("/login");
-            }
+            if (customer) navigate("/checkout");
+            else navigate("/login");
           }}
         />
       </nav>

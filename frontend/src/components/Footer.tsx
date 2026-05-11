@@ -14,18 +14,21 @@ const Footer = () => {
       body: "Got a doubt? From order tracking to custom designs, our team is here to help you navigate. We'll respond faster than a teleportation jutsu.",
       footer: "Reach out anytime.",
       date: "Link to contact page",
+      link: "/contact",
     },
     {
       title: "About us",
       body: "MUIN means No Seal. We believe your passion shouldn't be restricted by labels or boundaries. Inspired by the stories that define us, we create premium anime streetwear for those who follow their own path.",
       footer: "Your nindo needs no seal.",
       date: "Link to about us page",
+      link: "/about",
     },
     {
       title: "Wanna work with us?",
       body: "Join the village. We are looking for artists and creators who share our vision. If you have a story to tell, let’s build together. Write us and let's create something epic.",
       footer: "Define your path with us.",
       date: "Link to careers page",
+      link: "/careers",
     },
   ];
 
@@ -37,16 +40,16 @@ const Footer = () => {
       />
       <div className="footer-cards-container">
         {reviews.map((item, index) => (
-          <section key={index} className="footer-card">
-            <h3>{item.title}</h3>
-            <p className="review-text">{item.body}</p>
-            <div className="card-author">
-              <span className="post-date">{item.date}</span>
-              <Link to="/contact" className="footer">
-                {item.footer}
-              </Link>
-            </div>
-          </section>
+          <Link to={item.link} className="footer-link">
+            <section key={index} className="footer-card">
+              <h3>{item.title}</h3>
+              <p className="review-text">{item.body}</p>
+              <div className="card-author">
+                <span className="post-date">{item.date}</span>
+                <a className="footer-link_text">{item.footer}</a>
+              </div>
+            </section>
+          </Link>
         ))}
       </div>
 

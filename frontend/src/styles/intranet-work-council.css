@@ -1,181 +1,195 @@
-.committee-page-wrapper {
+/* --- LAYOUT GENERAL --- */
+.work-capsules-page {
+  background: #1a1a1a;
   min-height: 100vh;
-  background: #f4f5f7;
+  color: white;
 }
 
-.committee-hero {
-  background: linear-gradient(180deg, #111111 0%, #22242a 100%);
-  color: #ffffff;
-  padding: 4rem 1.5rem 3rem;
+.work-capsules-main {
+  max-width: 73.75rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* --- HERO SECTION --- */
+.work-capsules-hero {
+  background: var(--panel-bg);
+  border-bottom: 0.06rem solid var(--border);
+  padding: 5rem 1.5rem 4rem;
   text-align: center;
 }
 
-.committee-hero .hero-label {
+.hero-label {
   display: inline-flex;
+  padding: 0.6rem 1.2rem;
+  background: var(--accent);
+  color: white;
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+}
+
+.work-capsules-hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  margin: 0;
+}
+
+.work-capsules-hero p {
+  max-width: 45rem;
+  margin: 1.5rem auto 0;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+/* --- TARJETAS (SECTION CARDS) --- */
+.section-card {
+  background: var(--panel-bg);
+  border: 0.06rem solid var(--border);
+  border-radius: 1.5rem; /* 24px */
+  padding: 2.5rem;
+}
+
+.section-card h2 {
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 1.5rem 0;
+  border-left: 5px solid var(--accent);
+  padding-left: 1.2rem;
+}
+
+.tag-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: var(--accent);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-radius: 24px;
+}
+
+/* --- GRIDS --- */
+.grid-two-capsules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.infographic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.infographic-card {
+  background: var(--card-bg);
+  border: 0.06rem solid var(--border);
+  padding: 2rem;
+  border-radius: 1.5rem;
+}
+
+.infographic-card h4 {
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.infographic-card ul {
+  padding-left: 1.2rem;
+  color: var(--text-secondary);
+}
+
+.infographic-card li {
+  margin-bottom: 0.5rem;
+}
+
+/* --- MIEMBROS (ORGANIGRAMA) --- */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.member-capsule {
+  background: var(--card-bg);
+  border: 0.06rem solid var(--border);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.member-avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  color: #d1d5db;
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+.member-capsule h4 {
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0.5rem 0;
+}
+.member-capsule p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* --- SUMMARY CARDS (LAS ROJAS) --- */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.red-summary-card {
+  background: var(--accent);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  color: white;
+}
+
+.red-summary-card h3 {
+  font-weight: 900;
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
 
-.committee-hero h1 {
-  font-size: clamp(2.5rem, 3.5vw, 4rem);
-  margin: 0;
-  letter-spacing: 0.2rem;
-  line-height: 1.05;
+.red-summary-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.9;
 }
 
-.committee-hero p {
-  max-width: 760px;
-  margin: 1.25rem auto 0;
-  color: #cbd5e1;
-  font-size: 1rem;
-  line-height: 1.75;
-}
-
-.committee-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem 4rem;
-}
-
-.committee-section {
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
-  padding: 2.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.committee-section h2 {
-  margin-top: 0;
-  font-size: 2rem;
-  color: #101828;
-}
-
-.committee-section p {
-  color: #475569;
-  line-height: 1.9;
-  margin: 1rem 0 0;
-}
-
-.committee-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.committee-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  padding: 1.75rem;
-}
-
-.committee-card h3 {
-  margin: 0 0 1rem;
-  color: #111827;
-  font-size: 1.2rem;
-}
-
-.committee-card p,
-.committee-card ul {
-  margin: 0;
-  color: #475569;
-  line-height: 1.8;
-  font-size: 0.98rem;
-}
-
-.committee-card ul {
-  padding-left: 1.2rem;
-}
-
-.committee-card li {
-  margin-bottom: 0.8rem;
-}
-
-.committee-chart {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
-.committee-member {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid #e2e8f0;
-  border-radius: 22px;
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.committee-member-avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: #e2e8f0;
-  display: grid;
-  place-items: center;
-  font-size: 2rem;
-  color: #334155;
-  margin-bottom: 1rem;
-}
-
-.committee-member h4 {
-  margin: 0;
-  font-size: 1rem;
-  color: #0f172a;
-}
-
-.committee-member span {
-  display: block;
-  color: #64748b;
-  margin-top: 0.35rem;
-  font-size: 0.92rem;
-}
-
-.committee-summary {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
-.committee-summary-card {
-  flex: 1;
-  min-width: 220px;
-  background: #0f172a;
-  color: #ffffff;
-  border-radius: 18px;
-  padding: 1.75rem;
-}
-
-.committee-summary-card h3 {
-  margin: 0 0 0.75rem;
-  font-size: 1.05rem;
-}
-
-.committee-summary-card p {
-  margin: 0;
-  color: #cbd5e1;
-  line-height: 1.7;
-}
-
-@media (max-width: 900px) {
-  .committee-grid {
-    grid-template-columns: 1fr;
+/* --- RESPONSIVE --- */
+@media (max-width: 48rem) {
+  .section-card {
+    padding: 1.5rem;
   }
-
-  .committee-summary {
-    flex-direction: column;
+  .work-capsules-main {
+    gap: 1.5rem;
+  }
+  .work-capsules-hero {
+    padding: 3rem 1rem;
   }
 }

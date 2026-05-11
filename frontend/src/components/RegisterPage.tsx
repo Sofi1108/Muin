@@ -38,11 +38,13 @@ export default function RegisterPage() {
   return (
     <div className="auth-container">
       <div className="auth-card">
+        <Link to="/" className="btn-muin-back">
+          ←
+        </Link>
         <h2 className="auth-title">REGISTER</h2>
         <p className="auth-subtitle">JOIN THE CLAN</p>
 
         {error && <div className="error-box">{error}</div>}
-
         <form onSubmit={handleRegister} className="auth-form">
           <div className="input-group">
             <label>YOUR USERNAME</label>

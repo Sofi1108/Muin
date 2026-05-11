@@ -35,6 +35,9 @@ export default function LoginPage() {
   return (
     <div className="auth-container">
       <div className="auth-card">
+        <Link to="/" className="btn-muin-back">
+          ←
+        </Link>
         <h2 className="auth-title">LOG IN</h2>
         <p className="auth-subtitle">ENTER YOUR NINDO</p>
 

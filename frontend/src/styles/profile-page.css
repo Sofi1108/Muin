@@ -1,11 +1,11 @@
 :root {
   --muin-black: #1a1a1a;
-  --muin-gray-light: #e5e5e5;
+  --muin-gray-light: #f5f5f5;
   --muin-gray-text: #666666;
-  --muin-border: #dddddd;
+  --muin-border: #eeeeee;
   --muin-white: #ffffff;
   --muin-red: #820000;
-  font-family: "KouzanBrush", "Sora", "Inter", sans-serif;
+  --muin-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .profile-page-container {
@@ -13,135 +13,195 @@
   min-height: 100vh;
 }
 
-/* --- CONTENEDOR PRINCIPAL --- */
 .profile-content-wrapper {
   max-width: 62.5rem;
-  margin: 2.5rem auto;
-  padding: 0 1.25rem;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
 }
 
-/* --- SECCIÓN SUPERIOR --- */
 .profile-main-section {
   display: flex;
-  gap: 3.75rem;
-  align-items: flex-start;
-  margin-bottom: 3.75rem;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 4rem;
+  width: 100%;
+  cursor: default;
 }
 
-/* Círculo del Avatar */
+/* --- AVATAR MEJORADO --- */
 .avatar-circle-large {
-  width: 15.6rem; /* 250px */
-  height: 15.6rem;
+  width: 14rem;
+  height: 14rem;
   background-color: var(--muin-gray-light);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 0.0625rem solid var(--muin-border);
+  border: 1px solid var(--muin-border);
+  box-shadow: var(--muin-shadow);
+  transition: transform 0.3s ease;
+}
+
+.avatar-circle-large:hover {
+  transform: scale(1.02);
 }
 
 .avatar-circle-large .material-symbols-outlined {
-  font-size: 6.25rem;
-  color: #999;
+  font-size: 5rem;
+  color: #bbb;
 }
 
-/* Columna de Detalles */
+.info-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.info-capsule {
+  padding: 1.2rem;
+  background: #fdfdfd;
+  border: 1px solid var(--muin-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.info-capsule:hover {
+  background: white;
+  border-color: var(--muin-black);
+  box-shadow: var(--muin-shadow);
+  cursor: pointer;
+}
+
+.info-capsule label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.7rem;
+  color: var(--muin-gray-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+
+.info-capsule p {
+  margin: 0;
+  color: var(--muin-black);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
 .profile-info-column {
   flex: 1;
+  min-width: 0;
   position: relative;
 }
 
-.profile-info-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.87rem;
-  font-family: KouzanBrush, serif;
-}
-
-.profile-info-header h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0;
-}
-
 #edit-icon {
-  font-size: 1.25rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.4rem;
   cursor: pointer;
   color: var(--muin-black);
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  z-index: 10;
 }
 
 #edit-icon:hover {
   color: var(--muin-red);
+  transform: scale(1.1);
 }
 
-/* Campos de Información */
-.info-field {
-  margin-bottom: 1.25rem;
-  font-family: "Sora", sans-serif;
-}
-
-.info-field label {
-  display: block;
-  font-weight: 700;
-  font-size: 0.87rem; /* 14px */
-  margin-bottom: 0.25rem;
-  text-transform: capitalize;
-}
-
-.info-field p {
-  margin: 0;
-  color: var(--muin-gray-text);
-  font-size: 1rem;
-}
-
-/* --- BOTONES (RECUADROS RECTOS) --- */
-.profile-button-group {
+.profile-info-header {
   display: flex;
-  gap: 0.95rem; /* 15px */
-  margin-top: 2.18rem;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-right: 2.5rem;
+}
+
+.role-badge-text {
+  display: inline-block;
+  color: var(--muin-red) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* --- BOTONES --- */
+.profile-button-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+  width: 100%;
+}
+
+.btn-muin-black,
+.btn-muin-white-outline,
+.btn-intranet-red {
+  flex: 0 0 auto;
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .btn-muin-black {
   background: var(--muin-black);
-  color: var(--muin-white);
-  border: none;
-  padding: 0.75rem 1.56rem;
-  font-weight: 700;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition:
-    background 0.3s ease,
-    box-shadow 0.3s ease;
-  border-radius: 8px;
-}
-
-.btn-muin-white-outline {
-  background: var(--muin-white);
-  color: var(--muin-black);
-  border: 0.0625rem solid var(--muin-border);
-  padding: 0.75rem 1.5625rem;
-  font-weight: 700;
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition:
-    background 0.3s ease,
-    box-shadow 0.3s ease;
-  border-radius: 8px;
+  color: white;
+  border: 1.5px solid var(--muin-black);
 }
 
 .btn-muin-black:hover {
-  opacity: 0.9;
-  background-color: var(--muin-red);
-  box-shadow: 0 0 0 0.0625rem var(--muin-border);
-}
-.btn-muin-white-outline:hover {
-  background: #f9f9f9;
-  box-shadow: 0 0 0 0.0625rem var(--muin-border);
+  background: var(--muin-red);
+  border-color: var(--muin-red);
+  transform: translateY(-2px);
 }
 
-/* --- SECCIÓN ORDER STATUS --- */
+.btn-intranet-red {
+  background-color: var(--muin-red) !important;
+  color: white !important;
+  text-decoration: none;
+  border: 1.5px solid var(--muin-red);
+}
+
+.btn-intranet-red:hover {
+  background-color: var(--muin-white) !important;
+  color: var(--muin-black) !important;
+  border: 1.5px solid var(--muin-black) !important;
+  transform: translateY(-2px);
+}
+
+.btn-muin-white-outline {
+  background: transparent;
+  color: var(--muin-black);
+  border: 1.5px solid var(--muin-black);
+}
+
+.btn-muin-white-outline:hover {
+  background: var(--muin-black);
+  color: white;
+}
+
+/* --- STATUS BAR --- */
+.order-status-section {
+  border-top: 1px solid var(--muin-border);
+  padding-top: 3rem;
+  margin-top: 2rem;
+}
+
 .order-status-section {
   border-top: 0.0625rem solid #eeeeee;
   padding-top: 2.5rem;
@@ -207,7 +267,6 @@
   background: var(--muin-black);
 }
 
-/* Caja del icono final (el cuadro con la X en tu dibujo) */
 .status-icon-box {
   width: 3.75rem; /* 60px */
   height: 3.75rem;
@@ -216,23 +275,35 @@
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
+  cursor: default;
 }
 
+@media (max-width: 48rem) {
+  .profile-info-column {
+    padding-top: 2rem;
+  }
+
+  #edit-icon {
+    top: -1rem;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
 /* --- RESPONSIVE --- */
 @media (max-width: 48rem) {
-  /* 768px */
-  .profile-main-section {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .profile-info-header {
-    flex-direction: column;
-    gap: 0.625rem;
-  }
-
   .profile-button-group {
-    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+
+    width: auto;
+  }
+
+  .btn-muin-black,
+  .btn-muin-white-outline,
+  .btn-intranet-red {
+    width: 100%;
+    font-size: 0.8rem;
+    padding: 0.85rem 2rem;
   }
 }

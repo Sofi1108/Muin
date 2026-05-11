@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./styles/App.css";
 
+import { UserProvider } from "./context/UserContext.tsx";
+import { useNavigate } from "react-router-dom";
+
 import Header from "./components/Header";
-import ProductCard from "./components/ProductCard";
-import CartButton from "./components/CartButton";
 import ProductDetail from "./components/ProductDetail";
 import HeroSection from "./components/HeroSection";
 import HeroSectionSmall from "./components/HeroSectionSmall";
@@ -25,13 +26,18 @@ import RegisterPage from "./components/RegisterPage";
 import PrivateRoute from "./components/PrivateRoute";
 import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
 import IntranetNews from "./components/IntranetNews";
+import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
+import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
+import ProductCard from "./components/ProductCard";
+import ContactPage from "./components/ContactPage";
 
 import type { Product, CartItem } from "../types";
 
 function App() {
-  const navigate = useNavigate();
   const PORT = 3000;
   const ROUTE = `http://localhost:${PORT}/`;
+
+  const navigate = useNavigate();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -82,7 +88,11 @@ function App() {
 
   return (
     <div id="app-wrapper">
-      <Header />
+      <Header
+        cart={cart}
+        onAddToCart={addToCart}
+        onDecreaseQuantity={decreaseQuantity}
+      />
 
       <main className="main-content">
         <Routes>
@@ -95,17 +105,10 @@ function App() {
                 <div className="products-grid">
                   {products.map((product) => (
                     <div key={product.id} className="product-card-container">
-                      <CartButton
-                        product={product}
-                        cart={cart}
-                        onAddToCart={addToCart}
-                        onRemoveFromCart={removeFromCart}
-                        onDecreaseQuantity={decreaseQuantity}
-                      />
-                      {/* <ProductCard
+                      <ProductCard
                         product={product}
                         onSelect={(id) => navigate(`/products/${id}`)}
-                      /> */}
+                      />
                     </div>
                   ))}
                 </div>
@@ -211,6 +214,23 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/intranet/hr"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <IntranetHumanResourcer />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/work-capsules"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <IntranetWorkCapsules />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -1,0 +1,17 @@
+.muin-input_textarea {
+  width: 100%;
+  padding: 0.94rem;
+  border: 0.06rem solid #dddddd;
+  font-size: 0.94rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 100px;
+  min-width: 100%;
+  max-height: 125px;
+}
+.muin-input_textarea:focus {
+  border-color: #000;
+}

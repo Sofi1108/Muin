@@ -1,43 +1,71 @@
-.intranet-container {
+/* --- BASE & WRAPPER --- */
+.work-capsules-page {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background: var(--page-bg);
+  color: var(--text-primary);
 }
 
-.intranet-content {
-  flex: 1;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
+/* --- HERO (IGUAL A TU CSS) --- */
+.work-capsules-hero {
+  background: var(--panel-bg);
+  border-bottom: 0.06rem solid var(--border);
+  padding: 4rem 1.5rem 3.5rem;
+  text-align: center;
 }
 
-/* Welcome Section */
-.welcome-section {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid #e0e0e0;
+.hero-label {
+  display: inline-flex;
+  padding: 0.6rem 1.2rem;
+  background: var(--accent);
+  color: white;
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
 }
 
-.welcome-section h1 {
-  font-size: 2rem;
-  font-weight: 600;
-  color: #1a1a1a;
+.work-capsules-hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 900;
+  text-transform: uppercase;
   margin: 0;
 }
 
-/* Video Section */
-.video-section {
-  margin-bottom: 3rem;
+/* --- MAIN LAYOUT --- */
+.work-capsules-main {
+  max-width: 73.75rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  display: grid;
+  gap: 3rem;
 }
 
+.section-card {
+  background: var(--panel-bg);
+  border: 0.06rem solid var(--border);
+  padding: 2.5rem;
+  border-radius: 1.5rem; /* 24px */
+}
+
+.section-card h2 {
+  margin: 1.5rem 0 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+}
+
+/* --- VIDEO --- */
 .video-placeholder {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #f5f5f5;
-  border-radius: 8px;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 0.06rem solid var(--border);
 }
 
 .video-placeholder iframe {
@@ -46,191 +74,89 @@
   border: none;
 }
 
-/* Schedule Section */
-.schedule-section {
-  margin-bottom: 3rem;
-}
-
-.schedule-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #2563eb;
-}
-
-.schedule-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.schedule-info {
-  font-size: 0.875rem;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
+/* --- TABLE --- */
 .schedule-table-wrapper {
+  margin-top: 1rem;
   overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-}
-
-.schedule-table thead {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-  color: white;
 }
 
 .schedule-table th {
-  padding: 1rem;
   text-align: left;
-  font-weight: 600;
-  font-size: 0.95rem;
-  border: none;
-}
-
-.schedule-table tbody tr {
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 0.2s ease;
-}
-
-.schedule-table tbody tr:hover {
-  background-color: #f9fafb;
-}
-
-.schedule-table tbody tr:last-child {
-  border-bottom: none;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 1rem;
+  border-bottom: 2px solid var(--border);
 }
 
 .schedule-table td {
-  padding: 1rem;
-  font-size: 0.95rem;
-  color: #333;
+  padding: 1.25rem 1rem;
+  border-bottom: 0.06rem solid var(--surface);
 }
 
 .time-cell {
-  font-weight: 600;
-  color: #2563eb;
-  min-width: 100px;
+  font-weight: 900;
+  color: var(--text-primary);
 }
 
-.activity-cell {
-  flex: 1;
-}
-
-.role-cell {
-  text-align: center;
-  min-width: 100px;
-}
-
-.role-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.role-badge.admin {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-.role-badge.employee {
-  background-color: #dbeafe;
-  color: #0c2d6b;
-}
-
-/* Holiday Section */
-.holiday-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.calendar-container,
-.holidays-list {
-  background: white;
-  border-radius: 8px;
+/* --- CALENDAR WIDGET --- */
+.calendar-widget {
+  background: var(--card-bg);
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  border: 0.06rem solid var(--border);
 }
 
-.calendar-container h3,
-.holidays-list h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0 0 1.5rem 0;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e5e7eb;
-}
-
-/* Calendar Styles */
-.calendar {
-  width: 100%;
-}
-
-.calendar-header {
+.calendar-header-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.calendar-header h4 {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #1a1a1a;
+.calendar-header-nav h4 {
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .nav-button {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
+  background: var(--surface);
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .nav-button:hover {
-  background: #e5e7eb;
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  cursor: pointer;
 }
 
-.calendar-weekdays {
+.calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
 }
 
 .weekday {
   text-align: center;
-  font-weight: 600;
-  color: #666;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  padding: 0.5rem 0;
-}
-
-.calendar-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--accent);
 }
 
 .calendar-day {
@@ -238,171 +164,73 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 0.06rem solid var(--border);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
-.calendar-day:hover:not(.empty) {
-  border-color: #2563eb;
-  background: #f0f9ff;
+.calendar-day:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  cursor: pointer;
+}
+
+.calendar-day.holiday {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
 }
 
 .calendar-day.empty {
   background: transparent;
   border: none;
-  cursor: default;
 }
 
-.calendar-day.holiday {
-  background: #1e40af;
+/* --- GRIDS & UTILS --- */
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.tag-badge {
+  padding: 0.4rem 0.8rem;
+  background: var(--accent);
   color: white;
-  font-weight: 600;
-  border-color: #1e40af;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-radius: 24px;
 }
 
-.calendar-legend {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.85rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.legend-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 2px;
-  border: 1px solid #d1d5db;
-}
-
-.legend-color.normal {
-  background: white;
-}
-
-.legend-color.holiday {
-  background: #1e40af;
-  border-color: #1e40af;
-}
-
-/* Holidays List */
-.holidays-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.holidays-list li {
-  padding: 1rem;
-  margin-bottom: 0.75rem;
-  background: #f9fafb;
-  border-left: 4px solid #2563eb;
+.role-badge {
+  padding: 0.2rem 0.6rem;
   border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-.holidays-list li strong {
-  display: block;
-  color: #1a1a1a;
-  margin-bottom: 0.25rem;
+.role-badge.admin {
+  background: #ff000022;
+  color: #ff4d4d;
+}
+.role-badge.employee {
+  background: #ffffff11;
+  color: #ccc;
 }
 
-.holidays-list li p {
-  margin: 0;
-  font-size: 0.85rem;
-  color: #666;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .intranet-content {
-    padding: 1rem;
-  }
-
-  .welcome-section h1 {
-    font-size: 1.5rem;
-  }
-
-  .holiday-section {
+@media (max-width: 64rem) {
+  .grid-two {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
-
-  .schedule-table th,
-  .schedule-table td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.85rem;
-  }
-
-  .time-cell {
-    min-width: 80px;
-  }
-
-  .calendar-days {
-    gap: 0.25rem;
-  }
-
-  .calendar-day {
-    font-size: 0.8rem;
-  }
-
-  .schedule-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .intranet-content {
-    padding: 0.75rem;
-  }
-
-  .welcome-section h1 {
-    font-size: 1.25rem;
-  }
-
-  .schedule-header h2 {
-    font-size: 1.25rem;
-  }
-
-  .schedule-table-wrapper {
-    border-radius: 4px;
-  }
-
-  .schedule-table {
-    font-size: 0.8rem;
-  }
-
-  .schedule-table th,
-  .schedule-table td {
-    padding: 0.5rem 0.25rem;
-  }
-
-  .role-cell {
-    display: none;
-  }
-
-  .role-badge {
-    padding: 0.2rem 0.5rem;
-    font-size: 0.7rem;
-  }
-
-  .calendar-container,
-  .holidays-list {
-    padding: 1rem;
-  }
-
-  .calendar-legend {
-    flex-direction: column;
-    gap: 0.75rem;
+  .section-card {
+    padding: 1.5rem;
   }
 }

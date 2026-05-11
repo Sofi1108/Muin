@@ -1,13 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-
-export interface Customer {
-  id: number;
-  email: string;
-  role: string;
-  phone: string;
-  name: string;
-}
+import type { Customer } from "../../types.ts";
 
 interface UserContextType {
   customer: Customer | null;
@@ -21,6 +14,19 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: ReactNode }) {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) throw new Error("No autenticado");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.customer) setCustomer(data.customer);
+      })
+      .catch(() => setCustomer(null))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <UserContext.Provider

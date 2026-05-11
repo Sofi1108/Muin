@@ -12,3 +12,13 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+export interface Customer {
+  id: number;
+  name: string; // nombre_usuario
+  email: string;
+  firstName?: string; // nombre
+  lastName?: string; // apellido
+  phone?: string;
+  role: "admin" | "empleado" | "cliente";
+}
