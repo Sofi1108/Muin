@@ -18,6 +18,13 @@ import PrivacyTerms from "./components/PrivacyTerms";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiesPolicy from "./components/CookiesPolicy";
 import NotFound from "./components/NotFound";
+import IntranetHome from "./components/IntranetHome";
+import ProfilePage from "./components/ProfilePage";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import PrivateRoute from "./components/PrivateRoute";
+import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
+import IntranetNews from "./components/IntranetNews";
 
 import type { Product, CartItem } from "../types";
 
@@ -193,6 +200,14 @@ function App() {
             element={
               <PrivateRoute roles={["admin", "employee"]}>
                 <IntranetWorkCouncil />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/news"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <IntranetNews />
               </PrivateRoute>
             }
           />

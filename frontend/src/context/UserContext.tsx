@@ -1,10 +1,12 @@
 import { createContext, useContext, useState } from "react";
-import type {ReactNode} from "react";
+import type { ReactNode } from "react";
 
 export interface Customer {
   id: number;
   email: string;
   role: string;
+  phone: string;
+  name: string;
 }
 
 interface UserContextType {

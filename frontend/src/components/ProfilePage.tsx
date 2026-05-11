@@ -1,134 +1,90 @@
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
-=======
-
->>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
 import { useUser } from "../context/UserContext";
+import HeroSectionSmall from "./HeroSectionSmall";
 import "../styles/profile-page.css";
 
 function ProfilePage() {
   const { customer, setCustomer } = useUser();
   const navigate = useNavigate();
-  const PORT = 3000;
-  const ROUTE = `http://localhost:${PORT}/`;
 
   const handleLogout = async () => {
     try {
-      await fetch(`${ROUTE}api/auth/logout`, {
+      const response = await fetch("http://localhost:3000/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });
-      setCustomer(null);
-      navigate("/");
+      if (response.ok) {
+        setCustomer(null);
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error al desconectar:", error);
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   return (
-<<<<<<< HEAD
     <div className="profile-page-container">
-      <div className="profile-content">
-        {/* Header */}
-        <div className="profile-header">
-          <button className="btn-back" onClick={handleGoBack}>
-            ← Back
-          </button>
-          <h1>My Profile</h1>
-          <div style={{ width: "60px" }} />
-        </div>
+      <HeroSectionSmall />
 
-        {/* Profile Info Card */}
-        <div className="profile-card">
-          <div className="profile-avatar">
-            <span className="material-symbols-outlined">account_circle</span>
+      <div className="profile-content-wrapper">
+        {/* SECCIÓN SUPERIOR: AVATAR + INFO */}
+        <div className="profile-main-section">
+          <div className="profile-avatar-column">
+            <div className="avatar-circle-large">
+              <span className="material-symbols-outlined">person</span>
+            </div>
           </div>
 
-          <div className="profile-info">
-            <div className="info-group">
+          <div className="profile-info-column">
+            <div className="profile-info-header">
+              <h2>Hi, {customer?.name || "Username"}</h2>
+              <span className="material-symbols-outlined" id="edit-icon">
+                edit
+              </span>
+            </div>
+
+            <div className="info-field">
               <label>Email</label>
-              <p>{customer?.email || "N/A"}</p>
+              <p>{customer?.email || "email@email.com"}</p>
             </div>
 
-            <div className="info-group">
-              <label>Role</label>
-              <p className={`role-badge ${customer?.role}`}>{customer?.role || "N/A"}</p>
+            <div className="info-field">
+              <label>Contact</label>
+              <p>{customer?.phone || "123 456 789"}</p>
             </div>
 
-            <div className="info-group">
-              <label>User ID</label>
-              <p>{customer?.id || "N/A"}</p>
+            <div className="profile-button-group">
+              <button className="btn-muin-black">CHECK ORDERS</button>
+              <button className="btn-muin-white-outline" onClick={handleLogout}>
+                LOGOUT
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="profile-actions">
-          <button className="btn-primary" onClick={() => navigate("/")}>
-            Go to Home
-          </button>
-          <button className="btn-danger" onClick={handleLogout}>
-            Log Out
-          </button>
+        {/* SECCIÓN INFERIOR: ORDER STATUS */}
+        <div className="order-status-section">
+          <h3>ORDER STATUS</h3>
+          <div className="status-container">
+            <div className="status-line"></div>
+            <div className="status-points">
+              <div className="point active">
+                <span>CONFIRMED</span>
+              </div>
+              <div className="point">
+                <span>SENDING</span>
+              </div>
+              <div className="point">
+                <span>DELIVERED</span>
+              </div>
+            </div>
+            <div className="status-icon-box">
+              <span className="material-symbols-outlined">package_2</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-=======
-    <>
-      <div className="profile-page-container">
-        <div className="profile-content">
-          {/* Header */}
-          <div className="profile-header">
-            <button className="btn-back" onClick={handleGoBack}>
-              ← Back
-            </button>
-            <h1>My Profile</h1>
-            <div style={{ width: "60px" }} />
-          </div>
-
-          {/* Profile Info Card */}
-          <div className="profile-card">
-            <div className="profile-avatar">
-              <span className="material-symbols-outlined">account_circle</span>
-            </div>
-
-            <div className="profile-info">
-              <div className="info-group">
-                <label>Email</label>
-                <p>{customer?.email || "N/A"}</p>
-              </div>
-
-              <div className="info-group">
-                <label>Role</label>
-                <p className={`role-badge ${customer?.role}`}>
-                  {customer?.role || "N/A"}
-                </p>
-              </div>
-
-              <div className="info-group">
-                <label>User ID</label>
-                <p>{customer?.id || "N/A"}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="profile-actions">
-            <button className="btn-primary" onClick={() => navigate("/")}>
-              Go to Home
-            </button>
-            <button className="btn-danger" onClick={handleLogout}>
-              Log Out
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
->>>>>>> 034c7d38192ff280ea10a3e80781473755e4a229
   );
 }
 
