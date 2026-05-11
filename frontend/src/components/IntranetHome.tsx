@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
-//import "../styles/intranet-home.css";
+import "../styles/intranet-home.css";
 
 interface ScheduleEntry {
   time: string;
   activity: string;
-  role: "admin" | "employee"; // admin puede ver ambos, employee solo employee
+  role: "admin" | "employee";
 }
 
 const IntranetHome = () => {
   const { customer } = useUser();
 
-  // Enlace del video - puedes cambiar esto en el código
   const VIDEO_URL = "https://www.youtube.com/embed/placeholder";
 
-  // Datos de ejemplo del horario
-  // Puedes reemplazar esto con una llamada a API
   const scheduleData: ScheduleEntry[] = [
     { time: "08:00 AM", activity: "Team Standup", role: "admin" },
     {
@@ -41,7 +38,6 @@ const IntranetHome = () => {
     { time: "05:00 PM", activity: "End of Shift", role: "employee" },
   ];
 
-  // Datos de ejemplo del calendario de vacaciones
   const holidaysData = [
     {
       date: "2026-05-25",
@@ -60,33 +56,23 @@ const IntranetHome = () => {
     },
   ];
 
-  // Filtrar horario según rol
   const filteredSchedule = scheduleData.filter((entry) => {
-    if (customer?.role === "admin") {
-      return true; // Admin ve todo
-    }
-    return entry.role === "employee"; // Employee solo ve employee
+    if (customer?.role === "admin") return true;
+    return entry.role === "employee";
   });
 
-  // Generar calendario simple
   const generateCalendar = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDayOfWeek = firstDay.getDay();
 
     const days = [];
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null);
-    }
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(i);
-    }
-
+    for (let i = 0; i < startingDayOfWeek; i++) days.push(null);
+    for (let i = 1; i <= daysInMonth; i++) days.push(i);
     return days;
   };
 
@@ -97,12 +83,10 @@ const IntranetHome = () => {
   return (
     <div className="intranet-container">
       <div className="intranet-content">
-        {/* Welcome Section */}
         <section className="welcome-section">
           <h1>Welcome, {customer?.email || "(username)"}</h1>
         </section>
 
-        {/* Video Section */}
         <section className="video-section">
           <div className="video-placeholder">
             <iframe
@@ -117,7 +101,6 @@ const IntranetHome = () => {
           </div>
         </section>
 
-        {/* Weekly Schedule Section */}
         <section className="schedule-section">
           <div className="schedule-header">
             <h2>Weekly Schedule</h2>
@@ -155,7 +138,6 @@ const IntranetHome = () => {
           </div>
         </section>
 
-        {/* Holiday Calendar Section */}
         <section className="holiday-section">
           <div className="calendar-container">
             <h3>Holiday calendar</h3>
@@ -184,11 +166,14 @@ const IntranetHome = () => {
 
               <div className="calendar-days">
                 {calendarDays.map((day, index) => {
-                  const isHoliday = holidaysData.some(
-                    (h) =>
-                      h.date ===
-                      `${year}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
-                  );
+                  // Corrección aquí: Comprobar si 'day' existe antes de usarlo
+                  const isHoliday =
+                    day &&
+                    holidaysData.some(
+                      (h) =>
+                        h.date ===
+                        `${year}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+                    );
                   return (
                     <div
                       key={index}

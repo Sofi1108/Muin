@@ -1,7 +1,6 @@
-//--PENDIENTE DE CSS --PENDIENTE DE AÑADIR A LA PAGINA
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import "../styles/auth-pages.css";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -16,9 +15,10 @@ export default function RegisterPage() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      setError("Passwords do not match");
       return;
     }
+
     fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,65 +26,86 @@ export default function RegisterPage() {
     })
       .then(async (res) => {
         const data = await res.json();
-        if (!res.ok)
-          throw new Error(data.error || "Error al registrar usuario");
+        if (!res.ok) throw new Error(data.error || "Error during registration");
         return data;
       })
       .then(() => {
-        alert("Usuario registrado correctamente");
         navigate("/login");
       })
       .catch((err) => setError(err.message));
   };
 
   return (
-    <div className="auth-page">
-      <h2>Create Account</h2>
-      {error && <p className="error-msg">{error}</p>}
-      <form onSubmit={handleRegister} className="auth-form">
-        <div>
-          <label>Your Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">REGISTER</h2>
+        <p className="auth-subtitle">JOIN THE CLAN</p>
+
+        {error && <div className="error-box">{error}</div>}
+
+        <form onSubmit={handleRegister} className="auth-form">
+          <div className="input-group">
+            <label>YOUR USERNAME</label>
+            <input
+              type="text"
+              className="muin-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="e.g. shin_obi"
+            />
+          </div>
+
+          <div className="input-group">
+            <label>EMAIL</label>
+            <input
+              type="email"
+              className="muin-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="name@email.com"
+            />
+          </div>
+
+          <div className="input-group">
+            <label>PASSWORD</label>
+            <input
+              type="password"
+              className="muin-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div className="input-group">
+            <label>CONFIRM PASSWORD</label>
+            <input
+              type="password"
+              className="muin-input"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button type="submit" className="btn-muin-black-full">
+            CREATE ACCOUNT
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            ALREADY HAVE AN ACCOUNT?{" "}
+            <Link to="/login" className="muin-link">
+              LOG IN
+            </Link>
+          </p>
         </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn-success">
-          Create accaunt
-        </button>
-      </form>
-      <p className="auth-footer">
-        ¿Already have one? <Link to="/login">Log In</Link>
-      </p>
+      </div>
     </div>
   );
 }

@@ -13,9 +13,8 @@ import NotFound from "./components/NotFound.tsx";
 // import RegisterPage from "./components/RegisterPage.tsx";
 // import OrderHistory from "./components/OrderHistory.tsx";
 // import OrdersPanel from "./components/OrdersPanel.tsx";
-// import NotFound from "./components/NotFound.tsx";
-// import { UserProvider } from "./context/UserContext.tsx";
-import "./App.css";
+
+import "./styles/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./context/UserContext.tsx";
 

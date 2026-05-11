@@ -1,8 +1,7 @@
-//--PENDIENTE DE CSS --PENDIENTE DE AÑADIR A LA PAGINA
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/UserContext.tsx";
+import "../styles/auth-pages.css";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
@@ -19,7 +18,7 @@ export default function LoginPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ identifier, password }),
+      body: JSON.stringify({ identifier, Contrasena: password }),
     })
       .then(async (res) => {
         const data = await res.json();
@@ -34,35 +33,52 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="auth-page">
-      <h2>Log In here</h2>
-      {error && <p className="error-msg">{error}</p>}
-      <form onSubmit={handleLogin} className="auth-form">
-        <div>
-          <label>Mail or Username:</label>
-          <input
-            type="text"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">LOG IN</h2>
+        <p className="auth-subtitle">ENTER YOUR NINDO</p>
+
+        {error && <div className="error-box">{error}</div>}
+
+        <form onSubmit={handleLogin} className="auth-form">
+          <div className="input-group">
+            <label>MAIL OR USERNAME</label>
+            <input
+              type="text"
+              className="muin-input"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              required
+              placeholder="e.g. naruto_uzumaki"
+            />
+          </div>
+
+          <div className="input-group">
+            <label>PASSWORD</label>
+            <input
+              type="password"
+              className="muin-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button type="submit" className="btn-muin-black-full">
+            SIGN IN
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            DON'T HAVE AN ACCOUNT?{" "}
+            <Link to="/register" className="muin-link">
+              REGISTER NOW
+            </Link>
+          </p>
         </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn-primary">
-          Log in
-        </button>
-      </form>
-      <p className="auth-footer">
-        Don't have an account? <Link to="/register">Register now</Link>
-      </p>
+      </div>
     </div>
   );
 }

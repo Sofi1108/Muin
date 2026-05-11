@@ -23,7 +23,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5; /* Tu fondo blanco */
+  background-color: #f5f5f5;
   min-height: 100vh;
 }
 
@@ -47,7 +47,7 @@ body {
 body {
   font-family: "Sora", "Inter", sans-serif;
   margin: 0;
-  color: #000; /* Texto en negro por defecto para fondo blanco */
+  color: #000;
 }
 
 /* Estilos de la tienda (se mantienen igual) */
