@@ -60,6 +60,7 @@
   font-weight: 600;
   background: #fafafa;
   transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
 .input-group input:focus {
@@ -72,6 +73,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+.row-inputs .input-group {
+  min-width: 0;
 }
 
 .card-input-wrapper {

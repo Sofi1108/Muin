@@ -178,3 +178,27 @@
     padding: 1.5rem;
   }
 }
+
+/* --- DOWNLOAD BUTTONS --- */
+.download-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.download-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: var(--accent);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.download-btn:hover {
+  background: var(--accent-hover, darken(var(--accent), 10%));
+}

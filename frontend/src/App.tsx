@@ -35,6 +35,7 @@ import Fichajes from "./components/Fichajes";
 import ProductsPanel from "./components/ProductsPanel";
 import EditProductPage from "./components/EditProductPage";
 import CheckoutPage from "./components/CheckoutPage";
+import Tickets from "./components/Tickets";
 
 import type { Product, CartItem } from "../types";
 
@@ -251,6 +252,14 @@ function App() {
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/intranet/fichajes" element={<Fichajes />} />
+          <Route
+            path="/intranet/tickets"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <Tickets />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/intranet/productos"
             element={

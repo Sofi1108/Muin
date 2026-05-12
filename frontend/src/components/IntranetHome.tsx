@@ -4,7 +4,6 @@ import "../styles/intranet-home.css";
 
 const IntranetHome = () => {
   const { customer } = useUser();
-  const VIDEO_URL = "https://www.youtube.com/embed/placeholder";
 
   const scheduleData = [
     { time: "08:00 AM", activity: "Reunión de Equipo", role: "admin" },
@@ -57,15 +56,6 @@ const IntranetHome = () => {
         </section>
 
         <main className="work-capsules-main">
-          {/* SECCIÓN DE VÍDEO */}
-          <section className="section-card">
-            <span className="tag-badge">Tutorial</span>
-            <h2>Vídeo Informativo</h2>
-            <div className="video-placeholder">
-              <iframe src={VIDEO_URL} title="Video" allowFullScreen />
-            </div>
-          </section>
-
           {/* SECCIÓN DE HORARIOS */}
           <section className="section-card">
             <span className="tag-badge">Horarios</span>
