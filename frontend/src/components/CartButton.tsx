@@ -39,9 +39,7 @@ export default function CartButton({
         }}
         disabled={isLimitReached || isOutOfStock}
       >
-        <span className="material-symbols-outlined">
-          {isOutOfStock ? "block" : "shopping_cart"}
-        </span>
+        <span>{isOutOfStock ? "block" : <span>ADD TO CART</span>}</span>
 
         {isProductDetail && (
           <span className="btn-text">
