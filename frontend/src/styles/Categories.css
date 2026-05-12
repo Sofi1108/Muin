@@ -1,0 +1,71 @@
+/*TODO Cambiar el nombre a categories-productos-home*/
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  padding: 3rem 5%;
+  animation: aparecerRevelar 1.2s ease-out forwards;
+}
+
+.column {
+  flex: 1 1 calc(25% - 26px);
+  max-width: calc(25% - 26px);
+  cursor: pointer;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.column:hover {
+  transform: scale(1.02);
+}
+
+.categories img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 28px;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.categories img:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.categories span {
+  display: block;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .column {
+    flex: 1 1 calc(50% - 16px);
+    max-width: calc(50% - 16px);
+  }
+}
+
+@media (max-width: 480px) {
+  .column {
+    flex: 1 1 100%;
+    max-width: 100%;
+    padding: 5px;
+  }
+}
+@keyframes aparecerRevelar {
+  0% {
+    opacity: 0;
+    transform: scale(1.1);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}

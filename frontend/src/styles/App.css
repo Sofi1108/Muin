@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "KouzanBrush";
+  src: url("../../fonts/KouzanMouhituFontOTF.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("../../fonts/Sora-VariableFont_wght.ttf") format("truetype");
+}
+
+:root {
+  --primary: #000;
+  --border: #ececec;
+  --gray-light: #f9f9f9;
+  --footer-bg: #1a1a1a;
+  --accent: #820000;
+}
+
+/* FONDO GLOBAL BLANCO */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* SISTEMA PARA CLAVAR EL FOOTER */
+#app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1 0 auto; /* Empuja el footer hacia abajo */
+  background-color: #ffffff; /* Asegura que el contenido sea blanco */
+}
+
+.main-footer {
+  flex-shrink: 0;
+  background-color: var(--footer-bg);
+}
+
+body {
+  font-family: "Sora", "Inter", sans-serif;
+  margin: 0;
+  color: #000;
+}
+
+/* Estilos de la tienda (se mantienen igual) */
+.hero {
+  height: 400px;
+  background: url("../assets/Img/heroSection.jpg") center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white; /* El texto del hero sí va en blanco */
+}
+
+.hero-title {
+  font-family: "KouzanBrush";
+  font-size: 3rem;
+  letter-spacing: 1.75rem;
+  margin: 0;
+  font-weight: bolder;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 3rem;
+  padding: 5rem 5%;
+}

@@ -1,0 +1,89 @@
+.comming-soon-wrapper {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+/* La tarjeta central */
+.comming-soon-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 4rem 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.icon-box {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.comming-soon-header {
+  font-family: "Sora", sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #1f1f1f;
+  margin: 0;
+}
+
+.divider {
+  width: 60px;
+  height: 4px;
+  background: #820000;
+  margin: 1.5rem auto;
+  border-radius: 2px;
+}
+
+.comming-soon-message {
+  font-family: "Sora", sans-serif;
+  color: #555;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+.comming-soon-btn {
+  font-family: "Sora", sans-serif;
+  color: white;
+  background: #1f1f1f;
+  border: none;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.comming-soon-btn:hover {
+  background: #820000;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(130, 0, 0, 0.3);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

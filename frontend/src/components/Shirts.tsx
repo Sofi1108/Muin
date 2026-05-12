@@ -1,0 +1,77 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ProductCard from "./ProductCard";
+import CartButton from "./CartButton";
+import type { Product, CartItem } from "../../types";
+
+interface ShirtsProps {
+  cart: CartItem[];
+  onAddToCart: (product: Product) => void;
+  onRemoveFromCart: (productId: number) => void;
+  onDecreaseQuantity: (productId: number) => void;
+}
+
+function Shirts({
+  cart,
+  onAddToCart,
+  onRemoveFromCart,
+  onDecreaseQuantity,
+}: ShirtsProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  // --- AQUÍ PONES EL USE EFFECT ---
+  useEffect(() => {
+    const loadShirts = async () => {
+      try {
+        setLoading(true);
+        // Llamamos a tu ruta específica del backend
+        const res = await fetch("http://localhost:3000/api/products/shirts");
+
+        if (res.ok) {
+          const data = await res.json();
+          setProducts(data);
+        } else {
+          console.error("Error en la respuesta del servidor");
+        }
+      } catch (error) {
+        console.error("Error conectando con la API de AWS:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadShirts();
+  }, []);
+
+  return (
+    <div className="container">
+      <h2 className="section-title">OUR SHIRTS</h2>
+
+      {loading ? (
+        <p>Loading collection...</p>
+      ) : (
+        <div className="products-grid">
+          {products.map((product) => (
+            <div key={product.id} className="product-card-container">
+              <CartButton
+                product={product}
+                cart={cart}
+                onAddToCart={onAddToCart}
+                onRemoveFromCart={onRemoveFromCart}
+                onDecreaseQuantity={onDecreaseQuantity}
+              />
+              <ProductCard
+                product={product}
+                onSelect={(id) => navigate(`/products/${id}`)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Shirts;

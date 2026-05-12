@@ -1,0 +1,96 @@
+@font-face {
+  font-family: "KouzanBrush";
+  src: url("../../fonts/KouzanMouhituFontOTF.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("../../fonts/Sora-VariableFont_wght.ttf") format("truetype");
+}
+:root {
+  --primary: #000;
+  --border: #ececec;
+  --gray-light: #f9f9f9;
+}
+
+body {
+  font-family: "KouzanBrush", "Sora", "Inter", sans-serif;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 5%;
+  background-color: #1f1f1f;
+  color: #f5f5f5;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.logo-container:hover .logo-kanji,
+.logo-container:hover .logo-text {
+  color: #820000;
+  text-shadow: #1f1f1f 0px 0px 0.2rem;
+  transform: scale(1.2);
+}
+
+.logo-kanji {
+  font-family: "KouzanBrush", serif;
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: -5px;
+  font-weight: bolder;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+
+.logo-text {
+  font-family: "Inter", sans-serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 8px;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 7px;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+}
+
+#profile-icon {
+  font-size: 2.5rem;
+  margin-left: 20px;
+  color: white;
+  transition:
+    color 0.3s,
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  text-decoration: none;
+}
+#profile-icon:hover {
+  color: #820000;
+  text-shadow: #1f1f1f 0px 0px 0.2rem;
+  transform: scale(1.27);
+}

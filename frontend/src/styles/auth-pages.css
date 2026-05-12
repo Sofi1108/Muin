@@ -1,0 +1,124 @@
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  padding: 1.25rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28.13rem;
+  padding: 3.13rem;
+  background: white;
+  border: 0.06rem solid #eeeeee;
+  box-shadow: 0 0.63rem 1.88rem rgba(0, 0, 0, 0.05);
+  text-align: center;
+  border-radius: 8px;
+}
+
+.auth-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.19rem;
+  margin-bottom: 0.31rem;
+  color: #000;
+}
+
+.auth-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  letter-spacing: 0.13rem;
+  margin-bottom: 2.5rem;
+  font-weight: 600;
+}
+
+.auth-form {
+  text-align: left;
+}
+
+.input-group {
+  margin-bottom: 1.56rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.06rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.muin-input {
+  width: 100%;
+  padding: 0.94rem;
+  border: 0.06rem solid #dddddd;
+  font-size: 0.94rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.muin-input:focus {
+  border-color: #000;
+}
+
+.btn-muin-black-full {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 1.13rem;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.13rem;
+  cursor: pointer;
+  margin-top: 0.63rem;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+
+.btn-muin-black-full:hover {
+  background: #820000;
+  box-shadow: #1f1f1f 0px 0px 0.5rem;
+}
+
+.error-box {
+  background-color: #fff1f1;
+  color: #c00;
+  padding: 0.94rem;
+  font-size: 0.81rem;
+  font-weight: 600;
+  border-left: 0.25rem solid #c00;
+  margin-bottom: 1.56rem;
+  text-align: left;
+}
+
+.auth-footer {
+  margin-top: 2.19rem;
+}
+
+.auth-footer p {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666;
+}
+
+.muin-link {
+  color: #000;
+  text-decoration: none;
+  border-bottom: 0.13rem solid #000;
+  padding-bottom: 0.13rem;
+  margin-left: 0.31rem;
+  transition: all 0.2s;
+}
+
+.muin-link:hover {
+  color: #8b0000;
+  border-color: #8b0000;
+}

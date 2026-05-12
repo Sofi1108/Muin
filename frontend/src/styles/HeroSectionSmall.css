@@ -1,0 +1,50 @@
+@font-face {
+  font-family: "KouzanBrush";
+  src: url("../../fonts/KouzanMouhituFontOTF.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("../../fonts/Sora-VariableFont_wght.ttf") format("truetype");
+}
+:root {
+  --primary: #000;
+  --border: #ececec;
+  --gray-light: #f9f9f9;
+}
+
+body {
+  font-family: "KouzanBrush", "Sora", "Inter", sans-serif;
+  margin: 0;
+}
+
+.hero-section-small {
+  position: relative;
+  height: 20rem;
+  background: url("../assets/Img/heroSection.jpeg") center/cover no-repeat;
+  background-size: cover;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.hero-section-small h1 {
+  font-family: kouzanbrush;
+  font-size: 3rem;
+  letter-spacing: 1.75rem;
+  margin-bottom: -0.6rem;
+  margin-right: -1.75rem;
+}
+
+.hero-section-small p {
+  font-family: sora, sans-serif;
+  font-size: 1.25rem;
+  margin: 1rem 0;
+  font-weight: 450;
+}
