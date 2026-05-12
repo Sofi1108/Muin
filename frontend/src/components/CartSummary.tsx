@@ -82,8 +82,12 @@ export default function Cart({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onAddToCart(item.product);
+                          // Solo añadir si hay stock disponible
+                          if (item.quantity < item.product.cantidad_u) {
+                            onAddToCart(item.product);
+                          }
                         }}
+                        disabled={item.quantity >= item.product.cantidad_u}
                       >
                         +
                       </button>

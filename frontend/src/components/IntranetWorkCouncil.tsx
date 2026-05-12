@@ -1,15 +1,13 @@
-﻿import IntranetLayout from "./IntranetLayout";
-import WorkCouncilNavbar from "./WorkCouncilNavbar";
+﻿import WorkCouncilLayout from "./WorkCouncilLayout";
 import "../styles/intranet-work-council.css";
 
 const IntranetWorkCouncil = () => {
   const VIDEO_URL = "https://www.youtube.com/embed/placeholder";
   return (
-    <IntranetLayout
+    <WorkCouncilLayout
       title="ÁREA DE EMPLEADOS"
       subtitle="Información institucional y defensa de los derechos laborales."
     >
-      <WorkCouncilNavbar />
       <div className="work-capsules-page">
         {/* HERO SECTION */}
         <section className="work-capsules-hero">
@@ -126,7 +124,7 @@ const IntranetWorkCouncil = () => {
           </div>
         </main>
       </div>
-    </IntranetLayout>
+    </WorkCouncilLayout>
   );
 };
 
