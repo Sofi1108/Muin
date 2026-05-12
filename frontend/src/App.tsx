@@ -32,6 +32,7 @@ import ContactPage from "./components/ContactPage";
 import Fichajes from "./components/Fichajes";
 import ProductsPanel from "./components/ProductsPanel";
 import EditProductPage from "./components/EditProductPage";
+import CheckoutPage from "./components/CheckoutPage";
 
 import type { Product, CartItem } from "../types";
 
@@ -262,6 +263,8 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
