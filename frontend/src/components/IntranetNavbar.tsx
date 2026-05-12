@@ -4,10 +4,10 @@ import "../styles/intranet-navbar.css";
 const navItems = [
   // Añadimos 'end: true' para que solo sea exacto
   { path: "/intranet", label: "INICIO", end: true },
-  { path: "/intranet/hr", label: "HR" },
+  { path: "/intranet/hr", label: "RRHH" },
   { path: "/intranet/news", label: "NOTICIAS" },
-  { path: "/intranet/work-capsules", label: "RIGHTS" },
-  { path: "/intranet/work-council", label: "WORKS COUNCIL" },
+  { path: "/intranet/work-capsules", label: "DERECHOS" },
+  { path: "/intranet/work-council", label: "COMITÉ DE EMPRESA" },
 ];
 
 const IntranetNavbar = () => {
