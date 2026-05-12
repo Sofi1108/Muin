@@ -144,6 +144,46 @@ export const IntranetWorkCapsules = () => {
               </div>
             </div>
           </section>
+
+          <section className="section-card">
+            <span className="tag-badge">Tipos de Despido</span>
+            <h2>Tipos de Despido en España</h2>
+            <p>
+              Existen diferentes tipos de despido según la legislación laboral española. Conoce las diferencias para saber tus derechos.
+            </p>
+            <div className="infographic-grid">
+              <div className="infographic-card">
+                <h4>Despido Disciplinario</h4>
+                <p>Por faltas graves o muy graves del trabajador. Debe estar justificado.</p>
+              </div>
+              <div className="infographic-card">
+                <h4>Despido Objetivo</h4>
+                <p>Por causas económicas, técnicas, organizativas o de producción.</p>
+              </div>
+              <div className="infographic-card">
+                <h4>Despido Improcedente</h4>
+                <p>Sin causa justificada o con vicios de forma. Derecho a indemnización o readmisión.</p>
+              </div>
+              <div className="infographic-card">
+                <h4>Despido Colectivo</h4>
+                <p>Afecta a un número significativo de trabajadores por causas económicas.</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="section-card">
+            <span className="tag-badge">Documentos</span>
+            <h2>Descargas Importantes</h2>
+            <p>Accede a documentos clave para tu protección laboral.</p>
+            <div className="download-buttons">
+              <a href="/documents/estatuto-trabajadores.pdf" download className="download-btn">
+                Descargar Estatuto de los Trabajadores
+              </a>
+              <a href="/documents/convenio-colectivo.pdf" download className="download-btn">
+                Descargar Convenio Colectivo
+              </a>
+            </div>
+          </section>
         </main>
       </div>
     </IntranetLayout>

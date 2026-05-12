@@ -54,7 +54,10 @@ function Shirts({
       ) : (
         <div className="products-grid">
           {products.map((product) => (
-            <div key={product.id} className="product-card-container">
+            <div
+              key={product.id_producto_perso!}
+              className="product-card-container"
+            >
               <CartButton
                 product={product}
                 cart={cart}

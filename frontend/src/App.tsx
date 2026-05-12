@@ -29,9 +29,13 @@ import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
 import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
 import ProductCard from "./components/ProductCard";
 import ContactPage from "./components/ContactPage";
+import AboutUsPage from "./components/AboutUsPage";
+import CareersPage from "./components/Carreers";
 import Fichajes from "./components/Fichajes";
 import ProductsPanel from "./components/ProductsPanel";
 import EditProductPage from "./components/EditProductPage";
+import CheckoutPage from "./components/CheckoutPage";
+import Tickets from "./components/Tickets";
 
 import type { Product, CartItem } from "../types";
 
@@ -245,7 +249,17 @@ function App() {
             }
           />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/careers" element={<CareersPage />} />
           <Route path="/intranet/fichajes" element={<Fichajes />} />
+          <Route
+            path="/intranet/tickets"
+            element={
+              <PrivateRoute roles={["admin", "employee"]}>
+                <Tickets />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/intranet/productos"
             element={
@@ -262,6 +276,8 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

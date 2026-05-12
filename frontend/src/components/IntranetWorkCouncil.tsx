@@ -1,12 +1,15 @@
 ﻿import IntranetLayout from "./IntranetLayout";
+import WorkCouncilNavbar from "./WorkCouncilNavbar";
 import "../styles/intranet-work-council.css";
 
 const IntranetWorkCouncil = () => {
+  const VIDEO_URL = "https://www.youtube.com/embed/placeholder";
   return (
     <IntranetLayout
       title="ÁREA DE EMPLEADOS"
       subtitle="Información institucional y defensa de los derechos laborales."
     >
+      <WorkCouncilNavbar />
       <div className="work-capsules-page">
         {/* HERO SECTION */}
         <section className="work-capsules-hero">
@@ -17,6 +20,17 @@ const IntranetWorkCouncil = () => {
             la comunicación directa con la dirección de Muin.
           </p>
         </section>
+
+        {/* SECCIÓN DE VÍDEO */}
+        <section className="section-card">
+          <span className="tag-badge">Tutorial</span>
+          <h2>Vídeo Informativo</h2>
+          <div className="video-placeholder">
+            <iframe src={VIDEO_URL} title="Video" allowFullScreen />
+          </div>
+        </section>
+
+        
 
         <main className="work-capsules-main">
           <section className="section-card">

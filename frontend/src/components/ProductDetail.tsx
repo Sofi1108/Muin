@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { Product, CartItem } from "../../types";
 import CartButton from "./CartButton";
-import CartSummary from "./CartSummary";
-
 import "../styles/product-detail.css";
 
 interface ProductDetailProps {
   cart: CartItem[];
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: Product & { selectedSize?: string }) => void;
   onRemoveFromCart: (productId: number) => void;
   onDecreaseQuantity: (productId: number) => void;
 }
@@ -22,7 +20,10 @@ function ProductDetail({
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
-  const [error, setError] = useState(false); // Estado para manejar ID inexistente
+  const [error, setError] = useState(false);
+
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
 
   const handleBack = () => {
     if (window.history.length > 2) {
@@ -36,9 +37,8 @@ function ProductDetail({
     fetch(`http://localhost:3000/api/products/${id}`)
       .then((res) => {
         if (!res.ok) {
-          // Si el ID no existe en la base de datos (404 de API)
           setError(true);
-          throw new Error("Producto no encontrado");
+          throw new Error("Product not found");
         }
         return res.json();
       })
@@ -49,50 +49,103 @@ function ProductDetail({
       });
   }, [id]);
 
+  const handleAddToCartWithLogic = () => {
+    if (!product) return;
+    if (!selectedSize) {
+      alert("Please, select a size before adding to cart.");
+      return;
+    }
+
+    onAddToCart({ ...product, selectedSize });
+
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   if (error) {
     return (
-      <div className="product-detail">
-        <h2>El producto con ID {id} no existe.</h2>
-        <button className="product-detail_back" onClick={handleBack}>
-          Volver al catálogo
-        </button>
+      <div className="product-detail-container">
+        <div className="error-message">
+          <h2>The product with ID {id} does not exist.</h2>
+          <button className="product-detail_back" onClick={handleBack}>
+            BACK TO CATALOG
+          </button>
+        </div>
       </div>
     );
   }
 
-  if (!product) return <p>Cargando...</p>;
+  if (!product) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="product-detail">
+    <div className="product-detail-container">
+      <div className={`cart-toast ${showToast ? "show" : ""}`}>
+        <span className="material-symbols-outlined">check_circle</span>
+        ADDED TO CART
+      </div>
+
       <button className="product-detail_back" onClick={handleBack}>
-        ← Volver
+        ← BACK TO CATALOG
       </button>
 
-      <img
-        className="product-detail_img"
-        src={product.url_imagen}
-        alt={product.nombre_producto_perso}
-      />
+      <div className="product-detail-grid">
+        {/* LEFT COLUMN: SINGLE IMAGE */}
+        <div className="product-images-section">
+          <div className="main-image-wrapper">
+            <img
+              className="product-detail_img"
+              src={product.url_imagen}
+              alt={product.nombre_producto_perso}
+            />
+          </div>
+        </div>
 
-      <h2>{product.nombre_producto_perso}</h2>
-      <p>{product.descripcion}</p>
-      <p className="price">{product.precio_producto_perso}€</p>
-      <p className="stock">
-        Stock:{" "}
-        <span className={product.cantidad_u > 0 ? "in-stock" : "out-of-stock"}>
-          {product.cantidad_u > 0
-            ? `${product.cantidad_u} disponible${product.cantidad_u !== 1 ? "s" : ""}`
-            : "Sin stock"}
-        </span>
-      </p>
+        {/* RIGHT COLUMN: INFO */}
+        <div className="product-info-section">
+          <span className="tag-badge">LIMITED EDITION</span>
+          <h1 className="product-title">{product.nombre_producto_perso}</h1>
+          <p className="product-description">{product.descripcion}</p>
+          <div className="price-tag">{product.precio_producto_perso}€</div>
 
-      <CartButton
-        product={product}
-        cart={cart}
-        onAddToCart={onAddToCart}
-        onRemoveFromCart={onRemoveFromCart}
-        onDecreaseQuantity={onDecreaseQuantity}
-      />
+          <div className="size-selector-container">
+            <label>SELECT YOUR SIZE</label>
+            <div className="size-selector">
+              {["XS", "S", "M", "L", "XL"].map((size) => (
+                <button
+                  key={size}
+                  className={`size-btn ${selectedSize === size ? "active" : ""}`}
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ACTION BUTTONS IN ONE LINE */}
+          <div className="actions-group">
+            <div className="cart-btn-muin-wrapper">
+              <CartButton
+                product={product}
+                cart={cart}
+                onAddToCart={handleAddToCartWithLogic}
+                onRemoveFromCart={onRemoveFromCart}
+                onDecreaseQuantity={onDecreaseQuantity}
+              />
+            </div>
+            <button className="btn-buy-now">BUY NOW</button>
+          </div>
+
+          <div className="extra-info">
+            <h3>SHIPPING INFORMATION</h3>
+            <ul>
+              <li>Premium Cotton 240 GSM.</li>
+              <li>Oversize / Unisex fit.</li>
+              <li>Shipping in 24/48 hours.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
