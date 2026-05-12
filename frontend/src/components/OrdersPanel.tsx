@@ -6,9 +6,9 @@ export default function OrdersPanel() {
 
   useEffect(() => {
     fetch("http://localhost:3000/api/orders", { credentials: "include" })
-      .then(res => res.json())
-      .then(data => setOrders(Array.isArray(data) ? data : []))
-      .catch(err => console.error(err));
+      .then((res) => res.json())
+      .then((data) => setOrders(Array.isArray(data) ? data : []))
+      .catch((err) => console.error(err));
   }, []);
 
   const updateStatus = (id: number, status: string) => {
@@ -16,14 +16,16 @@ export default function OrdersPanel() {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ status })
+      body: JSON.stringify({ status }),
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.order) {
-        setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
-      }
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.order) {
+          setOrders((prev) =>
+            prev.map((o) => (o.id === id ? { ...o, status } : o)),
+          );
+        }
+      });
   };
 
   return (
@@ -40,14 +42,17 @@ export default function OrdersPanel() {
           </tr>
         </thead>
         <tbody>
-          {orders.map(o => (
+          {orders.map((o) => (
             <tr key={o.id}>
               <td>#{o.id}</td>
               <td>{o.customer_id}</td>
               <td>{o.address}</td>
               <td>${Number(o.total).toFixed(2)}</td>
               <td>
-                <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value)}>
+                <select
+                  value={o.status}
+                  onChange={(e) => updateStatus(o.id, e.target.value)}
+                >
                   <option value="pendiente">Pendiente</option>
                   <option value="enviado">Enviado</option>
                   <option value="entregado">Entregado</option>

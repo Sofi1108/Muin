@@ -11,9 +11,9 @@ export default function OrderHistory() {
 
   useEffect(() => {
     fetch("http://localhost:3000/api/orders/my", { credentials: "include" })
-      .then(res => res.json())
-      .then(data => setOrders(Array.isArray(data) ? data : []))
-      .catch(err => console.error(err));
+      .then((res) => res.json())
+      .then((data) => setOrders(Array.isArray(data) ? data : []))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
@@ -22,7 +22,9 @@ export default function OrderHistory() {
         ← Volver al catálogo
       </button>
       <h2>Mis Pedidos</h2>
-      {orders.length === 0 ? <p className="orders-empty">No tienes pedidos todavía.</p> : (
+      {orders.length === 0 ? (
+        <p className="orders-empty">No tienes pedidos todavía.</p>
+      ) : (
         <table className="orders-table">
           <thead>
             <tr>
@@ -33,7 +35,7 @@ export default function OrderHistory() {
             </tr>
           </thead>
           <tbody>
-            {orders.map(o => (
+            {orders.map((o) => (
               <OrderRow key={o.id} order={o} />
             ))}
           </tbody>
@@ -51,9 +53,11 @@ function OrderRow({ order }: { order: any }) {
   const toggleExpand = () => {
     if (!expanded && items.length === 0) {
       setLoading(true);
-      fetch(`http://localhost:3000/api/orders/${order.id}`, { credentials: "include" })
-        .then(res => res.json())
-        .then(data => setItems(data.items || []))
+      fetch(`http://localhost:3000/api/orders/${order.id}`, {
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => setItems(data.items || []))
         .finally(() => setLoading(false));
     }
     setExpanded(!expanded);
@@ -61,20 +65,31 @@ function OrderRow({ order }: { order: any }) {
 
   return (
     <>
-      <tr className={expanded ? "order-row-expanded" : ""} onClick={toggleExpand}>
-        <td>#{order.id} {expanded ? "▼" : "▶"}</td>
+      <tr
+        className={expanded ? "order-row-expanded" : ""}
+        onClick={toggleExpand}
+      >
+        <td>
+          #{order.id} {expanded ? "▼" : "▶"}
+        </td>
         <td>{new Date(order.created_at).toLocaleString()}</td>
         <td>{order.status}</td>
-        <td style={{ textAlign: "right" }}>${Number(order.total).toFixed(2)}</td>
+        <td style={{ textAlign: "right" }}>
+          ${Number(order.total).toFixed(2)}
+        </td>
       </tr>
       {expanded && (
         <tr>
           <td colSpan={4} className="order-detail-cell">
-            {loading ? <p>Cargando productos...</p> : (
+            {loading ? (
+              <p>Cargando productos...</p>
+            ) : (
               <ul>
                 {items.map((i, idx) => (
                   <li key={idx}>
-                    <span>{i.quantity}x <b>{i.name}</b></span>
+                    <span>
+                      {i.quantity}x <b>{i.name}</b>
+                    </span>
                     <span>Subtotal: ${Number(i.subtotal).toFixed(2)}</span>
                   </li>
                 ))}

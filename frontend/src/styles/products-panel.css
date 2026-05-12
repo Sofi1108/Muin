@@ -1,0 +1,375 @@
+/* --- BASE & WRAPPER --- */
+.products-panel {
+  min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--text-primary);
+  padding: 3rem 1.5rem;
+}
+
+/* --- PANEL HEADER --- */
+.panel-header {
+  max-width: 73.75rem;
+  margin: 0 auto 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 2rem;
+  border-bottom: 0.06rem solid var(--border);
+}
+
+.header-title h1 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.header-title p {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.btn-new-product {
+  padding: 1rem 1.5rem;
+  background: #388e3c;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-family: "Sora", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(56, 142, 60, 0.25);
+}
+
+.btn-new-product:hover {
+  background: #2e7d32;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(56, 142, 60, 0.35);
+}
+
+/* --- SEARCH --- */
+.panel-search {
+  max-width: 73.75rem;
+  margin: 0 auto 2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem;
+  background: var(--panel-bg);
+  border: 0.06rem solid var(--border);
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  font-family: "Sora", sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  background: var(--card-bg);
+  box-shadow: 0 0 0 3px rgba(130, 0, 0, 0.1);
+}
+
+/* --- ALERTS --- */
+.alert {
+  max-width: 73.75rem;
+  margin: 0 auto 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+}
+
+.alert-error {
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+  border: 0.06rem solid #d32f2f;
+}
+
+/* --- EMPTY STATE --- */
+.empty-state {
+  max-width: 73.75rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* --- TABLE WRAPPER --- */
+.products-table-wrapper {
+  max-width: 73.75rem;
+  margin: 0 auto;
+  background: var(--panel-bg);
+  border: 0.06rem solid var(--border);
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+/* --- TABLE --- */
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.products-table thead {
+  background: var(--card-bg);
+  border-bottom: 0.06rem solid var(--border);
+}
+
+.products-table th {
+  text-align: left;
+  padding: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.products-table tbody tr {
+  border-bottom: 0.06rem solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.products-table tbody tr:hover {
+  background: var(--surface);
+}
+
+.products-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.products-table td {
+  padding: 1.25rem;
+  font-size: 0.9rem;
+}
+
+/* --- CELL STYLES --- */
+.cell-id {
+  font-weight: 900;
+  color: var(--accent);
+  min-width: 80px;
+}
+
+.cell-name {
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 150px;
+}
+
+.cell-desc {
+  color: var(--text-secondary);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-price {
+  font-weight: 900;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.cell-qty {
+  display: flex;
+  justify-content: center;
+}
+
+.qty-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 0.5rem 0.75rem;
+  background: rgba(56, 142, 60, 0.15);
+  color: #388e3c;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 0.8rem;
+}
+
+.qty-badge.out-stock {
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+}
+
+.cell-image {
+  display: flex;
+  justify-content: center;
+}
+
+.product-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 0.06rem solid var(--border);
+}
+
+.no-image {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 180px;
+}
+
+/* --- ACTION BUTTONS --- */
+.btn-action {
+  padding: 0.5rem 1rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 0.06rem solid var(--border);
+  border-radius: 0.5rem;
+  font-family: "Sora", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+  border-color: currentColor;
+}
+
+.btn-edit {
+  color: #388e3c;
+}
+
+.btn-edit:hover {
+  background: rgba(56, 142, 60, 0.15);
+}
+
+.btn-delete {
+  color: var(--accent);
+}
+
+.btn-delete:hover {
+  background: rgba(130, 0, 0, 0.15);
+}
+
+/* --- LOADING --- */
+.loading {
+  max-width: 73.75rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 64rem) {
+  .products-panel {
+    padding: 2rem 1.5rem;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .products-table {
+    font-size: 0.85rem;
+  }
+
+  .products-table th,
+  .products-table td {
+    padding: 1rem;
+  }
+
+  .cell-desc {
+    display: none;
+  }
+
+  .product-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .btn-action {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 40rem) {
+  .products-panel {
+    padding: 1.5rem 1rem;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .products-table-wrapper {
+    border-radius: 1rem;
+    overflow-x: auto;
+  }
+
+  .products-table {
+    font-size: 0.75rem;
+    min-width: 600px;
+  }
+
+  .products-table th,
+  .products-table td {
+    padding: 0.75rem;
+  }
+
+  .cell-id {
+    min-width: 60px;
+  }
+
+  .cell-name {
+    min-width: 120px;
+  }
+
+  .cell-price {
+    min-width: 80px;
+  }
+
+  .product-thumb {
+    width: 35px;
+    height: 35px;
+  }
+
+  .cell-actions {
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 100px;
+  }
+
+  .btn-action {
+    width: 100%;
+    padding: 0.4rem 0.5rem;
+  }
+}

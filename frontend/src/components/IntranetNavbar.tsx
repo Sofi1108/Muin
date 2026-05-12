@@ -8,6 +8,7 @@ const navItems = [
   { path: "/intranet/news", label: "NOTICIAS" },
   { path: "/intranet/work-capsules", label: "DERECHOS" },
   { path: "/intranet/work-council", label: "COMITÉ DE EMPRESA" },
+  { path: "/intranet/fichajes", label: "FICHAJES" },
 ];
 
 const IntranetNavbar = () => {

@@ -7,18 +7,20 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, onSelect }: ProductCardProps) {
+  const productId = product.id_producto_perso;
+  const productName = product.nombre_producto_perso || "Producto";
+  const productPrice = product.precio_producto_perso || 0;
+  const productImage = product.url_imagen || "";
+  const productStock = product.cantidad_u || 0;
+
   return (
     <div
       className="product-card"
-      onClick={() => onSelect && onSelect(product.id)}
+      onClick={() => onSelect && onSelect(productId || 0)}
     >
       <div className="product-image-container">
-        {product.image_url ? (
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="product-img"
-          />
+        {productImage ? (
+          <img src={productImage} alt={productName} className="product-img" />
         ) : (
           <div className="product-placeholder">
             <div className="placeholder-x"></div>
@@ -26,10 +28,10 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
         )}
       </div>
       <div className="product-info">
-        <h2 className="product-name">{product.name.toUpperCase()}</h2>
-        <p className="product-price">{Number(product.price).toFixed(2)}€</p>
+        <h2 className="product-name">{productName.toUpperCase()}</h2>
+        <p className="product-price">{Number(productPrice).toFixed(2)}€</p>
 
-        {product.stock <= 0 && (
+        {productStock <= 0 && (
           <span className="out-of-stock-label">OUT OF STOCK</span>
         )}
       </div>

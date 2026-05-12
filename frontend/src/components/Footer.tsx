@@ -34,19 +34,15 @@ const Footer = () => {
 
   return (
     <footer className="main-footer">
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      />
       <div className="footer-cards-container">
         {reviews.map((item, index) => (
-          <Link to={item.link} className="footer-link">
-            <section key={index} className="footer-card">
+          <Link key={index} to={item.link} className="footer-link">
+            <section className="footer-card">
               <h3>{item.title}</h3>
               <p className="review-text">{item.body}</p>
               <div className="card-author">
                 <span className="post-date">{item.date}</span>
-                <a className="footer-link_text">{item.footer}</a>
+                <span className="footer-link_text">{item.footer}</span>
               </div>
             </section>
           </Link>

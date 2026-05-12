@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles/App.css";
 
-import { UserProvider } from "./context/UserContext.tsx";
 import { useNavigate } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -30,6 +29,9 @@ import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
 import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
 import ProductCard from "./components/ProductCard";
 import ContactPage from "./components/ContactPage";
+import Fichajes from "./components/Fichajes";
+import ProductsPanel from "./components/ProductsPanel";
+import EditProductPage from "./components/EditProductPage";
 
 import type { Product, CartItem } from "../types";
 
@@ -61,11 +63,16 @@ function App() {
 
   const addToCart = (product: Product): void => {
     setCart((prev) => {
-      const existing = prev.find((i) => i.product.id === product.id);
+      const existing = prev.find(
+        (i) => i.product.id_producto_perso === product.id_producto_perso,
+      );
+      const stock = product.cantidad_u ?? product.cantidad_u ?? 0;
       if (existing) {
-        if (existing.quantity >= product.stock) return prev;
+        if (existing.quantity >= stock) return prev;
         return prev.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
+          i.product.id_producto_perso === product.id_producto_perso
+            ? { ...i, quantity: i.quantity + 1 }
+            : i,
         );
       }
       return [...prev, { product, quantity: 1 }];
@@ -73,14 +80,18 @@ function App() {
   };
 
   const removeFromCart = (productId: number): void => {
-    setCart((prev) => prev.filter((i) => i.product.id !== productId));
+    setCart((prev) =>
+      prev.filter((i) => i.product.id_producto_perso !== productId),
+    );
   };
 
   const decreaseQuantity = (productId: number): void => {
     setCart((prev) =>
       prev
         .map((i) =>
-          i.product.id === productId ? { ...i, quantity: i.quantity - 1 } : i,
+          i.product.id_producto_perso === productId
+            ? { ...i, quantity: i.quantity - 1 }
+            : i,
         )
         .filter((i) => i.quantity > 0),
     );
@@ -104,7 +115,10 @@ function App() {
                 <Categories />
                 <div className="products-grid">
                   {products.map((product) => (
-                    <div key={product.id} className="product-card-container">
+                    <div
+                      key={product.id_producto_perso}
+                      className="product-card-container"
+                    >
                       <ProductCard
                         product={product}
                         onSelect={(id) => navigate(`/products/${id}`)}
@@ -231,6 +245,23 @@ function App() {
             }
           />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/intranet/fichajes" element={<Fichajes />} />
+          <Route
+            path="/intranet/productos"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <ProductsPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/productos-personalizados/:id/edit"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <EditProductPage />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
