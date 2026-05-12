@@ -1,0 +1,83 @@
+.orders-page {
+  padding: 2rem 5%;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: "Sora", sans-serif;
+}
+
+.orders-page h2 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.orders-empty {
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  padding: 3rem 0;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead tr {
+  border-bottom: 2px solid var(--primary);
+}
+
+.orders-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.orders-table th:last-child {
+  text-align: right;
+}
+
+.orders-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.orders-table tbody tr:hover {
+  background: var(--gray-light);
+}
+
+.orders-table td {
+  padding: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.order-row-expanded {
+  background: var(--gray-light);
+}
+
+.order-detail-cell {
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+}
+
+.order-detail-cell ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-detail-cell li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}

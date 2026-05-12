@@ -28,15 +28,15 @@ export default function CartButton({
       className={`cart-button-wrapper ${isProductDetail ? "cart-button-detail" : ""}`}
     >
       <button
-        className="btn-add-corner"
+        className="btn-add-corner material-symbols-outlined"
         onClick={(e) => {
           e.stopPropagation();
           onAddToCart(product);
         }}
         disabled={quantity >= product.stock || product.stock === 0}
       >
-        🛒
         {quantity > 0 && <span className="qty-badge">{quantity}</span>}
+        shopping_cart
       </button>
 
       {quantity > 0 && (
@@ -47,34 +47,34 @@ export default function CartButton({
           </div>
 
           <button
-            className="menu-btn decrease"
+            className="menu-btn decrease material-symbols-outlined"
             onClick={(e) => {
               e.stopPropagation();
               onDecreaseQuantity(product.id);
             }}
           >
-            ➖ Restar
+            minimize
           </button>
 
           <button
-            className="menu-btn add"
+            className="menu-btn add material-symbols-outlined"
             onClick={(e) => {
               e.stopPropagation();
               onAddToCart(product);
             }}
             disabled={quantity >= product.stock}
           >
-            ➕ Añadir
+            add
           </button>
 
           <button
-            className="menu-btn remove"
+            className="menu-btn remove material-symbols-outlined"
             onClick={(e) => {
               e.stopPropagation();
               onRemoveFromCart(product.id);
             }}
           >
-            🗑️ Quitar todo
+            delete
           </button>
         </div>
       )}

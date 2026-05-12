@@ -24,6 +24,14 @@ function ProductDetail({
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState(false); // Estado para manejar ID inexistente
 
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   useEffect(() => {
     fetch(`http://localhost:3000/api/products/${id}`)
       .then((res) => {
@@ -45,7 +53,7 @@ function ProductDetail({
     return (
       <div className="product-detail">
         <h2>El producto con ID {id} no existe.</h2>
-        <button className="product-detail_back" onClick={() => navigate("/")}>
+        <button className="product-detail_back" onClick={handleBack}>
           Volver al catálogo
         </button>
       </div>
@@ -56,24 +64,24 @@ function ProductDetail({
 
   return (
     <div className="product-detail">
-      <button className="product-detail_back" onClick={() => navigate("/")}>
+      <button className="product-detail_back" onClick={handleBack}>
         ← Volver
       </button>
 
       <img
         className="product-detail_img"
-        src={product.image_url}
-        alt={product.name}
+        src={product.url_imagen}
+        alt={product.nombre_producto_perso}
       />
 
-      <h2>{product.name}</h2>
-      <p>{product.description}</p>
-      <p className="price">{product.price}€</p>
+      <h2>{product.nombre_producto_perso}</h2>
+      <p>{product.descripcion}</p>
+      <p className="price">{product.precio_producto_perso}€</p>
       <p className="stock">
         Stock:{" "}
-        <span className={product.stock > 0 ? "in-stock" : "out-of-stock"}>
-          {product.stock > 0
-            ? `${product.stock} disponible${product.stock !== 1 ? "s" : ""}`
+        <span className={product.cantidad_u > 0 ? "in-stock" : "out-of-stock"}>
+          {product.cantidad_u > 0
+            ? `${product.cantidad_u} disponible${product.cantidad_u !== 1 ? "s" : ""}`
             : "Sin stock"}
         </span>
       </p>

@@ -88,6 +88,30 @@
   box-shadow: #1f1f1f 0px 0px 0.5rem;
 }
 
+.btn-muin-back {
+  display: flex;
+  justify-content: center;
+  width: 5%;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.13rem;
+  cursor: pointer;
+  margin-top: 0.63rem;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+
+.btn-muin-back:hover {
+  background: #820000;
+  box-shadow: #1f1f1f 0px 0px 0.5rem;
+}
+
 .error-box {
   background-color: #fff1f1;
   color: #c00;

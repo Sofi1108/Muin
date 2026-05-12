@@ -16,11 +16,11 @@ function Profile() {
   };
 
   return (
-    <div className="Profile" onClick={handleProfileClick} style={{ cursor: "pointer" }}>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-      />
+    <div
+      className="Profile"
+      onClick={handleProfileClick}
+      style={{ cursor: "pointer" }}
+    >
       <div className="material-symbols-outlined" id="profile-icon">
         <Link to="/profile">person</Link>
       </div>
