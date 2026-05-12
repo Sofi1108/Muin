@@ -1,0 +1,148 @@
+.careers-container {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 2rem;
+  font-family: "Sora", sans-serif;
+}
+
+.careers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.main-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 0.9;
+  margin: 1.5rem 0;
+  text-transform: uppercase;
+}
+
+.tag {
+  color: var(--muin-red);
+  font-weight: 900;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+}
+
+.description {
+  color: var(--muin-gray-text);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.perk-item strong {
+  display: block;
+  font-weight: 900;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.perk-item p {
+  color: var(--muin-gray-text);
+  font-size: 0.9rem;
+}
+
+.muin-capsule-form {
+  background: white;
+  border: 1.5px solid var(--muin-border);
+  padding: 3.5rem;
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 900;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #bbb;
+  margin-bottom: 0.8rem;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 1.2rem;
+  background: #fafafa;
+  border: 1.5px solid var(--muin-border);
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: var(--muin-black);
+  background: white;
+}
+
+.btn-submit-careers {
+  margin-top: 1rem;
+  padding: 1.2rem;
+  background: var(--muin-black);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit-careers:hover {
+  background: var(--muin-red);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(130, 0, 0, 0.2);
+}
+
+.success-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.success-box {
+  text-align: center;
+  padding: 5rem;
+  border-radius: 40px;
+  background: white;
+  border: 2px solid var(--muin-black);
+}
+
+.icon-large {
+  font-size: 4rem;
+  color: var(--muin-red);
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+  .careers-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  .main-title {
+    font-size: 3rem;
+  }
+  .muin-capsule-form {
+    padding: 2rem;
+  }
+}

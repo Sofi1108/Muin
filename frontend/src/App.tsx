@@ -29,6 +29,8 @@ import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
 import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
 import ProductCard from "./components/ProductCard";
 import ContactPage from "./components/ContactPage";
+import AboutUsPage from "./components/AboutUsPage";
+import CareersPage from "./components/Carreers";
 import Fichajes from "./components/Fichajes";
 import ProductsPanel from "./components/ProductsPanel";
 import EditProductPage from "./components/EditProductPage";
@@ -246,6 +248,8 @@ function App() {
             }
           />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/careers" element={<CareersPage />} />
           <Route path="/intranet/fichajes" element={<Fichajes />} />
           <Route
             path="/intranet/productos"
