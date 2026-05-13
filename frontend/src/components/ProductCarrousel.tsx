@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import ProductCard from "./ProductCard";
 import type { Product } from "../../types";
 import "../styles/product-carousel.css";
@@ -54,11 +54,19 @@ const ProductCarousel = ({
 
         {/* TRACK DE PRODUCTOS */}
         <div className="muin-carousel-track" ref={scrollRef}>
-          {products.slice(0, 20).map((product) => (
-            <div className="carousel-item" key={product.id_producto_perso}>
-              <ProductCard product={product} onSelect={onSelect} />
+          {products && products.length > 0 ? (
+            products.slice(0, 20).map((product) => (
+              <div className="carousel-item" key={product.id_producto_perso}>
+                <ProductCard product={product} onSelect={onSelect} />
+              </div>
+            ))
+          ) : (
+            <div
+              style={{ padding: "2rem", textAlign: "center", width: "100%" }}
+            >
+              <p>No hay productos disponibles</p>
             </div>
-          ))}
+          )}
 
           <div className="carousel-spacer"></div>
         </div>

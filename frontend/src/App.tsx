@@ -27,13 +27,14 @@ import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
 import IntranetNews from "./components/IntranetNews";
 import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
 import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
-import ProductCard from "./components/ProductCard";
 import ContactPage from "./components/ContactPage";
 import AboutUsPage from "./components/AboutUsPage";
 import CareersPage from "./components/Carreers";
 import Fichajes from "./components/Fichajes";
 import ProductsPanel from "./components/ProductsPanel";
 import EditProductPage from "./components/EditProductPage";
+import CreateProductPage from "./components/CreateProductPage";
+import ShipmentsPanel from "./components/ShipmentsPanel";
 import CheckoutPage from "./components/CheckoutPage";
 import Tickets from "./components/Tickets";
 import ProductCarousel from "./components/ProductCarrousel";
@@ -255,7 +256,7 @@ function App() {
             }
           />
           <Route
-            path="/intranet/productos"
+            path="/admin/products"
             element={
               <PrivateRoute roles={["admin", "empleado"]}>
                 <ProductsPanel />
@@ -263,7 +264,23 @@ function App() {
             }
           />
           <Route
-            path="/intranet/productos-personalizados/:id/edit"
+            path="/admin/products/new"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <CreateProductPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/shipments"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <ShipmentsPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/products/:id/edit"
             element={
               <PrivateRoute roles={["admin", "empleado"]}>
                 <EditProductPage />

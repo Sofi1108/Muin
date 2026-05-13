@@ -278,28 +278,38 @@ app.get("/api/products", async (req: Request, res: Response) => {
   }
 });
 
-//--CARGAR PRODUCTOS ESPECIFICOS POR ID
-
-app.get(
-  "/api/products/:id",
-  async (req: Request<{ id: string }>, res: Response) => {
+//--CREAR NUEVO PRODUCTO
+app.post(
+  "/api/products",
+  verifyToken,
+  requireRole("admin"),
+  async (req: AuthRequest, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
+      const {
+        nombre_producto_perso,
+        descripcion,
+        precio_producto_perso,
+        cantidad_u,
+        url_imagen,
+      } = req.body;
+
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
-        [id],
+        "INSERT INTO PRODUCTO_PERSONALIZADO (nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        [
+          nombre_producto_perso,
+          descripcion,
+          precio_producto_perso,
+          cantidad_u,
+          url_imagen,
+        ],
       );
 
-      if (result.rows.length === 0) {
-        return res.status(404).json({ error: "Producto no encontrado" });
-      }
-      res.json(result.rows[0]);
+      res
+        .status(201)
+        .json({ message: "Producto creado", product: result.rows[0] });
     } catch (error) {
-      console.error("Error al cargar producto:", error);
-
-      res.status(500).json({
-        error: "Error interno del servidor",
-      });
+      console.error(error);
+      res.status(500).json({ error: "Error al crear el producto" });
     }
   },
 );
@@ -338,6 +348,121 @@ app.get("/api/products/hoodies", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+//--CARGAR PRODUCTOS ESPECIFICOS POR ID
+
+app.get(
+  "/api/products/:id",
+  async (req: Request<{ id: string }>, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const result = await pool.query(
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
+        [id],
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Error al cargar producto:", error);
+
+      res.status(500).json({
+        error: "Error interno del servidor",
+      });
+    }
+  },
+);
+
+//--ELIMINAR PRODUCTO POR ID
+app.delete(
+  "/api/products/:id",
+  verifyToken,
+  requireRole("admin"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const id = parseInt(req.params.id as string);
+      const result = await pool.query(
+        "DELETE FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1 RETURNING id_producto_perso",
+        [id],
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.json({ message: "Producto eliminado" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error al eliminar el producto" });
+    }
+  },
+);
+
+//--ACTUALIZAR STOCK DE PRODUCTO
+app.patch(
+  "/api/products/:id/stock",
+  verifyToken,
+  requireRole("admin", "empleado"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const id = parseInt(req.params.id as string);
+      const { stock } = req.body;
+
+      const result = await pool.query(
+        "UPDATE PRODUCTO_PERSONALIZADO SET cantidad_u=$1 WHERE id_producto_perso=$2 RETURNING id_producto_perso, cantidad_u",
+        [stock, id],
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.json({ message: "Stock actualizado", product: result.rows[0] });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error al actualizar el stock" });
+    }
+  },
+);
+
+//--ACTUALIZAR PRODUCTO POR ID
+app.put(
+  "/api/products/:id",
+  verifyToken,
+  requireRole("admin", "empleado"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const id = parseInt(req.params.id as string);
+      const {
+        nombre_producto_perso,
+        descripcion,
+        precio_producto_perso,
+        cantidad_u,
+        url_imagen,
+      } = req.body;
+
+      const result = await pool.query(
+        "UPDATE PRODUCTO_PERSONALIZADO SET nombre_producto_perso=$1, descripcion=$2, precio_producto_perso=$3, cantidad_u=$4, url_imagen=$5 WHERE id_producto_perso=$6 RETURNING *",
+        [
+          nombre_producto_perso,
+          descripcion,
+          precio_producto_perso,
+          cantidad_u,
+          url_imagen,
+          id,
+        ],
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.json({ message: "Producto actualizado", product: result.rows[0] });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error al actualizar el producto" });
+    }
+  },
+);
 
 //--CARGAR PRODUCTOS PERSONALIZADOS (tabla PRODUCTO_PERSO)
 app.get(
@@ -513,7 +638,7 @@ app.get(
   async (req: AuthRequest, res: Response) => {
     try {
       const result = await pool.query(
-        `SELECT p.id_Pedido as id, p.estado_pedido as status, d.calle as address, p.Fecha_Realizado as created_at,
+        `SELECT p.id_Pedido as id, p.estado_pedido as status, d.calle as address, p.Fecha_Realizado as created_at, p.Fecha_Recibido as received_at,
               COALESCE(SUM(l.Cant_Producto * l.Precio_U), 0) AS total
        FROM PEDIDO p 
        LEFT JOIN LINEA_PRODUCTO l ON l.id_Pedido = p.id_Pedido
@@ -537,7 +662,7 @@ app.get(
     const orderId = parseInt(req.params.id as string);
     try {
       const orderResult = await pool.query(
-        `SELECT p.id_Pedido as id, p.id_Usuario as customer_id, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at,
+        `SELECT p.id_Pedido as id, p.id_Usuario as customer_id, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at, p.fecha_recibido as received_at,
               COALESCE(SUM(l.cant_Producto * l.precio_U), 0) AS total
        FROM PEDIDO p 
        LEFT JOIN LINEA_PRODUCTO l ON l.id_Pedido = p.id_Pedido
@@ -577,7 +702,7 @@ app.get(
   async (req: Request, res: Response) => {
     try {
       const result = await pool.query(
-        `SELECT p.id_pedido as id, p.id_usuario as customer_id, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at,
+        `SELECT p.id_pedido as id, p.id_usuario as customer_id, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at, p.fecha_recibido as received_at,
               COALESCE(SUM(l.cant_Producto * l.precio_U), 0) AS total
        FROM PEDIDO p 
        LEFT JOIN LINEA_PRODUCTO l ON l.id_pedido = p.id_pedido

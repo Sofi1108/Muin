@@ -22,7 +22,7 @@ export default function ProductsPanel() {
 
   // Cargar productos
   useEffect(() => {
-    fetch("http://localhost:3000/api/productos-personalizados", {
+    fetch("http://localhost:3000/api/products", {
       credentials: "include",
     })
       .then((res) => {
@@ -45,7 +45,7 @@ export default function ProductsPanel() {
       return;
     }
 
-    fetch(`http://localhost:3000/api/productos-personalizados/${id}`, {
+    fetch(`http://localhost:3000/api/products/${id}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -62,7 +62,7 @@ export default function ProductsPanel() {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/intranet/productos-personalizados/${id}/edit`);
+    navigate(`/admin/products/${id}/edit`);
   };
 
   const filteredProducts = products.filter((p) => {
@@ -94,19 +94,24 @@ export default function ProductsPanel() {
             <h1>Gestión de Productos</h1>
             <p>Total de productos: {products.length}</p>
           </div>
-          {customer?.role === "admin" && (
-            <button
-              className="btn-new-product"
-              onClick={() => navigate("/intranet/productos-personalizados/new")}
-            >
-              ➕ Nuevo Producto
-            </button>
-          )}
-        </div>
-
-        {error && <div className="alert alert-error">{error}</div>}
-
-        <div className="panel-search">
+          <div className="panel-button-group">
+            {customer?.role === "admin" && (
+              <button
+                className="btn-new-product"
+                onClick={() => navigate("/admin/products/new")}
+              >
+                ➕ Nuevo Producto
+              </button>
+            )}
+            {(customer?.role === "admin" || customer?.role === "empleado") && (
+              <button
+                className="btn-new-product"
+                onClick={() => navigate("/admin/shipments")}
+              >
+                ENVIOS
+              </button>
+            )}
+          </div>
           <input
             type="text"
             placeholder="🔍 Buscar por nombre..."
