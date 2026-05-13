@@ -320,8 +320,7 @@ app.post(
 app.get("/api/products/shirts", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u as stock, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE tipo_producto = 'shirt' ORDER BY id_producto_perso",
-    );
+      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'shirt' OR P.tipo_producto = 'shirt' ORDER BY PP.Id_Producto_Perso;");
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No shirts found" });
@@ -329,6 +328,7 @@ app.get("/api/products/shirts", async (req: Request, res: Response) => {
 
     res.json(result.rows);
   } catch (error) {
+    console.error("Error in /api/products/shirts:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -337,9 +337,7 @@ app.get("/api/products/shirts", async (req: Request, res: Response) => {
 app.get("/api/products/hoodies", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE tipo_producto = 'hoodie' ORDER BY id_producto_perso",
-    );
-
+      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'hoodie' OR P.tipo_producto = 'hoodie' ORDER BY PP.Id_Producto_Perso;");
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No hoodies found" });
     }
@@ -794,7 +792,7 @@ app.get(
         [req.customer!.id],
       );
       // mapear entrada/salida a in/out para el frontend
-      const mapped = result.rows.map((r:any) => ({
+      const mapped = result.rows.map((r: any) => ({
         ...r,
         type: r.type === "entrada" ? "in" : "out",
       }));
