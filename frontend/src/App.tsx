@@ -36,6 +36,7 @@ import ProductsPanel from "./components/ProductsPanel";
 import EditProductPage from "./components/EditProductPage";
 import CheckoutPage from "./components/CheckoutPage";
 import Tickets from "./components/Tickets";
+import ProductCarousel from "./components/ProductCarrousel";
 
 import type { Product, CartItem } from "../types";
 
@@ -117,19 +118,12 @@ function App() {
               <>
                 <HeroSection />
                 <Categories />
-                <div className="products-grid">
-                  {products.map((product) => (
-                    <div
-                      key={product.id_producto_perso}
-                      className="product-card-container"
-                    >
-                      <ProductCard
-                        product={product}
-                        onSelect={(id) => navigate(`/products/${id}`)}
-                      />
-                    </div>
-                  ))}
-                </div>
+                <ProductCarousel
+                  products={products}
+                  title="NUEVOS PRODUCTOS"
+                  tag="COLECCIÓN 2026"
+                  onSelect={(id) => navigate(`/products/${id}`)}
+                />
               </>
             }
           />

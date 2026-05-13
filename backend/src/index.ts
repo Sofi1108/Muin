@@ -264,10 +264,18 @@ app.post("/api/auth/logout", (req: Request, res: Response) => {
 
 //--CARGAR PRODUCTOS
 app.get("/api/products", async (req: Request, res: Response) => {
-  const result = await pool.query(
-    "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO",
-  );
-  res.json(result.rows);
+  try {
+    const result = await pool.query(
+      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO",
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+
+    res.status(500).json({
+      error: "Error interno del servidor",
+    });
+  }
 });
 
 //--CARGAR PRODUCTOS ESPECIFICOS POR ID
@@ -275,16 +283,24 @@ app.get("/api/products", async (req: Request, res: Response) => {
 app.get(
   "/api/products/:id",
   async (req: Request<{ id: string }>, res: Response) => {
-    const id = parseInt(req.params.id);
-    const result = await pool.query(
-      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
-      [id],
-    );
+    try {
+      const id = parseInt(req.params.id);
+      const result = await pool.query(
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
+        [id],
+      );
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Producto no encontrado" });
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "Producto no encontrado" });
+      }
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Error al cargar producto:", error);
+
+      res.status(500).json({
+        error: "Error interno del servidor",
+      });
     }
-    res.json(result.rows[0]);
   },
 );
 
