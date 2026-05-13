@@ -1,0 +1,39 @@
+/* --- PRODUCTS PAGES (Shirts, Hoodies) --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin: 3rem 0 2rem 0;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #820000;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.product-card-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.product-card-container .cart-button-wrapper {
+  display: flex !important;
+  width: 100%;
+}
+
+.product-card-container .btn-add-corner {
+  width: 100% !important;
+}

@@ -17,6 +17,7 @@ export default function CartButton({
 }: CartButtonProps) {
   const location = useLocation();
   const isProductDetail = location.pathname.startsWith("/product/");
+  const isProductsPage = location.pathname.includes("/products/");
 
   const cartItem = cart.find(
     (i) => i.product.id_producto_perso === product.id_producto_perso,
@@ -29,7 +30,7 @@ export default function CartButton({
 
   return (
     <div
-      className={`cart-button-wrapper ${isProductDetail ? "cart-button-detail" : ""}`}
+      className={`cart-button-wrapper ${isProductDetail ? "cart-button-detail" : isProductsPage ? "cart-button-products" : ""}`}
     >
       <button
         className="btn-add-corner"
@@ -39,12 +40,21 @@ export default function CartButton({
         }}
         disabled={isLimitReached || isOutOfStock}
       >
-        <span>{isOutOfStock ? "block" : <span>ADD TO CART</span>}</span>
+        {isProductsPage && !isProductDetail && (
+          <span className="material-symbols-outlined">shopping_cart</span>
+        )}
 
         {isProductDetail && (
-          <span className="btn-text">
-            {isOutOfStock ? "OUT OF STOCK" : "ADD TO CART"}
-          </span>
+          <>
+            <span className="material-symbols-outlined">shopping_cart</span>
+            <span className="btn-text">
+              {isOutOfStock ? "OUT OF STOCK" : "ADD TO CART"}
+            </span>
+          </>
+        )}
+
+        {!isProductDetail && !isProductsPage && (
+          <span>{isOutOfStock ? "block" : <span>ADD TO CART</span>}</span>
         )}
       </button>
     </div>

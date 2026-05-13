@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import CartButton from "./CartButton";
 import type { Product, CartItem } from "../../types";
+import "../styles/products.css";
 
 interface HoodiesProps {
   cart: CartItem[];
@@ -54,17 +55,20 @@ function Hoodies({
       ) : (
         <div className="products-grid">
           {products.map((product) => (
-            <div key={product.id} className="product-card-container">
+            <div
+              key={product.id_producto_perso!}
+              className="product-card-container"
+            >
+              <ProductCard
+                product={product}
+                onSelect={(id) => navigate(`/products/${id}`)}
+              />
               <CartButton
                 product={product}
                 cart={cart}
                 onAddToCart={onAddToCart}
                 onRemoveFromCart={onRemoveFromCart}
                 onDecreaseQuantity={onDecreaseQuantity}
-              />
-              <ProductCard
-                product={product}
-                onSelect={(id) => navigate(`/products/${id}`)}
               />
             </div>
           ))}
