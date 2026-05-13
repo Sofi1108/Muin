@@ -12,14 +12,6 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
   const { customer } = useUser();
   const navigate = useNavigate();
 
-  const handleToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    fetch(
-      `http://localhost:3000/api/products/${product.id_producto_perso}/toggle`,
-      { method: "PATCH", credentials: "include" },
-    ).then(() => window.location.reload());
-  };
-
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm("¿Seguro que quieres borrarlo?")) {
@@ -90,13 +82,18 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button onClick={handleChangeStock} title="Cambiar Stock">
-              📦
+            <button
+              className="stock-btn material-symbols-outlined"
+              onClick={handleChangeStock}
+              title="Cambiar Stock"
+            >
+              box_add
             </button>
 
             {customer.role === "admin" && (
               <>
                 <button
+                  className="edit-btn material-symbols-outlined"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(
@@ -105,13 +102,14 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
                   }}
                   title="Editar"
                 >
-                  ✏️
+                  edit
                 </button>
-                <button onClick={handleToggle} title="Activar/Desactivar">
-                  🔴
-                </button>
-                <button onClick={handleDelete} title="Borrar">
-                  🗑️
+                <button
+                  className="delete-btn material-symbols-outlined"
+                  onClick={handleDelete}
+                  title="Borrar"
+                >
+                  delete
                 </button>
               </>
             )}

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
 // Importa las imágenes correctamente desde su ubicación
-import shirtImg from "../assets/Img/shirtCategorie.png";
-import hoodieImg from "../assets/Img/hoodieCategorie.png";
+import shirtImg from "../assets/Img/shirtCategorie.jpg";
+import hoodieImg from "../assets/Img/hoodieCategorie.jpg";
 import comingSoonImg from "../assets/Img/comingsoon.png";
 import salesImg from "../assets/Img/sales.png";
 

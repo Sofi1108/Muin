@@ -32,6 +32,16 @@ function ProductDetail({
       navigate("/");
     }
   };
+  const handleBuyNow = () => {
+    if (!product) return;
+
+    if (!selectedSize) {
+      alert("Please, select a size before proceeding to checkout.");
+      return;
+    }
+    onAddToCart({ ...product, selectedSize });
+    navigate("/checkout");
+  };
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/products/${id}`)
@@ -133,7 +143,9 @@ function ProductDetail({
                 onDecreaseQuantity={onDecreaseQuantity}
               />
             </div>
-            <button className="btn-buy-now">BUY NOW</button>
+            <button className="btn-buy-now" onClick={handleBuyNow}>
+              BUY NOW
+            </button>
           </div>
 
           <div className="extra-info">
