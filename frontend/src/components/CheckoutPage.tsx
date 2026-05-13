@@ -17,10 +17,10 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
 
   const handleExpirationDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, ""); // Solo números
-    
+
     // Limitar a 4 dígitos máximo
     if (value.length > 4) value = value.slice(0, 4);
-    
+
     // Validar mes (primeros 2 dígitos)
     if (value.length >= 2) {
       const month = parseInt(value.slice(0, 2), 10);
@@ -34,18 +34,18 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
         }
       }
     }
-    
+
     // Validar año (últimos 2 dígitos) - debe ser año actual o futuro
     if (value.length === 4) {
       const year = parseInt(value.slice(2, 4), 10);
       const currentYear = new Date().getFullYear() % 100; // Últimos 2 dígitos del año actual
-      
+
       if (year < currentYear) {
         // Rechazar años del pasado
         return;
       }
     }
-    
+
     // Formatear con barra diagonal
     if (value.length <= 2) {
       setExpirationDate(value);
@@ -123,6 +123,10 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
 
           <form onSubmit={handlePayment} className="muin-form">
             <div className="input-group">
+              <label>DIRECTION</label>
+              <input type="text" placeholder="YOUR DIRECTION" required />
+            </div>
+            <div className="input-group">
               <label>NAME OF CARDHOLDER</label>
               <input type="text" placeholder="FULL NAME" required />
             </div>
@@ -142,13 +146,13 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
             <div className="row-inputs">
               <div className="input-group">
                 <label>EXPIRATION DATE</label>
-                <input 
-                  type="text" 
-                  placeholder="MM/YY" 
+                <input
+                  type="text"
+                  placeholder="MM/YY"
                   value={expirationDate}
                   onChange={handleExpirationDateChange}
                   maxLength={5}
-                  required 
+                  required
                 />
               </div>
               <div className="input-group">
