@@ -1,4 +1,4 @@
-import IntranetLayout from "./IntranetLayout";
+import WorkCouncilLayout from "./WorkCouncilLayout";
 import "../styles/intranet-news.css";
 
 const newsGroups = [
@@ -79,7 +79,7 @@ const newsGroups = [
 
 const IntranetNews = () => {
   return (
-    <IntranetLayout
+    <WorkCouncilLayout
       title="Área de Empleados"
       subtitle="Noticias, actualizaciones internas y decisiones del comité para nuestros empleados."
     >
@@ -131,7 +131,7 @@ const IntranetNews = () => {
           </section>
         </main>
       </div>
-    </IntranetLayout>
+    </WorkCouncilLayout>
   );
 };
 

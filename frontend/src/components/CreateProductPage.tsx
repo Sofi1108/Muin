@@ -1,114 +1,61 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import IntranetLayout from "./IntranetLayout";
 import type { Product } from "../../types";
 import "../styles/edit-product.css";
 
-export default function EditProductPage() {
-  const { id } = useParams();
+export default function CreateProductPage() {
   const navigate = useNavigate();
   const { customer } = useUser();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState<Partial<Product>>({
+    nombre_producto_perso: "",
+    descripcion: "",
+    precio_producto_perso: 0,
+    cantidad_u: 0,
+    url_imagen: "",
+  });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   // Verificar permisos
-  useEffect(() => {
-    if (customer && !["admin", "empleado"].includes(customer.role)) {
-      navigate("/");
-    }
-  }, [customer, navigate]);
-
-  // Cargar producto
-  useEffect(() => {
-    if (!id) return;
-
-    fetch(`http://localhost:3000/api/products/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Producto no encontrado");
-        return res.json();
-      })
-      .then((data) => {
-        setProduct(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Error al cargar el producto");
-        setLoading(false);
-      });
-  }, [id]);
+  if (customer && !["admin"].includes(customer.role)) {
+    navigate("/");
+    return null;
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!product || !id) return;
-
     const payload = {
       nombre_producto_perso: product.nombre_producto_perso,
-      descripcion: product.descripcion,
+      descripcion: product.descripcion || "",
       precio_producto_perso: product.precio_producto_perso,
       cantidad_u: product.cantidad_u,
-      url_imagen: product.url_imagen,
+      url_imagen: product.url_imagen || "",
     };
 
-    fetch(`http://localhost:3000/api/products/${id}`, {
-      method: "PUT",
+    fetch(`http://localhost:3000/api/products`, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify(payload),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Error al actualizar");
+        if (!res.ok) throw new Error("Error al crear");
         setSuccess(true);
         setTimeout(() => navigate("/admin/products"), 2000);
       })
       .catch((err) => {
         console.error(err);
-        setError("Error al guardar los cambios");
+        setError("Error al guardar el producto");
       });
   };
 
-  if (loading) {
-    return (
-      <IntranetLayout
-        title="Editar Producto"
-        subtitle="Gestiona los detalles del producto"
-      >
-        <div className="edit-product-page">
-          <div className="loading">Cargando producto...</div>
-        </div>
-      </IntranetLayout>
-    );
-  }
-
-  if (!product) {
-    return (
-      <IntranetLayout
-        title="Editar Producto"
-        subtitle="Gestiona los detalles del producto"
-      >
-        <div className="edit-product-page">
-          <div className="error-message">
-            {error || "Producto no encontrado"}
-          </div>
-          <button
-            className="btn-back"
-            onClick={() => navigate("/admin/products")}
-          >
-            ← Volver a Productos
-          </button>
-        </div>
-      </IntranetLayout>
-    );
-  }
-
   return (
     <IntranetLayout
-      title="Editar Producto"
-      subtitle="Modifica los detalles del producto"
+      title="Nuevo Producto"
+      subtitle="Crea un nuevo producto en el catálogo"
     >
       <div className="edit-product-page">
         <div className="edit-container">
@@ -121,16 +68,16 @@ export default function EditProductPage() {
 
           <div className="edit-card">
             <div className="edit-header">
-              <h1>Editar Producto</h1>
+              <h1>Nuevo Producto</h1>
               <p className="edit-subtitle">
-                ID: {product.id_producto_perso || id}
+                Añade un nuevo producto al catálogo
               </p>
             </div>
 
             {error && <div className="alert alert-error">{error}</div>}
             {success && (
               <div className="alert alert-success">
-                ✓ Producto actualizado correctamente
+                ✓ Producto creado correctamente
               </div>
             )}
 
@@ -245,7 +192,7 @@ export default function EditProductPage() {
                   Cancelar
                 </button>
                 <button type="submit" className="btn-submit">
-                  💾 Guardar Cambios
+                  ➕ Crear Producto
                 </button>
               </div>
             </form>

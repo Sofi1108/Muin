@@ -1,9 +1,9 @@
-import IntranetLayout from "./IntranetLayout";
+import WorkCouncilLayout from "./WorkCouncilLayout";
 import "../styles/intranet-work-capsules.css";
 
 export const IntranetWorkCapsules = () => {
   return (
-    <IntranetLayout
+    <WorkCouncilLayout
       title="Área de Empleados"
       subtitle="Guía de derechos, apoyo ante despidos y recomendaciones de seguridad."
     >
@@ -186,6 +186,6 @@ export const IntranetWorkCapsules = () => {
           </section>
         </main>
       </div>
-    </IntranetLayout>
+    </WorkCouncilLayout>
   );
 };
