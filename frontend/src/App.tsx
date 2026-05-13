@@ -38,6 +38,7 @@ import ShipmentsPanel from "./components/ShipmentsPanel";
 import CheckoutPage from "./components/CheckoutPage";
 import Tickets from "./components/Tickets";
 import ProductCarousel from "./components/ProductCarrousel";
+import AdminUsers from "./components/AdminUsers";
 
 import type { Product, CartItem } from "../types";
 
@@ -252,6 +253,14 @@ function App() {
             element={
               <PrivateRoute roles={["admin", "employee"]}>
                 <Tickets />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/admin-users"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminUsers />
               </PrivateRoute>
             }
           />

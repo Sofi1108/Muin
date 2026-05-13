@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import "../styles/intranet-navbar.css";
 
+import { useUser } from "../context/UserContext";
+
 const navItems = [
   // Añadimos 'end: true' para que solo sea exacto
   { path: "/intranet", label: "INICIO", end: true },
@@ -11,6 +13,7 @@ const navItems = [
 ];
 
 const IntranetNavbar = () => {
+  const { customer } = useUser();
   return (
     <nav className="intranet-navbar">
       <div className="intranet-navbar-inner">
@@ -26,6 +29,20 @@ const IntranetNavbar = () => {
             {item.label}
           </NavLink>
         ))}
+
+        {customer?.role === "admin" && (
+          <>
+            <div className="intranet-nav-separator"></div>
+            <NavLink
+              to="/intranet/admin-users"
+              className={({ isActive }) =>
+                isActive ? "intranet-nav-link active" : "intranet-nav-link"
+              }
+            >
+              USUARIOS (ADMIN)
+            </NavLink>
+          </>
+        )}
       </div>
     </nav>
   );
