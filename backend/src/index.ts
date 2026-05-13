@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
+import { registerTicketRoutes } from "./tickets.js";
 import { pool } from "./db.js";
 
 dotenv.config();
@@ -39,7 +40,7 @@ interface AuthRequest extends Request {
   };
 }
 
-const verifyToken = (
+export const verifyToken = (
   req: AuthRequest,
   res: Response,
   next: NextFunction,
@@ -69,7 +70,7 @@ const verifyToken = (
 
 //VERIFICAR QUE NO SEA CLIENTE
 
-const requireRole = (...roles: string[]) => {
+export const requireRole = (...roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.customer) {
       res.status(401).json({ error: "No autenticado" });
@@ -793,7 +794,7 @@ app.get(
         [req.customer!.id],
       );
       // mapear entrada/salida a in/out para el frontend
-      const mapped = result.rows.map((r) => ({
+      const mapped = result.rows.map((r:any) => ({
         ...r,
         type: r.type === "entrada" ? "in" : "out",
       }));
@@ -852,3 +853,4 @@ app.patch(
     res.status(400).json({ error: "No soportado en el nuevo esquema" });
   },
 );
+registerTicketRoutes(app);
