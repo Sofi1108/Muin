@@ -259,7 +259,14 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/careers" element={<CareersPage />} />
-          <Route path="/intranet/fichajes" element={<Fichajes />} />
+          <Route
+            path="/intranet/fichajes"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <Fichajes />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/intranet/tickets"
             element={
@@ -324,14 +331,14 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route 
-            path="/personalize" 
+          <Route
+            path="/personalize"
             element={
               <>
                 <HeroSectionSmall />
                 <PersonalizarProducto onAddToCart={addToCart} />
               </>
-            } 
+            }
           />
 
           <Route path="/checkout" element={<CheckoutPage cart={cart} />} />

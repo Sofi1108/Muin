@@ -24,6 +24,7 @@ type Layer = {
   scale: number;
   x: number;
   y: number;
+  side: 'front' | 'back';
   color?: string;
 };
 
@@ -41,11 +42,11 @@ const COLOR_MAP: Record<string, string> = {
   'Verde': '#4a5e42',   // Olive/Forest green
 };
 
-const DesignImage = ({ url, position, scale }: { url: string, position: [number, number, number], scale: [number, number, number] }) => {
+const DesignImage = ({ url, position, rotation, scale }: { url: string, position: [number, number, number], rotation: [number, number, number], scale: [number, number, number] }) => {
   const texture = useTexture(url);
   texture.colorSpace = THREE.SRGBColorSpace;
   return (
-    <Decal position={position} rotation={[0, 0, 0]} scale={scale}>
+    <Decal position={position} rotation={rotation} scale={scale}>
       <meshBasicMaterial 
         map={texture} 
         transparent 
@@ -130,11 +131,21 @@ const StylizedGarment = ({ type, color, layers }: { type: GarmentType, color: st
           <extrudeGeometry args={[shape, extrudeSettings]} />
           {/* === DESIGN OVERLAYS === */}
           {layers.map(layer => {
+            const isBack = layer.side === 'back';
+            const garmentDepth = type === 'shirt' ? 0.3 : 0.4;
+            const bevel = 0.1;
+            
+            // Positions: Front face is at z=depth+bevel, Back face is at z=-bevel
+            // We move them slightly away from the surface (0.01) to avoid z-fighting
+            const zPos = isBack ? -bevel - 0.01 : garmentDepth + bevel + 0.01;
+            const rotation: [number, number, number] = isBack ? [0, Math.PI, 0] : [0, 0, 0];
+
             if (layer.type === 'text') {
               return (
                 <Text 
                   key={layer.id}
-                  position={[layer.x, layer.y, type === 'shirt' ? 0.35 : 0.45]}
+                  position={[layer.x, layer.y, zPos]}
+                  rotation={rotation}
                   fontSize={layer.scale * 0.15}
                   color={layer.color || '#ffffff'}
                   anchorX="center" 
@@ -153,8 +164,10 @@ const StylizedGarment = ({ type, color, layers }: { type: GarmentType, color: st
                 <Suspense fallback={null} key={layer.id}>
                   <DesignImage 
                     url={url}
-                    position={[layer.x, layer.y, type === 'shirt' ? 0.35 : 0.45]}
-                    scale={[layer.scale, layer.scale, layer.scale]}
+                    position={[layer.x, layer.y, zPos]}
+                    rotation={rotation}
+                    // Small Z scale (0.1) prevents bleed-through to the other side
+                    scale={[layer.scale, layer.scale, 0.1]}
                   />
                 </Suspense>
               );
@@ -176,6 +189,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const [size, setSize] = useState<SizeType>('M');
   const [activeColor, setActiveColor] = useState<ColorType>({ name: 'Negro', hex: '#1a1a1a' });
   const [layers, setLayers] = useState<Layer[]>([]);
+  const [fileMap, setFileMap] = useState<Record<string, File>>({}); // Store original files for lazy upload
   
   const [dbProducts, setDbProducts] = useState<DBProduct[]>([]);
   const [dbDesigns, setDbDesigns] = useState<DBDesign[]>([]);
@@ -225,37 +239,28 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
       name: design.nombre_diseno.split('//')[0] || design.nombre_diseno,
       scale: type === 'hoodie' ? 1.4 : 1.6,
       x: 0,
-      y: 0
+      y: 0,
+      side: 'front'
     }]);
   };
 
-  const handleAddCustomImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddCustomImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(file) {
-      const formData = new FormData();
-      formData.append('image', file);
+      const id = Date.now().toString();
+      const localUrl = URL.createObjectURL(file);
       
-      try {
-        const res = await fetch('http://localhost:3000/api/upload', {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (!res.ok) throw new Error("Error al subir la imagen");
-        const data = await res.json();
-        
-        setLayers([...layers, {
-          id: Date.now().toString(),
-          type: 'custom_image',
-          content: data.url, // URL del servidor
-          name: file.name,
-          scale: 1.0,
-          x: 0,
-          y: 0
-        }]);
-      } catch(err) {
-        alert("Error al subir la imagen al servidor.");
-      }
+      setFileMap(prev => ({ ...prev, [id]: file }));
+      setLayers([...layers, {
+        id: id,
+        type: 'custom_image',
+        content: localUrl, 
+        name: file.name,
+        scale: 1.0,
+        x: 0,
+        y: 0,
+        side: 'front'
+      }]);
     }
     e.target.value = ''; // reset
   };
@@ -269,6 +274,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
       scale: 1.0,
       x: 0,
       y: 0,
+      side: 'front',
       color: '#ffffff'
     }]);
   };
@@ -278,42 +284,76 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   };
 
   const removeLayer = (id: string) => {
+    const layer = layers.find(l => l.id === id);
+    if (layer && layer.type === 'custom_image' && layer.content.startsWith('blob:')) {
+      URL.revokeObjectURL(layer.content);
+    }
     setLayers(layers.filter(l => l.id !== id));
+    setFileMap(prev => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
 
-  const handleAddToCart = () => {
-    // We create a unique temporary ID for this custom product configuration
-    const customId = Date.now();
+  const handleAddToCart = async () => {
+    setLoading(true); // Show loading while uploading
     
-    const firstDbDesign = layers.find(l => l.type === 'db_design');
-    const customProduct: any = {
-      id_producto_perso: customId,
-      id_diseño: firstDbDesign ? firstDbDesign.dbId : undefined,
-      nombre_producto_perso: `Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
-      descripcion: `Color: ${activeColor.name}, Layers: ${layers.length}`,
-      precio_producto_perso: totalPrice,
-      cantidad_u: 100,
-      url_imagen: type === 'shirt' ? '/assets/Img/shirtCategorie.jpg' : '/assets/Img/hoodieCategorie.jpg',
-      layers: layers // Añadimos las capas para que el backend las procese
-    };
+    try {
+      // 1. Upload any pending local files
+      const updatedLayers = await Promise.all(layers.map(async (layer) => {
+        if (layer.type === 'custom_image' && layer.content.startsWith('blob:')) {
+          const file = fileMap[layer.id];
+          if (!file) return layer;
 
-    if (onAddToCart) {
-      // Assuming App.tsx addToCart supports sizes, though the current App.tsx addToCart takes just product.
-      // We will pass the size in description or as part of the name for now.
-      customProduct.descripcion += `, Talla: ${size}`;
-      onAddToCart(customProduct, 1, size);
-    } else {
-      // Fallback: modify sessionStorage directly if onAddToCart is not passed, 
-      // but ideally it should be passed from App.tsx
-      const saved = sessionStorage.getItem("cart");
-      const cart: CartItem[] = saved ? JSON.parse(saved) : [];
-      cart.push({ product: customProduct, quantity: 1, selectedSize: size });
-      sessionStorage.setItem("cart", JSON.stringify(cart));
+          const formData = new FormData();
+          formData.append('image', file);
+
+          const res = await fetch('http://localhost:3000/api/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!res.ok) throw new Error(`Error uploading image: ${layer.name}`);
+          const data = await res.json();
+          
+          return { ...layer, content: data.url };
+        }
+        return layer;
+      }));
+
+      // 2. Add to cart with final URLs
+      const customId = Date.now();
+      const firstDbDesign = updatedLayers.find(l => l.type === 'db_design');
+      
+      const customProduct: any = {
+        id_producto_perso: customId,
+        id_diseño: firstDbDesign ? firstDbDesign.dbId : undefined,
+        nombre_producto_perso: `Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
+        descripcion: `Color: ${activeColor.name}, Layers: ${updatedLayers.length}, Talla: ${size}`,
+        precio_producto_perso: totalPrice,
+        cantidad_u: 100,
+        url_imagen: type === 'shirt' ? '/assets/Img/shirtCategorie.jpg' : '/assets/Img/hoodieCategorie.jpg',
+        layers: updatedLayers
+      };
+
+      if (onAddToCart) {
+        onAddToCart(customProduct, 1, size);
+      } else {
+        const saved = sessionStorage.getItem("cart");
+        const cart: CartItem[] = saved ? JSON.parse(saved) : [];
+        cart.push({ product: customProduct, quantity: 1, selectedSize: size });
+        sessionStorage.setItem("cart", JSON.stringify(cart));
+      }
+      
+      alert("Customized product successfully added to cart.");
+      navigate('/checkout');
+    } catch (err) {
+      console.error(err);
+      alert("There was an error saving your design. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    
-    // Notify and maybe redirect
-    alert("Customized product successfully added to cart.");
-    navigate('/checkout'); // or stay
   };
 
   if (loading) {
@@ -433,6 +473,16 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
                     )}
 
                     <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                         <label style={{fontSize: '0.8rem'}}>Side: {layer.side.toUpperCase()}</label>
+                         <button 
+                           onClick={() => updateLayer(layer.id, { side: layer.side === 'front' ? 'back' : 'front' })}
+                           style={{background: '#444', color: 'white', border: '1px solid #666', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px', fontSize: '0.7rem'}}
+                         >
+                           Flip to {layer.side === 'front' ? 'Back' : 'Front'}
+                         </button>
+                       </div>
+
                        <label style={{fontSize: '0.8rem'}}>Scale: {layer.scale.toFixed(1)}</label>
                        <input type="range" min="0.1" max="4" step="0.1" value={layer.scale} onChange={e => updateLayer(layer.id, { scale: parseFloat(e.target.value) })} />
 
