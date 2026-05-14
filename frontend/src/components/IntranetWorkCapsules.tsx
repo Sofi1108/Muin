@@ -60,7 +60,7 @@ export const IntranetWorkCapsules = () => {
               </div>
             </div>
 
-            <h2 style={{ marginTop: "3rem", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>2. Extinción del Contrato (Terminación)</h2>
+            <h2 style={{ marginTop: "3rem", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>2. Extinción del Contrato</h2>
 
             <h3 style={{ marginTop: "1.5rem" }}>A. Por voluntad del trabajador (Iniciativa Propia)</h3>
             <div className="infographic-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem", marginTop: "1rem" }}>

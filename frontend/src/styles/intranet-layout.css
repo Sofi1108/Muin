@@ -150,6 +150,35 @@ p {
   font-family: var(--font-main);
 }
 
+.download-btn {
+  padding: 1.2rem 2.5rem;
+  background: var(--text-primary);
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  border-radius: var(--br-main);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-btn:hover {
+  background: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.download-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
 /* --- RESPONSIVE --- */
 @media (max-width: 64rem) {
   .grid-two,
