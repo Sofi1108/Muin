@@ -35,25 +35,25 @@ const IntranetWorkCouncil = () => {
             <span className="tag-badge">MISIÓN</span>
             <h2>QUÉ ES EL COMITÉ DE EMPRESA</h2>
             <p>
-              Es el órgano de representación legal ante la dirección. Nuestra
-              misión es actuar como voz de la plantilla para defender los
-              intereses laborales.
+              El Comité de Empresa es el órgano representativo colegiado de los trabajadores (en centros de 50 o más empleados). En empresas de 10 a 49 trabajadores, esta labor recae en los "Delegados de Personal". Su finalidad es defender los intereses laborales, sociales y económicos de la plantilla frente a la dirección, con un mandato de cuatro años tras ser elegidos democráticamente mediante elecciones sindicales.
             </p>
             <div className="grid-two-capsules">
               <div className="infographic-card">
                 <h4>PERFIL DEL COMITÉ</h4>
                 <ul>
-                  <li>Representa a todos los empleados del proyecto.</li>
-                  <li>Elegido democráticamente por la plantilla.</li>
-                  <li>Interlocutor oficial con la empresa.</li>
+                  <li>Representa a todos los empleados del proyecto (50+ trabajadores).</li>
+                  <li>Elegido democráticamente por toda la plantilla.</li>
+                  <li>Interlocutor oficial con la dirección de la empresa.</li>
+                  <li>Mandato representativo de 4 años de duración.</li>
                 </ul>
               </div>
               <div className="infographic-card">
                 <h4>FUNCIONES CLAVE</h4>
                 <ul>
-                  <li>Informar sobre cambios organizativos.</li>
-                  <li>Proponer mejoras en salud y bienestar.</li>
-                  <li>Negociar acuerdos colectivos justos.</li>
+                  <li><strong>Información y Consulta:</strong> Situación económica, empleo, ERE, ERTE, IA.</li>
+                  <li><strong>Vigilancia:</strong> Normativa, Registro Horario y Prevención de Riesgos.</li>
+                  <li><strong>Igualdad:</strong> Planes de Género y LGTBI+.</li>
+                  <li><strong>Negociación:</strong> Convenios y acuerdos colectivos justos.</li>
                 </ul>
               </div>
             </div>
@@ -61,64 +61,93 @@ const IntranetWorkCouncil = () => {
 
           <section className="section-card">
             <span className="tag-badge">ACTIVIDAD</span>
-            <h2>NUESTRAS LÍNEAS DE ACCIÓN</h2>
+            <h2>NUESTRAS LÍNEAS DE ACCIÓN (Art. 64 ET)</h2>
             <div className="infographic-grid">
               <div className="infographic-card">
-                <h4>INFORMACIÓN</h4>
+                <h4>INFORMACIÓN Y CONSULTA</h4>
                 <p>
-                  Recibimos y analizamos cambios en la organización y políticas
-                  internas.
+                  Analizamos la situación económica y de empleo. Evaluamos la <strong>transparencia algorítmica (IA)</strong> y emitimos informes legales ante cambios sustanciales, planes de formación, EREs o traslados.
                 </p>
               </div>
               <div className="infographic-card">
-                <h4>ORGANIZACIÓN</h4>
+                <h4>VIGILANCIA Y CONTROL</h4>
                 <p>
-                  Atendemos dudas y preparamos respuestas basadas en derechos
-                  laborales.
+                  Supervisamos de forma estricta la normativa laboral, el <strong>registro horario real</strong>, los derechos de desconexión digital, el teletrabajo y la prevención de riesgos laborales y salud.
+                </p>
+              </div>
+              <div className="infographic-card">
+                <h4>IGUALDAD Y DIVERSIDAD</h4>
+                <p>
+                  Participamos activamente en los <strong>Planes de Igualdad de Género</strong> (evitando la brecha salarial) y negociamos protocolos en favor de la igualdad real del colectivo LGTBI+.
                 </p>
               </div>
               <div className="infographic-card">
                 <h4>NEGOCIACIÓN</h4>
                 <p>
-                  Defendemos condiciones justas en horarios, turnos y medidas de
-                  seguridad.
-                </p>
-              </div>
-              <div className="infographic-card">
-                <h4>SUPERVISIÓN</h4>
-                <p>
-                  Controlamos decisiones con impacto como traslados o
-                  reestructuraciones.
+                  Somos el actor principal para defender condiciones justas negociando el <strong>Convenio Colectivo</strong>, los pactos de empresa, los horarios, turnos y calendarios laborales de la plantilla.
                 </p>
               </div>
             </div>
           </section>
 
+
+
           <section className="section-card">
             <span className="tag-badge">EQUIPO</span>
             <h2>ORGANIGRAMA DEL COMITÉ</h2>
-            <div className="members-grid">
-              {[
-                { name: "Elena Martínez García", role: "Presidenta" },
-                { name: "Carlos Rodríguez Pérez", role: "Secretario" },
-                { name: "Ana Ruiz López", role: "Vocal / PRL" },
-                { name: "Javier Sanz Díaz", role: "Vocal / PRL" },
-                { name: "Luis Fernández Gil", role: "Vocal / PRL" },
-                { name: "Andrés Ara Monge", role: "Vocal / PRL" },
-                { name: "Pilar Gómez Torres", role: "Vocal / PRL" },
-                { name: "Miguel Moreno Ruiz", role: "Vocal / PRL Social" },
-                { name: "David Castro León", role: "Vocal / PRL Social" },
-                { name: "Sofía Torcal Valentín", role: "Vocal" },
-                { name: "Jorge Navarro Cruz", role: "Vocal" },
-                { name: "Carmen Pérez Ortiz", role: "Vocal" },
-                { name: "Ainara Gorría Planté", role: "Vocal" }
-              ].map((member, i) => (
-                <article key={i} className="member-capsule">
-                  <div className="member-avatar">{member.name.charAt(0)}</div>
-                  <h4>{member.name}</h4>
-                  <p>{member.role}</p>
-                </article>
-              ))}
+
+            <div className="org-tree-container">
+              <div className="org-tree">
+                {/* TOP LEVEL */}
+                <div className="org-top">
+                  <div className="org-top-avatars">
+                    <article className="member-capsule org-node-top">
+                      <div className="member-avatar">E</div>
+                      <p className="role-title">PRESIDENTA</p>
+                      <h4>Elena Martínez García</h4>
+                    </article>
+
+                    <div className="org-top-connector">
+                      <div className="org-vertical-drop"></div>
+                    </div>
+
+                    <article className="member-capsule org-node-top">
+                      <div className="member-avatar">C</div>
+                      <p className="role-title">SECRETARIO</p>
+                      <h4>Carlos Rodríguez Pérez</h4>
+                    </article>
+                  </div>
+                </div>
+
+                {/* BOTTOM LEVEL */}
+                <div className="org-bottom">
+                  <div className="org-horizontal-line"></div>
+                  <div className="org-bottom-nodes">
+                    {[
+                      { name: "Ana Ruiz López", role: "VOCAL / PRL C.Social" },
+                      { name: "Javier Sanz Díaz", role: "VOCAL / PRL C.Social" },
+                      { name: "Luis Fernández Gil", role: "VOCAL / PRL C.Social" },
+                      { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" },
+                      { name: "Pilar Gómez Torres", role: "VOCAL / PRL C.Social" },
+                      { name: "Miguel Moreno Ruiz", role: "VOCAL / PRL C.Social" },
+                      { name: "David Castro León", role: "VOCAL / PRL C.Social" },
+                      { name: "Sofía Torcal Valentín", role: "VOCAL" },
+                      { name: "Jorge Navarro Cruz", role: "VOCAL" },
+                      { name: "Carmen Pérez Ortiz", role: "VOCAL" },
+                      { name: "Ainara Gorría Planté", role: "VOCAL" }
+                    ].map((member, i) => (
+                      <div key={i} className="org-bottom-node-wrapper">
+                        <div className="org-vertical-branch"></div>
+                        <article className="member-capsule org-node-bottom">
+                          <div className="member-avatar">{member.name.charAt(0)}</div>
+                          <p className="role-title">{member.role}</p>
+                          <h4>{member.name}</h4>
+                        </article>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 

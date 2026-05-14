@@ -56,6 +56,8 @@
   border: 0.06rem solid var(--border);
   border-radius: 1.5rem; /* 24px */
   padding: 2.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .section-card h2 {
@@ -192,4 +194,160 @@
   .work-capsules-hero {
     padding: 3rem 1rem;
   }
+}
+
+/* --- ORGANIGRAMA (TREE STRUCTURE) --- */
+.org-tree-container {
+  overflow-x: auto;
+  padding: 1rem 0 2rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.org-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: max-content;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.org-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-top-avatars {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.org-node-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 130px;
+  text-align: center;
+  padding: 0.8rem;
+  box-sizing: border-box;
+}
+
+.org-node-top .member-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 3px solid var(--card-bg);
+  background-color: var(--accent);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.org-top-connector {
+  width: 3rem;
+  height: 2px;
+  background-color: var(--border);
+  margin-top: 32px;
+  position: relative;
+}
+
+.org-vertical-drop {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 50px;
+  background-color: var(--border);
+}
+
+.org-bottom {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.org-horizontal-line {
+  height: 2px;
+  background-color: var(--border);
+  width: calc(100% - 75px);
+  position: absolute;
+  top: 0;
+  left: 37.5px;
+}
+
+.org-bottom-nodes {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.org-bottom-node-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75px; 
+}
+
+.org-vertical-branch {
+  height: 1.5rem;
+  width: 2px;
+  background-color: var(--border);
+}
+
+.org-node-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem 0.2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.org-node-bottom .member-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--card-bg);
+  background-color: var(--accent);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+}
+
+.member-capsule .role-title {
+  font-size: 0.6rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0.2rem 0;
+  text-transform: uppercase;
+  min-height: 2rem;
+  line-height: 1.1;
+}
+
+.org-node-bottom h4 {
+  font-size: 0.55rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.org-node-top h4 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin: 0;
 }
