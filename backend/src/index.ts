@@ -805,10 +805,17 @@ app.post(
       try {
         await client.query("BEGIN");
 
-        // Necesita una dirección existente en la nueva BD. Usaré 1 por defecto si no se puede crear al vuelo para el ejemplo
+        // 1. Insertar la dirección en la tabla DIRECCION y obtener su ID
+        const addressResult = await client.query(
+          "INSERT INTO DIRECCION (id_Usuario, calle) VALUES ($1, $2) RETURNING id_Direccion",
+          [req.customer!.id, address || "Sin dirección"]
+        );
+        const addressId = addressResult.rows[0].id_direccion || addressResult.rows[0].id_Direccion;
+
+        // 2. Crear el pedido usando el addressId real
         const orderResult = await client.query(
-          "INSERT INTO PEDIDO (id_Usuario, id_direccion, estado_pedido, fecha_realizado) VALUES ($1, $2, 'pendiente', NOW()) RETURNING id_pedido as id, estado_pedido as status",
-          [req.customer!.id, 1],
+          "INSERT INTO PEDIDO (id_Usuario, id_Direccion, estado_pedido, fecha_realizado) VALUES ($1, $2, 'pendiente', NOW()) RETURNING id_pedido as id, estado_pedido as status",
+          [req.customer!.id, addressId],
         );
         const orderId = orderResult.rows[0].id;
 

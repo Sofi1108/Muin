@@ -12,6 +12,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [cvc, setCvc] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
 
   useEffect(() => {
     console.log("Contenido del carrito en Checkout:", cart);
@@ -109,7 +110,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
             unitPrice: c.product.precio_producto_perso,
             productData: c.product
           })),
-          address: "Dirección de prueba"
+          address: shippingAddress
         })
       });
 
@@ -164,7 +165,13 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
           <form onSubmit={handlePayment} className="muin-form">
             <div className="input-group">
               <label>DIRECTION</label>
-              <input type="text" placeholder="YOUR DIRECTION" required />
+              <input 
+                type="text" 
+                placeholder="YOUR DIRECTION" 
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
+                required 
+              />
             </div>
             <div className="input-group">
               <label>NAME OF CARDHOLDER</label>

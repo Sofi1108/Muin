@@ -181,7 +181,11 @@ export default function ProfilePage() {
         </div>
         {/* SECCIÓN INFERIOR: ORDER STATUS DINÁMICO */}
         <div className="order-status-section">
-          <h3>ORDER STATUS {selectedOrder && `#${selectedOrder.id}`}</h3>
+          <h3>
+            ORDER STATUS{" "}
+            {selectedOrder &&
+              `#${orders.length - orders.findIndex((o) => o.id === selectedOrder.id)}`}
+          </h3>
           <div className="status-container">
             <div className="status-line"></div>
             <div className="status-points">
@@ -216,15 +220,17 @@ export default function ProfilePage() {
                 <tr>
                   <th>ID Pedido</th>
                   <th>Fecha</th>
+                  <th>Dirección</th>
                   <th>Estado</th>
                   <th style={{ textAlign: "right" }}>Total</th>
                 </tr>
               </thead>
               <tbody>
-                {orders.slice(0, 5).map((o) => (
+                {orders.slice(0, 5).map((o, index) => (
                   <OrderRow
                     key={o.id}
                     order={o}
+                    displayId={orders.length - index}
                     isSelected={selectedOrder?.id === o.id}
                     onSelect={() => setSelectedOrder(o)}
                   />
@@ -313,10 +319,12 @@ export default function ProfilePage() {
 
 function OrderRow({
   order,
+  displayId,
   isSelected,
   onSelect,
 }: {
   order: any;
+  displayId: number;
   isSelected: boolean;
   onSelect: () => void;
 }) {
@@ -349,9 +357,10 @@ function OrderRow({
           <span className="expand-icon" onClick={handleToggle}>
             {expanded ? "▼" : "▶"}
           </span>
-          #{order.id}
+          #{displayId}
         </td>
         <td>{new Date(order.created_at).toLocaleDateString()}</td>
+        <td>{order.address || "No especificada"}</td>
         <td>
           <span className={`status-badge ${order.status}`}>
             {order.status.toUpperCase()}
@@ -363,7 +372,7 @@ function OrderRow({
       </tr>
       {expanded && (
         <tr className="detail-row">
-          <td colSpan={4} className="order-detail-cell">
+          <td colSpan={5} className="order-detail-cell">
             {loading ? (
               <p>Cargando productos...</p>
             ) : (
