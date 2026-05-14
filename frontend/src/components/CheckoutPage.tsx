@@ -77,17 +77,48 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
 
   const total = subtotal;
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) {
       alert("El carrito está vacío");
       return;
     }
+    
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          items: cart.map(c => ({
+            productId: c.product.id_producto_perso,
+            quantity: c.quantity,
+            unitPrice: c.product.precio_producto_perso,
+            productData: c.product
+          })),
+          address: "Dirección de prueba"
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Error al procesar el pedido");
+      }
+
+      // Clear the cart
+      sessionStorage.removeItem("cart");
+      window.dispatchEvent(new Event("cartUpdated"));
+      
       setStep(2);
-    }, 2500);
+    } catch (err: any) {
+      alert(err.message || "Ha ocurrido un error durante el pago");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (step === 2) {

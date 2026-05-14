@@ -8,7 +8,12 @@ import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { registerTicketRoutes } from "./tickets.js";
 import { pool } from "./db.js";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
@@ -23,6 +28,21 @@ if (!JWT_SECRET) {
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads/'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+
 
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto http://localhost:${PORT}`);
@@ -277,6 +297,108 @@ app.get("/api/products", async (req: Request, res: Response) => {
       error: "Error interno del servidor",
     });
   }
+});
+
+//-- CARGAR PRODUCTOS BASE
+app.get("/api/base-products", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query("SELECT * FROM PRODUCTO");
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar productos base:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+//-- CARGAR DISEÑOS
+app.get("/api/designs", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query("SELECT * FROM DISENO");
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar diseños:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+//-- AÑADIR DISEÑO (Admin)
+app.post("/api/designs", async (req: Request, res: Response) => {
+  const { nombre_diseno, precio_diseno, url_imagen } = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO DISENO (nombre_diseno, precio_diseno, url_imagen) VALUES ($1, $2, $3) RETURNING *",
+      [nombre_diseno, precio_diseno, url_imagen]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Error al añadir diseño:", error);
+    res.status(500).json({ error: "Error interno" });
+  }
+});
+
+//-- ELIMINAR DISEÑO (Admin)
+app.delete("/api/designs/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM DISENO WHERE id_diseno = $1", [id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al eliminar diseño:", error);
+    res.status(500).json({ error: "Error interno" });
+  }
+});
+
+//-- CARGAR DISEÑOS PERSONALIZADOS (Capas) (Admin)
+app.get("/api/custom-designs", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`
+      SELECT dp.*, pp.nombre_producto_perso 
+      FROM DISENO_PERSONALIZADO dp
+      JOIN PRODUCTO_PERSONALIZADO pp ON dp.id_producto_perso = pp.id_producto_perso
+      ORDER BY dp.id_diseno_perso DESC
+    `);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar diseños personalizados:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+//-- PROXY DE IMAGENES PARA EVITAR CORS EN WEBGL
+app.get("/api/proxy-image", async (req: Request, res: Response) => {
+  const imageUrl = req.query.url as string;
+  if (!imageUrl) {
+    return res.status(400).json({ error: "URL de imagen requerida" });
+  }
+  
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    // Set headers
+    res.setHeader('Content-Type', response.headers.get('content-type') || 'image/jpeg');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache 1 day
+    
+    res.send(buffer);
+  } catch (error) {
+    console.error("Error proxying image:", error);
+    res.status(500).json({ error: "Error proxying image" });
+  }
+});
+
+//-- ENDPOINT DE UPLOAD DE IMAGENES PROPIAS DEL CLIENTE
+app.post("/api/upload", upload.single('image'), (req: Request, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No se proporcionó ningún archivo" });
+  }
+  const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+  res.json({ url: fileUrl });
 });
 
 //--CREAR NUEVO PRODUCTO
@@ -578,6 +700,11 @@ app.post(
     try {
       // Verificar stock de cada producto
       for (const item of items) {
+        // Si el frontend envía productData con un id_diseño, es un producto customizado nuevo. No comprobamos stock.
+        if (item.productData && item.productData.id_diseño !== undefined) {
+          continue;
+        }
+
         const check = await pool.query(
           "SELECT cantidad_u as stock, nombre_producto_perso as nombre_producto FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso = $1",
           [item.productId],
@@ -604,13 +731,56 @@ app.post(
         const orderId = orderResult.rows[0].id;
 
         for (const item of items) {
+          let actualProductId = item.productId;
+
+          if (item.productData && item.productData.layers !== undefined) {
+            // Es un producto personalizado con múltiples capas, lo insertamos en la BD primero
+            const insertCustom = await client.query(
+              `INSERT INTO PRODUCTO_PERSONALIZADO 
+               (id_producto, id_diseño, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen) 
+               VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_producto_perso`,
+              [
+                item.productData.id_producto || null,
+                item.productData.id_diseño,
+                item.productData.nombre_producto_perso,
+                item.productData.descripcion,
+                item.productData.precio_producto_perso,
+                item.quantity, 
+                item.productData.url_imagen
+              ]
+            );
+            actualProductId = insertCustom.rows[0].id_producto_perso;
+            
+            // Insertar todas las capas en DISENO_PERSONALIZADO
+            const layers = item.productData.layers;
+            for (const layer of layers) {
+               await client.query(
+                 `INSERT INTO DISENO_PERSONALIZADO 
+                  (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+                 [
+                   actualProductId,
+                   layer.type,
+                   layer.content,
+                   layer.dbId || null,
+                   layer.scale,
+                   layer.x,
+                   layer.y,
+                   layer.color || null
+                 ]
+               );
+            }
+          } else {
+            // Actualizar el stock del producto normal
+            await client.query(
+              "UPDATE PRODUCTO_PERSONALIZADO SET cantidad_u = cantidad_u - $1 WHERE id_producto_perso = $2",
+              [item.quantity, actualProductId],
+            );
+          }
+
           await client.query(
-            "INSERT INTO LINEA_PRODUCTO (id_Pedido, id_Producto, cant_Producto, precio_u, descripcion) VALUES ($1,$2,$3,$4,'')",
-            [orderId, item.productId, item.quantity, item.unitPrice],
-          );
-          await client.query(
-            "UPDATE PRODUCTO_PERSONALIZADO SET cantidad_u = cantidad_u - $1 WHERE id_producto_perso = $2",
-            [item.quantity, item.productId],
+            "INSERT INTO LINEA_PRODUCTO (id_Pedido, id_Producto, cant_Producto, precio_u, descripcion) VALUES ($1,$2,$3,$4,$5)",
+            [orderId, actualProductId, item.quantity, item.unitPrice, item.productData?.descripcion || ''],
           );
         }
         await client.query("COMMIT");

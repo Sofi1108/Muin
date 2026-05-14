@@ -39,6 +39,9 @@ import CheckoutPage from "./components/CheckoutPage";
 import Tickets from "./components/Tickets";
 import ProductCarousel from "./components/ProductCarrousel";
 import AdminUsers from "./components/AdminUsers";
+import PersonalizarProducto from "./components/PersonalizarProducto";
+import AdminDesignsPanel from "./components/AdminDesignsPanel";
+import AdminCustomDesignsPanel from "./components/AdminCustomDesignsPanel";
 
 import type { Product, CartItem } from "../types";
 
@@ -265,6 +268,22 @@ function App() {
             }
           />
           <Route
+            path="/intranet/admin-designs"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminDesignsPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/admin-custom-designs"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminCustomDesignsPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/admin/products"
             element={
               <PrivateRoute roles={["admin", "empleado"]}>
@@ -295,6 +314,15 @@ function App() {
                 <EditProductPage />
               </PrivateRoute>
             }
+          />
+          <Route 
+            path="/personalize" 
+            element={
+              <>
+                <HeroSectionSmall />
+                <PersonalizarProducto onAddToCart={addToCart} />
+              </>
+            } 
           />
 
           <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
