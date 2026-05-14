@@ -1,83 +1,81 @@
 /* --- BASE & WRAPPER --- */
 .work-capsules-page {
-  min-height: 100vh;
+  min-size: 100vh;
   background: var(--page-bg);
   color: var(--text-primary);
 }
 
 /* --- HERO (IGUAL A TU CSS) --- */
 .work-capsules-hero {
-  background: var(--panel-bg);
-  border-bottom: 0.06rem solid var(--border);
-  padding: 4rem 1.5rem 3.5rem;
+  background: var(--dark-bg);
+  color: #FFFFFF;
+  padding: 6rem 1.5rem 5rem;
   text-align: center;
 }
 
 .hero-label {
+  border-radius: var(--br-main);
   display: inline-flex;
-  padding: 0.6rem 1.2rem;
-  background: var(--accent);
-  color: white;
-  font-weight: 900;
-  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  border-radius: 999px;
-  margin-bottom: 1.5rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 2rem;
 }
 
 .work-capsules-hero h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 900;
   text-transform: uppercase;
-  margin: 0;
+  letter-spacing: 0.1em;
+  margin: 0 0 1rem;
+}
+
+.work-capsules-hero p {
+  font-family: var(--font-main);
+  font-size: 1.2rem;
+  color: #B0B0B0;
+  max-width: 600px;
+  margin: 0 auto;
+  font-weight: 300;
 }
 
 /* --- MAIN LAYOUT --- */
 .work-capsules-main {
-  max-width: 73.75rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 5rem;
+  padding: 5rem 1.5rem;
   display: grid;
-  gap: 3rem;
+  gap: 4rem;
 }
 
 .section-card {
   background: var(--panel-bg);
-  border: 0.06rem solid var(--border);
-  padding: 2.5rem;
-  border-radius: 1.5rem; /* 24px */
+  border: 1px solid var(--border);
+  padding: 3.5rem;
+  border-radius: var(--br-main);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
 }
 
 .section-card h2 {
-  margin: 1.5rem 0 1.5rem;
-  font-size: 1.75rem;
+  font-family: var(--font-title);
+  margin: 0 0 2.5rem;
+  font-size: 2rem;
   font-weight: 900;
   text-transform: uppercase;
-  border-left: 4px solid var(--accent);
-  padding-left: 1rem;
-}
-
-/* --- VIDEO --- */
-.video-placeholder {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: #000;
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 0.06rem solid var(--border);
-}
-
-.video-placeholder iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+  border-left: 6px solid var(--accent);
+  padding-left: 1.5rem;
+  letter-spacing: 0.05em;
 }
 
 /* --- TABLE --- */
 .schedule-table-wrapper {
   margin-top: 1rem;
-  overflow-x: auto;
 }
 
 .schedule-table {
@@ -87,76 +85,83 @@
 
 .schedule-table th {
   text-align: left;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  padding: 1rem;
-  border-bottom: 2px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 1.5rem 1rem;
+  border-bottom: 2px solid var(--text-primary);
+  letter-spacing: 0.1em;
 }
 
 .schedule-table td {
-  padding: 1.25rem 1rem;
-  border-bottom: 0.06rem solid var(--surface);
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid var(--surface);
+  font-size: 0.95rem;
 }
 
 .time-cell {
-  font-weight: 900;
+  font-weight: 800;
   color: var(--text-primary);
+  font-family: var(--font-main);
 }
 
 /* --- CALENDAR WIDGET --- */
 .calendar-widget {
-  background: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 1rem;
-  border: 0.06rem solid var(--border);
+  background: var(--panel-bg);
+  padding: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--br-main);
 }
 
 .calendar-header-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .calendar-header-nav h4 {
+  font-family: var(--font-title);
   font-weight: 900;
   text-transform: uppercase;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
 }
 
 .nav-button {
   background: var(--surface);
-  border: none;
-  color: white;
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-button:hover {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-  cursor: pointer;
+  background: var(--text-primary);
+  color: #FFFFFF;
+  border-color: var(--text-primary);
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .weekday {
   text-align: center;
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
 }
 
 .calendar-day {
@@ -164,27 +169,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 800;
-  border-radius: 8px;
-  background: var(--surface);
-  border: 0.06rem solid var(--border);
-  transition:
-    background 0.3s ease,
-    border-color 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
 }
 
-.calendar-day:hover {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+.calendar-day:hover:not(.empty) {
+  background: var(--surface);
+  border-color: var(--text-primary);
   cursor: pointer;
 }
 
-.calendar-day.holiday {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+.calendar-day.today {
+  background-color: var(--accent) !important;
+  color: #FFFFFF !important;
+  border-color: var(--accent) !important;
+  font-weight: 800;
 }
 
 .calendar-day.empty {
@@ -192,45 +194,67 @@
   border: none;
 }
 
-.calendar-day.today {
-  background-color: #820000;
-  color: #fff;
-  border-radius: 50%;
-  font-weight: bold;
-}
-
 /* --- GRIDS & UTILS --- */
 .grid-two {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  gap: 4rem;
 }
 
 .tag-badge {
+  display: inline-block;
   padding: 0.4rem 0.8rem;
   background: var(--accent);
   color: white;
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
-  border-radius: 24px;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  border-radius: var(--br-main);
 }
 
 .role-badge {
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
   font-size: 0.65rem;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--br-main);
 }
 
 .role-badge.admin {
-  background: #ff000022;
-  color: #ff4d4d;
+  background: var(--dark-bg);
+  color: #FFFFFF;
 }
+
 .role-badge.empleado {
-  background: #ffffff11;
-  color: #ccc;
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+
+.rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rule-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--surface);
+}
+
+.rule-item span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rule-item strong {
+  font-family: var(--font-title);
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 900;
 }
 
 @media (max-width: 64rem) {
@@ -238,6 +262,7 @@
     grid-template-columns: 1fr;
   }
   .section-card {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 }
+

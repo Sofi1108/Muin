@@ -31,7 +31,7 @@ const ProductCarousel = ({
   };
 
   return (
-    <section className="muin-carousel-section">
+    <section className="muin-carousel-section" id="new-products">
       <div className="carousel-container">
         {/* HEADER DEL CARRUSEL */}
         <div className="carousel-header">

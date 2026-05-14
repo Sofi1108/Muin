@@ -101,11 +101,13 @@ export const verifyToken = async (
       firstName: dbUser.nombre,
       lastName: dbUser.apellido,
       dni: dbUser.dni,
-      role: dbUser.tipo_usuario,
+      role: dbUser.tipo_usuario.trim().toLowerCase(),
       phone: "", // Si tienes teléfono en la BD, añádelo aquí
     };
+    console.log(`Token verified for ${req.customer.name}. Role: ${req.customer.role}`);
     next();
-  } catch {
+  } catch (err) {
+    console.error("Token verification failed:", err);
     res.status(401).json({ error: "Token inválido o expirado" });
   }
 };
@@ -1069,13 +1071,16 @@ app.get(
   "/api/admin/users",
   verifyToken,
   requireRole("admin"),
-  async (req: Request, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    console.log("Admin route accessed by:", req.customer?.name, "Role:", req.customer?.role);
     try {
       const result = await pool.query(
         "SELECT id_usuario as id, nombre_usuario as username, correoelectronico as email, tipo_usuario as role FROM USUARIO ORDER BY id_usuario",
       );
+      console.log("Users found in DB:", result.rows.length);
       res.json(result.rows);
     } catch (error) {
+      console.error("Error in /api/admin/users:", error);
       res.status(500).json({ error: "Error al cargar usuarios" });
     }
   },

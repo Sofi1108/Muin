@@ -12,6 +12,7 @@ export default function Fichajes() {
     hoursThisMonth: "0h 0m",
   });
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Verificar estado de fichaje
   const checkStatus = () => {
@@ -66,6 +67,10 @@ export default function Fichajes() {
       }
     };
     init();
+
+    // Actualizar el reloj cada segundo
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleClock = () => {
@@ -145,14 +150,14 @@ export default function Fichajes() {
             <div className="clock-card">
               <div className="clock-time">
                 <h2 className="time-display">
-                  {new Date().toLocaleTimeString("es-ES", {
+                  {currentTime.toLocaleTimeString("es-ES", {
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",
                   })}
                 </h2>
                 <p className="date-display">
-                  {formatDate(new Date().toISOString())}
+                  {formatDate(currentTime.toISOString())}
                 </p>
               </div>
 

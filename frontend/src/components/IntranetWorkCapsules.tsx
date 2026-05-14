@@ -23,7 +23,7 @@ export const IntranetWorkCapsules = () => {
           {/* 1. Modificación y Extinción de Contratos */}
           <section className="section-card">
             <span className="tag-badge">Actualización Laboral 2026</span>
-            <h2>1. Modificación Sustancial (MSCT)</h2>
+            <h2>1. Modificación Sustancial</h2>
             <p>
               Regulada en el Artículo 41 del Estatuto de los Trabajadores (ET), es la facultad del empresario para alterar aspectos esenciales del contrato por razones ETOP (Económicas, Técnicas, Organizativas o de Producción).
             </p>
@@ -56,7 +56,7 @@ export const IntranetWorkCapsules = () => {
               </div>
               <div className="infographic-card">
                 <h4>3. Impugnar judicialmente</h4>
-                <p>Plazo de 20 días hábiles para demandar si no hay causa justificada.</p>
+                <p>Plazo de 20 días hábiles para demandar si no hay razón justificada para el cambio.</p>
               </div>
             </div>
 
