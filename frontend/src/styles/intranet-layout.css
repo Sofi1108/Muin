@@ -179,13 +179,59 @@ p {
   flex-wrap: wrap;
 }
 
-/* --- RESPONSIVE --- */
+/* --- RESPONSIVE SWEEP --- */
 @media (max-width: 64rem) {
-  .grid-two,
-  .infographic-grid {
-    grid-template-columns: 1fr;
+  .intranet-page-content {
+    padding: 2rem 1.2rem 6rem;
   }
+
+  .grid-two, 
+  .infographic-grid,
+  .grid-two-capsules,
+  .summary-row {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
   .section-card {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem !important;
+  }
+
+  .employee-zone-header {
+    padding: 4rem 1.5rem 3.5rem;
+  }
+
+  .employee-zone-header h1 {
+    font-size: 2.5rem !important;
+    letter-spacing: 0.1rem;
+  }
+
+  .work-capsules-hero {
+    padding: 4rem 1.2rem 3.5rem !important;
+  }
+
+  .work-capsules-hero h1 {
+    font-size: 2.8rem !important;
+  }
+
+  .download-buttons {
+    flex-direction: column;
+  }
+
+  .download-btn {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .employee-zone-header h1,
+  .work-capsules-hero h1 {
+    font-size: 2.2rem !important;
+  }
+
+  .section-card h2 {
+    font-size: 1.5rem !important;
+    padding-left: 1rem;
   }
 }

@@ -156,10 +156,11 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   return (
     <div className="checkout-container">
       <div className="checkout-grid">
+        <button className="back-link" onClick={() => navigate(-1)}>
+          ← COME BACK TO CART
+        </button>
+
         <div className="payment-form-section">
-          <button className="back-link" onClick={() => navigate(-1)}>
-            ← COME BACK TO CART
-          </button>
           <h2 className="section-title">PAYMENT DETAILS</h2>
 
           <form onSubmit={handlePayment} className="muin-form">

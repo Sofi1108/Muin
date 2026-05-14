@@ -174,8 +174,23 @@
   color: var(--footer-accent);
 }
 
-@media (max-width: 30rem) {
+@media (max-width: 48rem) {
   .main-footer {
     padding: 2rem 5% 1.5rem;
+  }
+  .footer-cards-container {
+    grid-template-columns: 1fr;
+  }
+  .footer-brand {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .footer-legal-inline {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .footer-legal-inline a:not(:last-child)::after {
+    display: none;
   }
 }

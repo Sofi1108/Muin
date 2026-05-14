@@ -189,22 +189,16 @@
   padding: 4rem 1rem;
   width: 100%;
   box-sizing: border-box;
-  position: relative; /* For the bridge */
+  position: relative;
 }
 
 .org-horizontal-bridge {
   position: absolute;
-  top: 195px; /* Adjust to match the space between leader and vocals */
+  top: 195px;
   left: 25%;
   right: 25%;
   height: 2px;
   background-color: var(--border);
-}
-
-@media (max-width: 55rem) {
-  .org-horizontal-bridge {
-    display: none;
-  }
 }
 
 .org-vertical-column {
@@ -265,7 +259,7 @@
 
 .org-node-bottom {
   display: flex;
-  flex-direction: row; /* Horizontal node layout for better space */
+  flex-direction: row;
   align-items: center;
   gap: 1.5rem;
   text-align: left;
@@ -315,10 +309,36 @@
   margin: 0;
 }
 
-@media (max-width: 55rem) {
+/* --- RESPONSIVE SWEEP --- */
+@media (max-width: 64rem) {
+  .work-capsules-main {
+    padding: 3rem 1.2rem;
+    gap: 3rem;
+  }
+  .section-card {
+    padding: 2.5rem 1.5rem !important;
+  }
   .org-vertical-container {
     flex-direction: column;
     align-items: center;
     gap: 4rem;
+    padding: 2rem 0;
+  }
+  .org-horizontal-bridge {
+    display: none;
+  }
+  .org-node-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+  }
+  .vocals-vertical-list {
+    border-left: none;
+    padding-left: 0;
+    align-items: center;
+  }
+  .vocal-side-line {
+    display: none;
   }
 }

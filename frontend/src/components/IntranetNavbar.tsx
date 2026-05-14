@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/intranet-navbar.css";
 
@@ -14,50 +15,60 @@ const navItems = [
 
 const IntranetNavbar = () => {
   const { customer } = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <nav className="intranet-navbar">
       <div className="intranet-navbar-inner">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.end} // Esto evita que 'Inicio' se quede siempre activo
-            className={({ isActive }) =>
-              isActive ? "intranet-nav-link active" : "intranet-nav-link"
-            }
-          >
-            {item.label}
-          </NavLink>
-        ))}
+        <button 
+          className="mobile-menu-toggle" 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className="material-symbols-outlined">
+            {isMenuOpen ? "close" : "menu"}
+          </span>
+        </button>
 
-        {customer?.role === "admin" && (
-          <>
-            <div className="intranet-nav-separator"></div>
+        <div className={`intranet-nav-links ${isMenuOpen ? "open" : ""}`}>
+          {navItems.map((item) => (
             <NavLink
-              to="/intranet/admin-users"
+              key={item.path}
+              to={item.path}
+              end={item.end}
               className={({ isActive }) =>
                 isActive ? "intranet-nav-link active" : "intranet-nav-link"
               }
+              onClick={() => setIsMenuOpen(false)}
             >
-              USUARIOS
+              {item.label}
             </NavLink>
-            <NavLink
-              to="/intranet/admin-designs"
-              className={({ isActive }) =>
-                isActive ? "intranet-nav-link active" : "intranet-nav-link"
-              }
-            >
-              DISEÑOS
-            </NavLink>
-            <NavLink
-              to="/intranet/admin-custom-designs"
-              className={({ isActive }) =>
-                isActive ? "intranet-nav-link active" : "intranet-nav-link"
-              }
-            >
-            </NavLink>
-          </>
-        )}
+          ))}
+
+          {customer?.role === "admin" && (
+            <>
+              <div className="intranet-nav-separator"></div>
+              <NavLink
+                to="/intranet/admin-users"
+                className={({ isActive }) =>
+                  isActive ? "intranet-nav-link active" : "intranet-nav-link"
+                }
+                onClick={() => setIsMenuOpen(false)}
+              >
+                USUARIOS
+              </NavLink>
+              <NavLink
+                to="/intranet/admin-designs"
+                className={({ isActive }) =>
+                  isActive ? "intranet-nav-link active" : "intranet-nav-link"
+                }
+                onClick={() => setIsMenuOpen(false)}
+              >
+                DISEÑOS
+              </NavLink>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

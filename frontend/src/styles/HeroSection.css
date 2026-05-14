@@ -70,3 +70,21 @@ body {
   box-shadow: #1f1f1f 0px 0px 1rem;
   transform: scale(1.1);
 }
+
+@media (max-width: 48rem) {
+  .hero-section {
+    height: 25rem;
+  }
+  .hero-section h1 {
+    font-size: 2rem;
+    letter-spacing: 0.8rem;
+    margin-right: -0.8rem;
+  }
+  .hero-section p {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  .hero-button {
+    padding: 0.8rem 2rem;
+  }
+}

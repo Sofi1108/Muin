@@ -25,16 +25,6 @@
   padding-left: 1.5rem;
 }
 
-.back-link {
-  background: none;
-  border: none;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  color: #999;
-  cursor: pointer;
-  margin-bottom: 2rem;
-}
 
 .muin-form {
   display: flex;
@@ -266,12 +256,37 @@
   color: #1a1a1a;
 }
 
+.back-link {
+  grid-column: 1 / -1;
+  background: none;
+  border: none;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: #999;
+  cursor: pointer;
+  margin-bottom: 0;
+  text-align: left;
+  width: fit-content;
+}
+
 @media (max-width: 850px) {
   .checkout-grid {
+    display: flex;
+    flex-direction: column;
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
+  }
+  .back-link {
+    order: 1;
   }
   .order-summary-section {
-    order: -1;
+    order: 2;
+  }
+  .payment-form-section {
+    order: 3;
+  }
+  .section-title {
+    margin-bottom: 2rem;
   }
 }
