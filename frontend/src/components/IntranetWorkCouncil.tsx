@@ -37,7 +37,7 @@ const IntranetWorkCouncil = () => {
             <p>
               Es el órgano de representación legal ante la dirección. Nuestra
               misión es actuar como voz de la plantilla para defender los
-              intereses laborales y económicos.
+              intereses laborales.
             </p>
             <div className="grid-two-capsules">
               <div className="infographic-card">
@@ -98,15 +98,27 @@ const IntranetWorkCouncil = () => {
             <span className="tag-badge">EQUIPO</span>
             <h2>ORGANIGRAMA DEL COMITÉ</h2>
             <div className="members-grid">
-              {["PRESIDENTE", "SECRETARIO", "TESORERO", "REPRESENTANTE"].map(
-                (role, i) => (
-                  <article key={i} className="member-capsule">
-                    <div className="member-avatar">{role[0]}</div>
-                    <h4>{role}</h4>
-                    <p>Gestión y apoyo al empleado.</p>
-                  </article>
-                ),
-              )}
+              {[
+                { name: "Elena Martínez García", role: "Presidenta" },
+                { name: "Carlos Rodríguez Pérez", role: "Secretario" },
+                { name: "Ana Ruiz López", role: "Vocal / PRL" },
+                { name: "Javier Sanz Díaz", role: "Vocal / PRL" },
+                { name: "Luis Fernández Gil", role: "Vocal / PRL" },
+                { name: "Andrés Ara Monge", role: "Vocal / PRL" },
+                { name: "Pilar Gómez Torres", role: "Vocal / PRL" },
+                { name: "Miguel Moreno Ruiz", role: "Vocal / PRL Social" },
+                { name: "David Castro León", role: "Vocal / PRL Social" },
+                { name: "Sofía Torcal Valentín", role: "Vocal" },
+                { name: "Jorge Navarro Cruz", role: "Vocal" },
+                { name: "Carmen Pérez Ortiz", role: "Vocal" },
+                { name: "Ainara Gorría Planté", role: "Vocal" }
+              ].map((member, i) => (
+                <article key={i} className="member-capsule">
+                  <div className="member-avatar">{member.name.charAt(0)}</div>
+                  <h4>{member.name}</h4>
+                  <p>{member.role}</p>
+                </article>
+              ))}
             </div>
           </section>
 

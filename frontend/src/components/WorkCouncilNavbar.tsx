@@ -6,6 +6,7 @@ const workCouncilNavItems = [
   { path: "/intranet/work-council", label: "PÁGINA COMITÉ", end: true },
   { path: "/intranet/news", label: "NOTICIAS" },
   { path: "/intranet/work-capsules", label: "PÍLDORAS INFORMATIVAS" },
+  { path: "/intranet/legal-documents", label: "DOCUMENTOS LEGALES" },
 ];
 
 const WorkCouncilNavbar = () => {

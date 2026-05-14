@@ -227,20 +227,6 @@ export const IntranetWorkCapsules = () => {
             </div>
           </section>
 
-          {/* 4. Descargas */}
-          <section className="section-card">
-            <span className="tag-badge">Documentos</span>
-            <h2>Descargas Importantes</h2>
-            <p>Accede a documentos clave para tu protección laboral.</p>
-            <div className="download-buttons">
-              <a href="/documents/Estatuto de los trabajadores.pdf" target="_blank" rel="noopener noreferrer" className="download-btn">
-                Ver Estatuto de los Trabajadores
-              </a>
-              <a href="/documents/BRSCGI.pdf" target="_blank" rel="noopener noreferrer" className="download-btn">
-                Ver Convenio Colectivo
-              </a>
-            </div>
-          </section>
 
         </main>
       </div>

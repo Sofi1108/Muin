@@ -26,6 +26,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
 import IntranetNews from "./components/IntranetNews";
 import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
+import IntranetLegalDocuments from "./components/IntranetLegalDocuments";
 import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
 import ContactPage from "./components/ContactPage";
 import AboutUsPage from "./components/AboutUsPage";
@@ -244,6 +245,14 @@ function App() {
             element={
               <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetWorkCapsules />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/legal-documents"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <IntranetLegalDocuments />
               </PrivateRoute>
             }
           />
