@@ -8,8 +8,8 @@
 }
 
 .column {
-  flex: 1 1 calc(25% - 26px);
-  max-width: calc(25% - 26px);
+  flex: 1 1 calc(20% - 26px);
+  max-width: calc(20% - 26px);
   cursor: pointer;
   transition:
     transform 0.3s,

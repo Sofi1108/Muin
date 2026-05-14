@@ -21,14 +21,15 @@ function Categories() {
         <img src={hoodieImg} />
         <span>HOODIES</span>
       </div>
+      <div className="column" onClick={() => navigate("/personalize")}>
+        <img src={comingSoonImg} style={{ filter: "hue-rotate(90deg)" }} />
+        <span>CUSTOMIZE</span>
+      </div>
       <div className="column" onClick={() => navigate("/products/accessories")}>
         <img src={comingSoonImg} />
         <span>ACCESORIES</span>
       </div>
-      <div className="column" onClick={() => navigate("/personalize")}>
-        <img src={comingSoonImg} style={{ filter: 'hue-rotate(90deg)' }} />
-        <span>CUSTOMIZE</span>
-      </div>
+
       <div className="column" onClick={() => navigate("/products/sales")}>
         <img src={salesImg} />
         <span>SALES</span>
