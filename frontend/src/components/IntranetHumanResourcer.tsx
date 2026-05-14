@@ -72,12 +72,10 @@ export default function IntranetHumanResourcer() {
         <section className="hr-hero">
           <div className="hr-hero-content">
             <span className="tag-badge">Recursos Humanos</span>
-            <h2>GUÍA RÁPIDA: ¿Qué es Recursos Humanos?</h2>
+            <h2>Recursos Humanos</h2>
             <p>
-              En pocas palabras, Recursos Humanos es el departamento responsable
-              de gestionar todo lo relacionado con las personas que conforman la
-              empresa. Su objetivo es actuar como un puente entre las
-              necesidades del negocio y el bienestar de la fuerza laboral.
+              El departamento de Recursos Humanos es responsable de gestionar todo lo relacionado con las personas que conforman la
+              empresa.
             </p>
           </div>
         </section>
@@ -87,7 +85,8 @@ export default function IntranetHumanResourcer() {
             <h3>¿Para qué sirve y cómo puede ayudarte?</h3>
             <p>
               El equipo de Recursos Humanos gestiona tu ciclo de vida dentro de
-              la empresa, desde antes de tu incorporación hasta tu salida. Sus
+              la empresa, desde antes de tu incorporación hasta tu salida. Su objetivo es actuar como un puente entre las
+              necesidades del negocio y el bienestar de la fuerza laboral.Sus
               funciones principales son:
             </p>
             <ul className="hr-list">

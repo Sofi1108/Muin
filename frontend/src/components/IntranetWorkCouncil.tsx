@@ -19,18 +19,16 @@ const IntranetWorkCouncil = () => {
           </p>
         </section>
 
-        {/* SECCIÓN DE VÍDEO */}
-        <section className="section-card">
-          <span className="tag-badge">Tutorial</span>
-          <h2>Vídeo Informativo</h2>
-          <div className="video-placeholder">
-            <iframe src={VIDEO_URL} title="Video" allowFullScreen />
-          </div>
-        </section>
-
-
-
         <main className="work-capsules-main">
+          {/* SECCIÓN DE VÍDEO */}
+          <section className="section-card">
+            <span className="tag-badge">Tutorial</span>
+            <h2>Vídeo Informativo</h2>
+            <div className="video-placeholder">
+              <iframe src={VIDEO_URL} title="Video" allowFullScreen />
+            </div>
+          </section>
+
           <section className="section-card">
             <span className="tag-badge">MISIÓN</span>
             <h2>QUÉ ES EL COMITÉ DE EMPRESA</h2>
@@ -96,56 +94,62 @@ const IntranetWorkCouncil = () => {
             <span className="tag-badge">EQUIPO</span>
             <h2>ORGANIGRAMA DEL COMITÉ</h2>
 
-            <div className="org-tree-container">
-              <div className="org-tree">
-                {/* TOP LEVEL */}
-                <div className="org-top">
-                  <div className="org-top-avatars">
-                    <article className="member-capsule org-node-top">
-                      <div className="member-avatar">E</div>
-                      <p className="role-title">PRESIDENTA</p>
-                      <h4>Elena Martínez García</h4>
-                    </article>
-
-                    <div className="org-top-connector">
-                      <div className="org-vertical-drop"></div>
+            <div className="org-vertical-container">
+              <div className="org-horizontal-bridge"></div>
+              {/* COLUMNA IZQUIERDA: PRESIDENTA */}
+              <div className="org-vertical-column">
+                <article className="member-capsule org-node-top">
+                  <div className="member-avatar">E</div>
+                  <p className="role-title">PRESIDENTA</p>
+                  <h4>Elena Martínez García</h4>
+                </article>
+                <div className="vertical-connector-line"></div>
+                <div className="vocals-vertical-list">
+                  {[
+                    { name: "Ana Ruiz López", role: "VOCAL / PRL C.Social" },
+                    { name: "Javier Sanz Díaz", role: "VOCAL / PRL C.Social" },
+                    { name: "Luis Fernández Gil", role: "VOCAL / PRL C.Social" },
+                    { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" },
+                    { name: "Pilar Gómez Torres", role: "VOCAL / PRL C.Social" },
+                    { name: "Miguel Moreno Ruiz", role: "VOCAL / PRL C.Social" }
+                  ].map((member, i) => (
+                    <div key={i} className="vocal-item">
+                      <div className="vocal-side-line"></div>
+                      <article className="member-capsule org-node-bottom">
+                        <div className="member-avatar">{member.name.charAt(0)}</div>
+                        <p className="role-title">{member.role}</p>
+                        <h4>{member.name}</h4>
+                      </article>
                     </div>
-
-                    <article className="member-capsule org-node-top">
-                      <div className="member-avatar">C</div>
-                      <p className="role-title">SECRETARIO</p>
-                      <h4>Carlos Rodríguez Pérez</h4>
-                    </article>
-                  </div>
+                  ))}
                 </div>
+              </div>
 
-                {/* BOTTOM LEVEL */}
-                <div className="org-bottom">
-                  <div className="org-horizontal-line"></div>
-                  <div className="org-bottom-nodes">
-                    {[
-                      { name: "Ana Ruiz López", role: "VOCAL / PRL C.Social" },
-                      { name: "Javier Sanz Díaz", role: "VOCAL / PRL C.Social" },
-                      { name: "Luis Fernández Gil", role: "VOCAL / PRL C.Social" },
-                      { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" },
-                      { name: "Pilar Gómez Torres", role: "VOCAL / PRL C.Social" },
-                      { name: "Miguel Moreno Ruiz", role: "VOCAL / PRL C.Social" },
-                      { name: "David Castro León", role: "VOCAL / PRL C.Social" },
-                      { name: "Sofía Torcal Valentín", role: "VOCAL" },
-                      { name: "Jorge Navarro Cruz", role: "VOCAL" },
-                      { name: "Carmen Pérez Ortiz", role: "VOCAL" },
-                      { name: "Ainara Gorría Planté", role: "VOCAL" }
-                    ].map((member, i) => (
-                      <div key={i} className="org-bottom-node-wrapper">
-                        <div className="org-vertical-branch"></div>
-                        <article className="member-capsule org-node-bottom">
-                          <div className="member-avatar">{member.name.charAt(0)}</div>
-                          <p className="role-title">{member.role}</p>
-                          <h4>{member.name}</h4>
-                        </article>
-                      </div>
-                    ))}
-                  </div>
+              {/* COLUMNA DERECHA: SECRETARIO */}
+              <div className="org-vertical-column">
+                <article className="member-capsule org-node-top">
+                  <div className="member-avatar">C</div>
+                  <p className="role-title">SECRETARIO</p>
+                  <h4>Carlos Rodríguez Pérez</h4>
+                </article>
+                <div className="vertical-connector-line"></div>
+                <div className="vocals-vertical-list">
+                  {[
+                    { name: "David Castro León", role: "VOCAL / PRL C.Social" },
+                    { name: "Sofía Torcal Valentín", role: "VOCAL" },
+                    { name: "Jorge Navarro Cruz", role: "VOCAL" },
+                    { name: "Carmen Pérez Ortiz", role: "VOCAL" },
+                    { name: "Ainara Gorría Planté", role: "VOCAL" }
+                  ].map((member, i) => (
+                    <div key={i} className="vocal-item">
+                      <div className="vocal-side-line"></div>
+                      <article className="member-capsule org-node-bottom">
+                        <div className="member-avatar">{member.name.charAt(0)}</div>
+                        <p className="role-title">{member.role}</p>
+                        <h4>{member.name}</h4>
+                      </article>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

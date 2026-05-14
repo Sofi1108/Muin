@@ -28,6 +28,7 @@ const AdminDesignsPanel = () => {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file || !nombre || !precio) return alert("Faltan campos");
+    if (parseFloat(precio) < 0) return alert("El precio no puede ser negativo");
 
     // Primero subir la imagen
     const formData = new FormData();
@@ -75,30 +76,68 @@ const AdminDesignsPanel = () => {
           <h3>Añadir Nuevo Diseño</h3>
           <div className="input-group">
             <label>Nombre del Diseño</label>
-            <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} required />
+            <input 
+              type="text" 
+              placeholder="Ej: Logo MUIN Gold"
+              value={nombre} 
+              onChange={e => setNombre(e.target.value)} 
+              required 
+            />
           </div>
           <div className="input-group">
             <label>Precio Extra (€)</label>
-            <input type="number" step="0.01" value={precio} onChange={e => setPrecio(e.target.value)} required />
+            <input 
+              type="number" 
+              step="0.01" 
+              min="0"
+              placeholder="0.00"
+              value={precio} 
+              onChange={e => setPrecio(e.target.value)} 
+              required 
+            />
           </div>
           <div className="input-group">
-            <label>Imagen</label>
-            <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} required />
+            <label>Imagen del Diseño</label>
+            <div className="file-input-wrapper">
+              <div className="file-input-button">
+                <span className="material-symbols-outlined">cloud_upload</span>
+                {file ? file.name : "Seleccionar archivo de imagen"}
+              </div>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={e => setFile(e.target.files?.[0] || null)} 
+                required 
+              />
+            </div>
           </div>
-          <button type="submit" className="btn-muin-red-solid">Añadir Diseño</button>
+          <button type="submit" className="btn-muin-red-solid">
+            <span className="material-symbols-outlined" style={{verticalAlign: 'middle', marginRight: '8px'}}>add_circle</span>
+            Añadir Diseño
+          </button>
         </form>
 
         <div className="admin-list">
-          {loading ? <p>Cargando...</p> : designs.map(d => (
-            <div key={d.id_diseno} className="admin-list-item">
-              <img src={d.url_imagen} alt={d.nombre_diseno} style={{width: 50, height: 50, objectFit: 'contain'}} />
-              <div>
-                <strong>{d.nombre_diseno}</strong>
-                <p>{d.precio_diseno}€</p>
+          {loading ? (
+            <div style={{textAlign: 'center', padding: '3rem'}}>Cargando diseños...</div>
+          ) : (
+            designs.map(d => (
+              <div key={d.id_diseno} className="admin-list-item">
+                <img src={d.url_imagen} alt={d.nombre_diseno} style={{width: 80, height: 80, objectFit: 'contain'}} />
+                <div>
+                  <strong>{d.nombre_diseno}</strong>
+                  <p>{d.precio_diseno} €</p>
+                </div>
+                <button 
+                  onClick={() => handleDelete(d.id_diseno)} 
+                  className="btn-intranet-red" 
+                  style={{marginLeft: 'auto'}}
+                >
+                  Eliminar
+                </button>
               </div>
-              <button onClick={() => handleDelete(d.id_diseno)} className="btn-intranet-red" style={{marginLeft: 'auto'}}>Eliminar</button>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </IntranetLayout>

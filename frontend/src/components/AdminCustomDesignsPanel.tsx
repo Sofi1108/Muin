@@ -26,28 +26,50 @@ const AdminCustomDesignsPanel = () => {
     <IntranetLayout title="Diseños de Clientes" subtitle="Registro de capas personalizadas generadas en pedidos">
       <div className="admin-panel-container">
         <div className="admin-list">
-          {loading ? <p>Cargando...</p> : layers.map(layer => (
-            <div key={layer.id_diseno_perso} className="admin-list-item" style={{ alignItems: 'flex-start', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                {layer.tipo !== 'text' && (
-                  <img src={layer.contenido} alt="Capa" style={{width: 80, height: 80, objectFit: 'contain', background: '#ccc'}} />
-                )}
-                {layer.tipo === 'text' && (
-                  <div style={{width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#ccc', color: layer.color}}>
-                    <strong>{layer.contenido}</strong>
-                  </div>
-                )}
+          {loading ? (
+            <div style={{textAlign: 'center', padding: '3rem'}}>Cargando diseños...</div>
+          ) : (
+            layers.map(layer => (
+              <div key={layer.id_diseno_perso} className="admin-list-item">
+                <div style={{ position: 'relative' }}>
+                  {layer.tipo !== 'text' ? (
+                    <img src={layer.contenido} alt="Capa" style={{width: 100, height: 100, objectFit: 'contain'}} />
+                  ) : (
+                    <div style={{
+                      width: 100, 
+                      height: 100, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      background: 'var(--surface)', 
+                      borderRadius: '12px',
+                      color: layer.color,
+                      fontSize: '1.5rem',
+                      fontWeight: 900
+                    }}>
+                      T
+                    </div>
+                  )}
+                  <span className="tag-badge" style={{ position: 'absolute', top: -10, left: -10, margin: 0, fontSize: '0.6rem' }}>
+                    {layer.tipo}
+                  </span>
+                </div>
                 
-                <div>
-                  <h4>Producto Perso ID: {layer.id_producto_perso}</h4>
-                  <p><strong>Tipo:</strong> {layer.tipo}</p>
-                  <p><strong>Escala:</strong> {layer.escala}</p>
-                  <p><strong>Posición:</strong> X: {layer.pos_x}, Y: {layer.pos_y}</p>
-                  {layer.tipo === 'text' && <p><strong>Color:</strong> <span style={{color: layer.color}}>{layer.color}</span></p>}
+                <div style={{ flex: 1 }}>
+                  <strong>{layer.nombre_producto_perso || `Producto #${layer.id_producto_perso}`}</strong>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                    <span>Escala: <strong>{layer.escala}</strong></span>
+                    <span>Posición: <strong>{layer.pos_x}, {layer.pos_y}</strong></span>
+                    {layer.tipo === 'text' && (
+                      <span style={{ gridColumn: 'span 2' }}>
+                        Contenido: <strong style={{color: layer.color}}>"{layer.contenido}"</strong>
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </IntranetLayout>
