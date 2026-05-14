@@ -135,15 +135,6 @@ function App() {
           />
 
           <Route
-            path="/profile"
-            element={
-              <>
-                <ProfilePage />
-              </>
-            }
-          />
-
-          <Route
             path="/products/shirts"
             element={
               <>
