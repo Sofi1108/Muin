@@ -945,7 +945,7 @@ app.post(
     const tipoFinal = type === "in" ? "entrada" : "salida";
     try {
       const result = await pool.query(
-        "INSERT INTO CHECK_IN (id_usuario, tipo, nota, hora) VALUES ($1,$2,$3,NOW()) RETURNING id_check_in as id, tipo as type, hora as recorded_at",
+        "INSERT INTO CHECK_IN (id_usuario, tipo, nota, hora) VALUES ($1,$2,$3,NOW()) RETURNING id_check_in as id, tipo as type, nota as note, hora as recorded_at",
         [req.customer!.id, tipoFinal, note ?? ""],
       );
       res.status(201).json({ event: result.rows[0] });
@@ -963,7 +963,7 @@ app.get(
   async (req: AuthRequest, res: Response) => {
     try {
       const result = await pool.query(
-        "SELECT id_check_in as id, tipo as type, hora as recorded_at FROM CHECK_IN WHERE id_usuario = $1 ORDER BY hora ASC",
+        "SELECT id_check_in as id, tipo as type, nota as note, hora as recorded_at FROM CHECK_IN WHERE id_usuario = $1 ORDER BY hora ASC",
         [req.customer!.id],
       );
       // mapear entrada/salida a in/out para el frontend
