@@ -15,7 +15,9 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
     console.log("Contenido del carrito en Checkout:", cart);
   }, [cart]);
 
-  const handleExpirationDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExpirationDateChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     let value = e.target.value.replace(/\D/g, ""); // Solo números
 
     // Limitar a 4 dígitos máximo
@@ -103,7 +105,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
           <h1 style={{ fontWeight: 900, marginTop: "1rem" }}>
             PAYMENT SUCCESSFUL!
           </h1>
-          <p>Tu pedido de MUIN ha sido procesado.</p>
+          <p>Your order with MUIN has been processed.</p>
           <button className="btn-pay-now" onClick={() => navigate("/")}>
             COME BACK TO HOME
           </button>

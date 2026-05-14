@@ -1,0 +1,55 @@
+/* Ticket form styling */
+.ticket-form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+/* Inputs & textarea */
+.ticket-form input,
+.ticket-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  font-size: 0.95rem;
+}
+
+/* Larger description textarea */
+.ticket-form textarea {
+  resize: vertical;
+  min-height: 6rem; /* roughly rows=6 */
+}
+
+/* ---------- BUTTON STYLING ---------- */
+.ticket-form .primary-button {
+  /* Same base used in other pages */
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover / active states */
+.ticket-form .primary-button:hover {
+  background: var(--accent-dark, #0066b2);
+  transform: translateY(-1px);
+}
+.ticket-form .primary-button:active {
+  background: var(--accent-darker, #004a86);
+  transform: translateY(0);
+}
+
+/* Optional focus outline for accessibility */
+.ticket-form .primary-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
