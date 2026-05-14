@@ -189,6 +189,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const [size, setSize] = useState<SizeType>('M');
   const [activeColor, setActiveColor] = useState<ColorType>({ name: 'Negro', hex: '#1a1a1a' });
   const [layers, setLayers] = useState<Layer[]>([]);
+  const [fileMap, setFileMap] = useState<Record<string, File>>({}); // Store original files for lazy upload
   
   const [dbProducts, setDbProducts] = useState<DBProduct[]>([]);
   const [dbDesigns, setDbDesigns] = useState<DBDesign[]>([]);
@@ -243,34 +244,23 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
     }]);
   };
 
-  const handleAddCustomImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddCustomImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(file) {
-      const formData = new FormData();
-      formData.append('image', file);
+      const id = Date.now().toString();
+      const localUrl = URL.createObjectURL(file);
       
-      try {
-        const res = await fetch('http://localhost:3000/api/upload', {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (!res.ok) throw new Error("Error al subir la imagen");
-        const data = await res.json();
-        
-        setLayers([...layers, {
-          id: Date.now().toString(),
-          type: 'custom_image',
-          content: data.url, // URL del servidor
-          name: file.name,
-          scale: 1.0,
-          x: 0,
-          y: 0,
-          side: 'front'
-        }]);
-      } catch(err) {
-        alert("Error al subir la imagen al servidor.");
-      }
+      setFileMap(prev => ({ ...prev, [id]: file }));
+      setLayers([...layers, {
+        id: id,
+        type: 'custom_image',
+        content: localUrl, 
+        name: file.name,
+        scale: 1.0,
+        x: 0,
+        y: 0,
+        side: 'front'
+      }]);
     }
     e.target.value = ''; // reset
   };
@@ -294,42 +284,76 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   };
 
   const removeLayer = (id: string) => {
+    const layer = layers.find(l => l.id === id);
+    if (layer && layer.type === 'custom_image' && layer.content.startsWith('blob:')) {
+      URL.revokeObjectURL(layer.content);
+    }
     setLayers(layers.filter(l => l.id !== id));
+    setFileMap(prev => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
 
-  const handleAddToCart = () => {
-    // We create a unique temporary ID for this custom product configuration
-    const customId = Date.now();
+  const handleAddToCart = async () => {
+    setLoading(true); // Show loading while uploading
     
-    const firstDbDesign = layers.find(l => l.type === 'db_design');
-    const customProduct: any = {
-      id_producto_perso: customId,
-      id_diseño: firstDbDesign ? firstDbDesign.dbId : undefined,
-      nombre_producto_perso: `Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
-      descripcion: `Color: ${activeColor.name}, Layers: ${layers.length}`,
-      precio_producto_perso: totalPrice,
-      cantidad_u: 100,
-      url_imagen: type === 'shirt' ? '/assets/Img/shirtCategorie.jpg' : '/assets/Img/hoodieCategorie.jpg',
-      layers: layers // Añadimos las capas para que el backend las procese
-    };
+    try {
+      // 1. Upload any pending local files
+      const updatedLayers = await Promise.all(layers.map(async (layer) => {
+        if (layer.type === 'custom_image' && layer.content.startsWith('blob:')) {
+          const file = fileMap[layer.id];
+          if (!file) return layer;
 
-    if (onAddToCart) {
-      // Assuming App.tsx addToCart supports sizes, though the current App.tsx addToCart takes just product.
-      // We will pass the size in description or as part of the name for now.
-      customProduct.descripcion += `, Talla: ${size}`;
-      onAddToCart(customProduct, 1, size);
-    } else {
-      // Fallback: modify sessionStorage directly if onAddToCart is not passed, 
-      // but ideally it should be passed from App.tsx
-      const saved = sessionStorage.getItem("cart");
-      const cart: CartItem[] = saved ? JSON.parse(saved) : [];
-      cart.push({ product: customProduct, quantity: 1, selectedSize: size });
-      sessionStorage.setItem("cart", JSON.stringify(cart));
+          const formData = new FormData();
+          formData.append('image', file);
+
+          const res = await fetch('http://localhost:3000/api/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!res.ok) throw new Error(`Error uploading image: ${layer.name}`);
+          const data = await res.json();
+          
+          return { ...layer, content: data.url };
+        }
+        return layer;
+      }));
+
+      // 2. Add to cart with final URLs
+      const customId = Date.now();
+      const firstDbDesign = updatedLayers.find(l => l.type === 'db_design');
+      
+      const customProduct: any = {
+        id_producto_perso: customId,
+        id_diseño: firstDbDesign ? firstDbDesign.dbId : undefined,
+        nombre_producto_perso: `Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
+        descripcion: `Color: ${activeColor.name}, Layers: ${updatedLayers.length}, Talla: ${size}`,
+        precio_producto_perso: totalPrice,
+        cantidad_u: 100,
+        url_imagen: type === 'shirt' ? '/assets/Img/shirtCategorie.jpg' : '/assets/Img/hoodieCategorie.jpg',
+        layers: updatedLayers
+      };
+
+      if (onAddToCart) {
+        onAddToCart(customProduct, 1, size);
+      } else {
+        const saved = sessionStorage.getItem("cart");
+        const cart: CartItem[] = saved ? JSON.parse(saved) : [];
+        cart.push({ product: customProduct, quantity: 1, selectedSize: size });
+        sessionStorage.setItem("cart", JSON.stringify(cart));
+      }
+      
+      alert("Customized product successfully added to cart.");
+      navigate('/checkout');
+    } catch (err) {
+      console.error(err);
+      alert("There was an error saving your design. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    
-    // Notify and maybe redirect
-    alert("Customized product successfully added to cart.");
-    navigate('/checkout'); // or stay
   };
 
   if (loading) {
