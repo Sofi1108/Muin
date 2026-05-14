@@ -192,6 +192,13 @@
   border: none;
 }
 
+.calendar-day.today {
+  background-color: #820000;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
 /* --- GRIDS & UTILS --- */
 .grid-two {
   display: grid;
