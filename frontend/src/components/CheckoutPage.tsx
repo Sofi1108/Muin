@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 import type { CartItem } from "../../types";
 import "../styles/checkout-page.css";
 
 const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   const navigate = useNavigate();
+  const { customer } = useUser();
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState(1);
   const [cardNumber, setCardNumber] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [cvc, setCvc] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
 
   useEffect(() => {
     console.log("Contenido del carrito en Checkout:", cart);
@@ -79,17 +82,53 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
 
   const total = subtotal;
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) {
       alert("El carrito está vacío");
       return;
     }
+    
+    if (!customer) {
+      alert("Debes iniciar sesión para realizar un pedido.");
+      navigate("/login"); // Asumiendo que existe esta ruta
+      return;
+    }
+    
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
+    try {
+      const res = await fetch("http://localhost:3000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          items: cart.map(c => ({
+            productId: c.product.id_producto_perso,
+            quantity: c.quantity,
+            unitPrice: c.product.precio_producto_perso,
+            productData: c.product
+          })),
+          address: shippingAddress
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Error al procesar el pedido");
+      }
+
+      // Clear the cart
+      sessionStorage.removeItem("cart");
+      window.dispatchEvent(new Event("cartUpdated"));
+      
       setStep(2);
-    }, 2500);
+    } catch (err: any) {
+      alert(err.message || "Ha ocurrido un error durante el pago");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (step === 2) {
@@ -126,7 +165,13 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
           <form onSubmit={handlePayment} className="muin-form">
             <div className="input-group">
               <label>DIRECTION</label>
-              <input type="text" placeholder="YOUR DIRECTION" required />
+              <input 
+                type="text" 
+                placeholder="YOUR DIRECTION" 
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
+                required 
+              />
             </div>
             <div className="input-group">
               <label>NAME OF CARDHOLDER</label>

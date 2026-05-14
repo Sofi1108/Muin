@@ -6,7 +6,6 @@ import NotFound from "./components/NotFound.tsx";
 // import CheckoutPage from "./components/CheckoutPage.tsx";
 // import IntranetLayout from "./components/IntranetLayout.tsx";
 // import IntranetHome from "./components/IntranetHome.tsx";
-// import ClockInPage from "./components/ClockInPage.tsx";
 // import ClockHistory from "./components/ClockHistory.tsx";
 // import AdminUsers from "./components/AdminUsers.tsx";
 // import LoginPage from "./components/LoginPage.tsx";

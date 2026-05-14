@@ -6,7 +6,7 @@ import { useUser } from "../context/UserContext";
 const navItems = [
   // Añadimos 'end: true' para que solo sea exacto
   { path: "/intranet", label: "INICIO", end: true },
-  { path: "/intranet/fichajes", label: "FICHAJES" },
+  { path: "/intranet/fichajes", label: "FICHAJE" },
   { path: "/intranet/work-council", label: "COMITÉ DE EMPRESA" },
   { path: "/intranet/hr", label: "RECURSOS HUMANOS" },
   { path: "/intranet/tickets", label: "TICKETS" },
@@ -39,7 +39,22 @@ const IntranetNavbar = () => {
                 isActive ? "intranet-nav-link active" : "intranet-nav-link"
               }
             >
-              USUARIOS (ADMIN)
+              USUARIOS
+            </NavLink>
+            <NavLink
+              to="/intranet/admin-designs"
+              className={({ isActive }) =>
+                isActive ? "intranet-nav-link active" : "intranet-nav-link"
+              }
+            >
+              DISEÑOS
+            </NavLink>
+            <NavLink
+              to="/intranet/admin-custom-designs"
+              className={({ isActive }) =>
+                isActive ? "intranet-nav-link active" : "intranet-nav-link"
+              }
+            >
             </NavLink>
           </>
         )}

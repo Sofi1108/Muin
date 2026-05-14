@@ -8,21 +8,46 @@ import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { registerTicketRoutes } from "./tickets.js";
 import { pool } from "./db.js";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
 const JWT_SECRET = process.env.JWT_SECRET;
-
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined");
 }
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"], credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.use('/uploads', express.static(uploadsDir));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+
 
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto http://localhost:${PORT}`);
@@ -35,32 +60,49 @@ interface AuthRequest extends Request {
     name: string;
     firstName?: string;
     lastName?: string;
+    dni?: string;
     role: string;
     phone?: string;
   };
 }
 
-export const verifyToken = (
+export const verifyToken = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction,
-): void => {
+): Promise<void> => {
   const token = req.cookies?.token ?? "";
 
   if (!token) {
-    res.status(401).json({ error: "Token requerido" });
+    res.status(401).json({ error: "Token requerido. Por favor, inicia sesión." });
     return;
   }
   try {
     const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    
+    // OBTENER DATOS FRESCOS DE LA BD: Esto asegura que si el usuario cambió su DNI, 
+    // se refleje inmediatamente al refrescar sin tener que re-loguearse.
+    const userCheck = await pool.query(
+      "SELECT id_usuario, nombre_usuario, correoelectronico, nombre, apellido, dni, tipo_usuario FROM USUARIO WHERE id_usuario = $1", 
+      [payload.id]
+    );
+
+    if (userCheck.rows.length === 0) {
+      res.status(401).json({ error: "Usuario no encontrado en el sistema." });
+      return;
+    }
+
+    const dbUser = userCheck.rows[0];
+
     req.customer = {
-      id: payload.id,
-      email: payload.email,
-      name: payload.name,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      role: payload.role,
-      phone: payload.phone || "",
+      id: dbUser.id_usuario,
+      email: dbUser.correoelectronico,
+      name: dbUser.nombre_usuario,
+      firstName: dbUser.nombre,
+      lastName: dbUser.apellido,
+      dni: dbUser.dni,
+      role: dbUser.tipo_usuario,
+      phone: "", // Si tienes teléfono en la BD, añádelo aquí
     };
     next();
   } catch {
@@ -164,6 +206,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
       email: customer.correoelectronico,
       firstName: customer.nombre,
       lastName: customer.apellido,
+      dni: customer.dni,
       role: customer.tipo_usuario,
     },
     JWT_SECRET,
@@ -185,6 +228,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
       email: customer.correoelectronico,
       firstName: customer.nombre,
       lastName: customer.apellido,
+      dni: customer.dni,
       role: customer.tipo_usuario,
     },
   });
@@ -256,6 +300,64 @@ app.post(
   },
 );
 
+//--ACTUALIZAR PERFIL
+app.put("/api/auth/profile", verifyToken, async (req: AuthRequest, res: Response) => {
+  const {
+    DNI,
+    CorreoElectronico,
+    Nombre,
+    Apellido,
+    Nombre_Usuario,
+    Contrasena
+  } = req.body;
+
+  try {
+    // 1. Verificar si el nuevo email o username ya existen en otro usuario
+    const existing = await pool.query(
+      "SELECT id_usuario FROM USUARIO WHERE (nombre_usuario = $1 OR correoelectronico = $2) AND id_usuario != $3",
+      [Nombre_Usuario, CorreoElectronico, req.customer!.id]
+    );
+    
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: "El nombre de usuario o email ya están en uso por otra cuenta." });
+    }
+
+    let query = `
+      UPDATE USUARIO 
+      SET dni = $1, correoelectronico = $2, nombre = $3, apellido = $4, nombre_usuario = $5
+    `;
+    const params = [DNI, CorreoElectronico, Nombre, Apellido, Nombre_Usuario];
+
+    // Si se proporciona contraseña, la hasheamos y la añadimos a la query
+    if (Contrasena && Contrasena.trim() !== "") {
+      const hashedPassword = await bcrypt.hash(Contrasena, 10);
+      query += `, contrasena = $6 WHERE id_usuario = $7`;
+      params.push(hashedPassword, req.customer!.id);
+    } else {
+      query += ` WHERE id_usuario = $6`;
+      params.push(req.customer!.id);
+    }
+
+    await pool.query(query, params);
+
+    // Devolvemos los datos actualizados (menos la pass)
+    res.json({
+      message: "Perfil actualizado correctamente",
+      user: {
+        id: req.customer!.id,
+        email: CorreoElectronico,
+        name: Nombre_Usuario,
+        firstName: Nombre,
+        lastName: Apellido,
+        dni: DNI
+      }
+    });
+  } catch (error) {
+    console.error("Error al actualizar perfil:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
 //--LOGOUT
 
 app.post("/api/auth/logout", (req: Request, res: Response) => {
@@ -277,6 +379,108 @@ app.get("/api/products", async (req: Request, res: Response) => {
       error: "Error interno del servidor",
     });
   }
+});
+
+//-- CARGAR PRODUCTOS BASE
+app.get("/api/base-products", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query("SELECT * FROM PRODUCTO");
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar productos base:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+//-- CARGAR DISEÑOS
+app.get("/api/designs", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query("SELECT * FROM DISENO");
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar diseños:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+//-- AÑADIR DISEÑO (Admin)
+app.post("/api/designs", async (req: Request, res: Response) => {
+  const { nombre_diseno, precio_diseno, url_imagen } = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO DISENO (nombre_diseno, precio_diseno, url_imagen) VALUES ($1, $2, $3) RETURNING *",
+      [nombre_diseno, precio_diseno, url_imagen]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Error al añadir diseño:", error);
+    res.status(500).json({ error: "Error interno" });
+  }
+});
+
+//-- ELIMINAR DISEÑO (Admin)
+app.delete("/api/designs/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM DISENO WHERE id_diseno = $1", [id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al eliminar diseño:", error);
+    res.status(500).json({ error: "Error interno" });
+  }
+});
+
+//-- CARGAR DISEÑOS PERSONALIZADOS (Capas) (Admin)
+app.get("/api/custom-designs", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`
+      SELECT dp.*, pp.nombre_producto_perso 
+      FROM DISENO_PERSONALIZADO dp
+      JOIN PRODUCTO_PERSONALIZADO pp ON dp.id_producto_perso = pp.id_producto_perso
+      ORDER BY dp.id_diseno_perso DESC
+    `);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al cargar diseños personalizados:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+//-- PROXY DE IMAGENES PARA EVITAR CORS EN WEBGL
+app.get("/api/proxy-image", async (req: Request, res: Response) => {
+  const imageUrl = req.query.url as string;
+  if (!imageUrl) {
+    return res.status(400).json({ error: "URL de imagen requerida" });
+  }
+  
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    // Set headers
+    res.setHeader('Content-Type', response.headers.get('content-type') || 'image/jpeg');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache 1 day
+    
+    res.send(buffer);
+  } catch (error) {
+    console.error("Error proxying image:", error);
+    res.status(500).json({ error: "Error proxying image" });
+  }
+});
+
+//-- ENDPOINT DE UPLOAD DE IMAGENES PROPIAS DEL CLIENTE
+app.post("/api/upload", upload.single('image'), (req: Request, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No se proporcionó ningún archivo" });
+  }
+  const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+  res.json({ url: fileUrl });
 });
 
 //--CREAR NUEVO PRODUCTO
@@ -578,6 +782,11 @@ app.post(
     try {
       // Verificar stock de cada producto
       for (const item of items) {
+        // Si el frontend envía productData con un id_diseño, es un producto customizado nuevo. No comprobamos stock.
+        if (item.productData && item.productData.id_diseño !== undefined) {
+          continue;
+        }
+
         const check = await pool.query(
           "SELECT cantidad_u as stock, nombre_producto_perso as nombre_producto FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso = $1",
           [item.productId],
@@ -596,21 +805,71 @@ app.post(
       try {
         await client.query("BEGIN");
 
-        // Necesita una dirección existente en la nueva BD. Usaré 1 por defecto si no se puede crear al vuelo para el ejemplo
+        // 1. Insertar la dirección en la tabla DIRECCION y obtener su ID
+        const addressResult = await client.query(
+          "INSERT INTO DIRECCION (id_Usuario, calle) VALUES ($1, $2) RETURNING id_Direccion",
+          [req.customer!.id, address || "Sin dirección"]
+        );
+        const addressId = addressResult.rows[0].id_direccion || addressResult.rows[0].id_Direccion;
+
+        // 2. Crear el pedido usando el addressId real
         const orderResult = await client.query(
-          "INSERT INTO PEDIDO (id_Usuario, id_direccion, estado_pedido, fecha_realizado) VALUES ($1, $2, 'pendiente', NOW()) RETURNING id_pedido as id, estado_pedido as status",
-          [req.customer!.id, 1],
+          "INSERT INTO PEDIDO (id_Usuario, id_Direccion, estado_pedido, fecha_realizado) VALUES ($1, $2, 'pendiente', NOW()) RETURNING id_pedido as id, estado_pedido as status",
+          [req.customer!.id, addressId],
         );
         const orderId = orderResult.rows[0].id;
 
         for (const item of items) {
+          let actualProductId = item.productId;
+
+          if (item.productData && item.productData.layers !== undefined) {
+            // Es un producto personalizado con múltiples capas, lo insertamos en la BD primero
+            const insertCustom = await client.query(
+              `INSERT INTO PRODUCTO_PERSONALIZADO 
+               (id_producto, id_diseño, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen) 
+               VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_producto_perso`,
+              [
+                item.productData.id_producto || null,
+                item.productData.id_diseño,
+                item.productData.nombre_producto_perso,
+                item.productData.descripcion,
+                item.productData.precio_producto_perso,
+                item.quantity, 
+                item.productData.url_imagen
+              ]
+            );
+            actualProductId = insertCustom.rows[0].id_producto_perso;
+            
+            // Insertar todas las capas en DISENO_PERSONALIZADO
+            const layers = item.productData.layers;
+            for (const layer of layers) {
+               await client.query(
+                 `INSERT INTO DISENO_PERSONALIZADO 
+                  (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+                 [
+                   actualProductId,
+                   layer.type,
+                   layer.content,
+                   layer.dbId || null,
+                   layer.scale,
+                   layer.x,
+                   layer.y,
+                   layer.color || null
+                 ]
+               );
+            }
+          } else {
+            // Actualizar el stock del producto normal
+            await client.query(
+              "UPDATE PRODUCTO_PERSONALIZADO SET cantidad_u = cantidad_u - $1 WHERE id_producto_perso = $2",
+              [item.quantity, actualProductId],
+            );
+          }
+
           await client.query(
-            "INSERT INTO LINEA_PRODUCTO (id_Pedido, id_Producto, cant_Producto, precio_u, descripcion) VALUES ($1,$2,$3,$4,'')",
-            [orderId, item.productId, item.quantity, item.unitPrice],
-          );
-          await client.query(
-            "UPDATE PRODUCTO_PERSONALIZADO SET cantidad_u = cantidad_u - $1 WHERE id_producto_perso = $2",
-            [item.quantity, item.productId],
+            "INSERT INTO LINEA_PRODUCTO (id_Pedido, id_Producto, cant_Producto, precio_u, descripcion) VALUES ($1,$2,$3,$4,$5)",
+            [orderId, actualProductId, item.quantity, item.unitPrice, item.productData?.descripcion || ''],
           );
         }
         await client.query("COMMIT");
@@ -770,7 +1029,7 @@ app.post(
     const tipoFinal = type === "in" ? "entrada" : "salida";
     try {
       const result = await pool.query(
-        "INSERT INTO CHECK_IN (id_usuario, tipo, nota, hora) VALUES ($1,$2,$3,NOW()) RETURNING id_check_in as id, tipo as type, hora as recorded_at",
+        "INSERT INTO CHECK_IN (id_usuario, tipo, nota, hora) VALUES ($1,$2,$3,NOW()) RETURNING id_check_in as id, tipo as type, nota as note, hora as recorded_at",
         [req.customer!.id, tipoFinal, note ?? ""],
       );
       res.status(201).json({ event: result.rows[0] });
@@ -788,7 +1047,7 @@ app.get(
   async (req: AuthRequest, res: Response) => {
     try {
       const result = await pool.query(
-        "SELECT id_check_in as id, tipo as type, hora as recorded_at FROM CHECK_IN WHERE id_usuario = $1 ORDER BY hora ASC",
+        "SELECT id_check_in as id, tipo as type, nota as note, hora as recorded_at FROM CHECK_IN WHERE id_usuario = $1 ORDER BY hora ASC",
         [req.customer!.id],
       );
       // mapear entrada/salida a in/out para el frontend

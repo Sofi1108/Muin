@@ -2,10 +2,11 @@ import { NavLink } from "react-router-dom";
 import "../styles/intranet-navbar.css"; // Usar el mismo estilo
 
 const workCouncilNavItems = [
-  { path: "/intranet", label: "INICIO" },
+  { path: "/intranet", label: "INICIO", end: true },
   { path: "/intranet/work-council", label: "PÁGINA COMITÉ", end: true },
   { path: "/intranet/news", label: "NOTICIAS" },
   { path: "/intranet/work-capsules", label: "PÍLDORAS INFORMATIVAS" },
+  { path: "/intranet/legal-documents", label: "DOCUMENTOS LEGALES" },
 ];
 
 const WorkCouncilNavbar = () => {

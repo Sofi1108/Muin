@@ -26,6 +26,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import IntranetWorkCouncil from "./components/IntranetWorkCouncil";
 import IntranetNews from "./components/IntranetNews";
 import { IntranetWorkCapsules } from "./components/IntranetWorkCapsules";
+import IntranetLegalDocuments from "./components/IntranetLegalDocuments";
 import IntranetHumanResourcer from "./components/IntranetHumanResourcer";
 import ContactPage from "./components/ContactPage";
 import AboutUsPage from "./components/AboutUsPage";
@@ -39,6 +40,9 @@ import CheckoutPage from "./components/CheckoutPage";
 import Tickets from "./components/Tickets";
 import ProductCarousel from "./components/ProductCarrousel";
 import AdminUsers from "./components/AdminUsers";
+import PersonalizarProducto from "./components/PersonalizarProducto";
+import AdminDesignsPanel from "./components/AdminDesignsPanel";
+import AdminCustomDesignsPanel from "./components/AdminCustomDesignsPanel";
 
 import type { Product, CartItem } from "../types";
 
@@ -131,15 +135,6 @@ function App() {
           />
 
           <Route
-            path="/profile"
-            element={
-              <>
-                <ProfilePage />
-              </>
-            }
-          />
-
-          <Route
             path="/products/shirts"
             element={
               <>
@@ -207,7 +202,7 @@ function App() {
           <Route
             path="/intranet"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetHome />
               </PrivateRoute>
             }
@@ -215,7 +210,7 @@ function App() {
           <Route
             path="/intranet/work-council"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetWorkCouncil />
               </PrivateRoute>
             }
@@ -223,7 +218,7 @@ function App() {
           <Route
             path="/intranet/news"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetNews />
               </PrivateRoute>
             }
@@ -231,7 +226,7 @@ function App() {
           <Route
             path="/intranet/hr"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetHumanResourcer />
               </PrivateRoute>
             }
@@ -239,19 +234,34 @@ function App() {
           <Route
             path="/intranet/work-capsules"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetWorkCapsules />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/legal-documents"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <IntranetLegalDocuments />
               </PrivateRoute>
             }
           />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/careers" element={<CareersPage />} />
-          <Route path="/intranet/fichajes" element={<Fichajes />} />
+          <Route
+            path="/intranet/fichajes"
+            element={
+              <PrivateRoute roles={["admin", "empleado"]}>
+                <Fichajes />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/intranet/tickets"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <Tickets />
               </PrivateRoute>
             }
@@ -261,6 +271,22 @@ function App() {
             element={
               <PrivateRoute roles={["admin"]}>
                 <AdminUsers />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/admin-designs"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminDesignsPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/admin-custom-designs"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminCustomDesignsPanel />
               </PrivateRoute>
             }
           />
@@ -294,6 +320,15 @@ function App() {
               <PrivateRoute roles={["admin", "empleado"]}>
                 <EditProductPage />
               </PrivateRoute>
+            }
+          />
+          <Route
+            path="/personalize"
+            element={
+              <>
+                <HeroSectionSmall />
+                <PersonalizarProducto onAddToCart={addToCart} />
+              </>
             }
           />
 

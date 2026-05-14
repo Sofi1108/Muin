@@ -19,7 +19,7 @@ export const IntranetWorkCapsules = () => {
         </section>
 
         <main className="work-capsules-main">
-          
+
           {/* 1. Modificación y Extinción de Contratos */}
           <section className="section-card">
             <span className="tag-badge">Actualización Laboral 2026</span>
@@ -27,7 +27,7 @@ export const IntranetWorkCapsules = () => {
             <p>
               Regulada en el Artículo 41 del Estatuto de los Trabajadores (ET), es la facultad del empresario para alterar aspectos esenciales del contrato por razones ETOP (Económicas, Técnicas, Organizativas o de Producción).
             </p>
-            
+
             <h3 style={{ marginTop: "1.5rem" }}>¿Qué puede cambiar la empresa?</h3>
             <div className="infographic-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginTop: "1rem" }}>
               <div className="infographic-card">
@@ -61,7 +61,7 @@ export const IntranetWorkCapsules = () => {
             </div>
 
             <h2 style={{ marginTop: "3rem", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>2. Extinción del Contrato (Terminación)</h2>
-            
+
             <h3 style={{ marginTop: "1.5rem" }}>A. Por voluntad del trabajador (Iniciativa Propia)</h3>
             <div className="infographic-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem", marginTop: "1rem" }}>
               <div className="infographic-card">
@@ -173,6 +173,102 @@ export const IntranetWorkCapsules = () => {
             </div>
           </section>
 
+          {/* DESPIDO DISCIPLINARIO */}
+          <section className="section-card">
+            <span className="tag-badge">Derechos</span>
+            <h2>DESPIDO DISCIPLINARIO</h2>
+
+            <div className="infographic-card" style={{ marginBottom: "1.5rem" }}>
+              <h4>1. EL CONCEPTO BÁSICO</h4>
+              <p>Es el despido por un incumplimiento grave y culpable.</p>
+              <ul className="info-list" style={{ paddingLeft: "1.2rem", marginTop: "0.5rem" }}>
+                <li style={{ marginBottom: "0.5rem" }}><strong>PIERDES:</strong> Derecho a indemnización y a días de preaviso.</li>
+                <li><strong>MANTIENES:</strong> Derecho al Finiquito y a pedir la prestación por desempleo (paro).</li>
+              </ul>
+            </div>
+
+            <div className="infographic-card" style={{ marginBottom: "1.5rem" }}>
+              <h4>2. ¿POR QUÉ TE PUEDEN DESPEDIR ASÍ? (Art. 54)</h4>
+              <p>Solo es válido si la empresa demuestra alguna de estas faltas:</p>
+              <ul className="info-list" style={{ paddingLeft: "1.2rem", marginTop: "0.5rem" }}>
+                <li style={{ marginBottom: "0.5rem" }}>Faltas de asistencia o impuntualidad repetidas e injustificadas.</li>
+                <li style={{ marginBottom: "0.5rem" }}>Indisciplina o desobediencia en el trabajo.</li>
+                <li style={{ marginBottom: "0.5rem" }}>Ofensas verbales o físicas al empresario, compañeros o familiares.</li>
+                <li style={{ marginBottom: "0.5rem" }}>Transgresión de la buena fe contractual o abuso de confianza.</li>
+                <li style={{ marginBottom: "0.5rem" }}>Disminución continuada y voluntaria del rendimiento.</li>
+                <li style={{ marginBottom: "0.5rem" }}>Embriaguez habitual o toxicomanía si repercuten negativamente en el trabajo.</li>
+                <li>Acoso por razón de origen racial, religión, discapacidad, edad u orientación sexual y el acoso sexual.</li>
+              </ul>
+            </div>
+
+            <div className="grid-two-capsules" style={{ marginBottom: "1.5rem" }}>
+              <div className="infographic-card">
+                <h4>3. LAS OBLIGACIONES DE LA EMPRESA</h4>
+                <p>No vale un despido verbal. Deben cumplir esto:</p>
+                <ul className="info-list" style={{ paddingLeft: "1.2rem", marginTop: "0.5rem" }}>
+                  <li style={{ marginBottom: "0.5rem" }}><strong>Carta de Despido:</strong> Por escrito, con hechos detallados, actos concretos y fechas exactas.</li>
+                  <li style={{ marginBottom: "0.5rem" }}><strong>Audiencia Previa (Novedad 2026):</strong> Deben dejarte defenderte y aportar pruebas antes de que el despido sea efectivo.</li>
+                  <li><strong>Expediente Contradictorio:</strong> Obligatorio solo si eres representante legal de los trabajadores o delegado sindical.</li>
+                </ul>
+              </div>
+
+              <div className="infographic-card">
+                <h4>4. ¿QUÉ HACER EN EL MOMENTO DEL DESPIDO?</h4>
+                <p><strong>REGLA DE ORO:</strong> Mantén la calma y firma todo así: <br /><em>"RECIBIDO, NO CONFORME" + Fecha de hoy + Tu firma</em></p>
+                <ul className="info-list" style={{ paddingLeft: "1.2rem", marginTop: "0.5rem" }}>
+                  <li style={{ marginBottom: "0.5rem" }}><strong>En la Carta:</strong> Hacerlo no te obliga a demandar, pero te guarda el derecho a hacerlo.</li>
+                  <li><strong>En el Finiquito:</strong> Recuerda que esto solo te paga lo atrasado (vacaciones no disfrutadas, parte proporcional de pagas extra, días del mes trabajado), no es la indemnización por despido. Fírmalo también como "No conforme" o "Pendiente de revisión".</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="infographic-card" style={{ marginBottom: "1.5rem", overflowX: "auto" }}>
+              <h4>5. SI DENUNCIAS... ¿QUÉ PUEDE DECIR EL JUEZ?</h4>
+              <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem", textAlign: "left", minWidth: "500px" }}>
+                <thead>
+                  <tr style={{ backgroundColor: "var(--bg-capsule-hover)", color: "var(--text-main)" }}>
+                    <th style={{ padding: "0.75rem", borderBottom: "2px solid var(--border)" }}>Sentencia</th>
+                    <th style={{ padding: "0.75rem", borderBottom: "2px solid var(--border)" }}>¿Qué significa?</th>
+                    <th style={{ padding: "0.75rem", borderBottom: "2px solid var(--border)" }}>Tu resultado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}><strong>PROCEDENTE</strong></td>
+                    <td style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}>La empresa tenía razón y confirma las causas.</td>
+                    <td style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}>Te quedas sin indemnización.</td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}><strong>IMPROCEDENTE</strong></td>
+                    <td style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}>La empresa no probó los hechos o falló el proceso.</td>
+                    <td style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}>Readmisión O 33 días por año trabajado. <br /><small style={{ color: "var(--text-muted)" }}>(Novedad 2026: Posible indemnización "disuasoria" por daños si los 33 días son muy pocos y el despido fue arbitrario).</small></td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "0.75rem" }}><strong>NULO</strong></td>
+                    <td style={{ padding: "0.75rem" }}>Hubo discriminación o violación de derechos fundamentales.</td>
+                    <td style={{ padding: "0.75rem" }}>Readmisión obligatoria y pago de salarios de tramitación.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="grid-two-capsules">
+              <div className="infographic-card">
+                <h4>6. TU LÍNEA DE TIEMPO (PLAZOS CRÍTICOS)</h4>
+                <ul className="info-list" style={{ paddingLeft: "1.2rem", marginTop: "0.5rem" }}>
+                  <li style={{ marginBottom: "0.5rem" }}><strong>Para la empresa (Prescripción de la falta):</strong> Tiene 60 días para sancionarte desde que descubre tu falta, y máximo 6 meses desde que ocurrió.</li>
+                  <li><strong>Para el trabajador (Demanda):</strong> Tienes <strong>SOLO 20 DÍAS HÁBILES</strong> (sin contar sábados, domingos ni festivos) desde el día siguiente a la fecha de efectos del despido para reclamar (Papeleta de Conciliación ante el SMAC o similar).</li>
+                </ul>
+              </div>
+              <div className="infographic-card" style={{ borderLeft: "4px solid #ef4444" }}>
+                <h4 style={{ color: "#ef4444" }}>CONSEJO FINAL</h4>
+                <p>
+                  Las palabras se las lleva el viento. No te fíes de acuerdos verbales de pasillo y busca asesoramiento legal de inmediato el mismo día que te den la carta.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* 3. Prevención y Riesgos Laborales */}
           <section className="section-card">
             <span className="tag-badge">Seguridad y Salud</span>
@@ -180,15 +276,15 @@ export const IntranetWorkCapsules = () => {
             <p>
               La salud y la seguridad son una prioridad. A continuación, los módulos unificados de integración (MUIN).
             </p>
-            
+
             <div style={{ textAlign: "center", margin: "2rem 0" }}>
               {/* Insertar la imagen de prevención y riesgos laborales */}
-              <img 
-                src={new URL("../assets/Img/prevencion_y_riesgos_laborales.png", import.meta.url).href} 
-                alt="Prevención y Riesgos Laborales" 
+              <img
+                src={new URL("../assets/Img/prevencion_y_riesgos_laborales.png", import.meta.url).href}
+                alt="Prevención y Riesgos Laborales"
                 style={{ maxWidth: "100%", height: "auto", borderRadius: "12px", border: "1px solid var(--border)" }}
-                onError={(e) => { 
-                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/1200x600?text=Guarda+la+imagen+en+src/assets/Img/prevencion_y_riesgos_laborales.png' 
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/1200x600?text=Guarda+la+imagen+en+src/assets/Img/prevencion_y_riesgos_laborales.png'
                 }}
               />
             </div>
@@ -227,20 +323,6 @@ export const IntranetWorkCapsules = () => {
             </div>
           </section>
 
-          {/* 4. Descargas */}
-          <section className="section-card">
-            <span className="tag-badge">Documentos</span>
-            <h2>Descargas Importantes</h2>
-            <p>Accede a documentos clave para tu protección laboral.</p>
-            <div className="download-buttons">
-              <a href="/documents/Estatuto de los trabajadores.pdf" target="_blank" rel="noopener noreferrer" className="download-btn">
-                Ver Estatuto de los Trabajadores
-              </a>
-              <a href="/documents/BRSCGI.pdf" target="_blank" rel="noopener noreferrer" className="download-btn">
-                Ver Convenio Colectivo
-              </a>
-            </div>
-          </section>
 
         </main>
       </div>
