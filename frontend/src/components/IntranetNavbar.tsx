@@ -39,7 +39,7 @@ const IntranetNavbar = () => {
                 isActive ? "intranet-nav-link active" : "intranet-nav-link"
               }
             >
-              USUARIOS (ADMIN)
+              USUARIOS
             </NavLink>
             <NavLink
               to="/intranet/admin-designs"
@@ -47,7 +47,7 @@ const IntranetNavbar = () => {
                 isActive ? "intranet-nav-link active" : "intranet-nav-link"
               }
             >
-              DISEÑOS (ADMIN)
+              DISEÑOS
             </NavLink>
             <NavLink
               to="/intranet/admin-custom-designs"
@@ -55,7 +55,6 @@ const IntranetNavbar = () => {
                 isActive ? "intranet-nav-link active" : "intranet-nav-link"
               }
             >
-              CAPAS PERSO (ADMIN)
             </NavLink>
           </>
         )}
