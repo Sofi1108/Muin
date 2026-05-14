@@ -210,7 +210,7 @@ function App() {
           <Route
             path="/intranet"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetHome />
               </PrivateRoute>
             }
@@ -218,7 +218,7 @@ function App() {
           <Route
             path="/intranet/work-council"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetWorkCouncil />
               </PrivateRoute>
             }
@@ -226,7 +226,7 @@ function App() {
           <Route
             path="/intranet/news"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetNews />
               </PrivateRoute>
             }
@@ -234,7 +234,7 @@ function App() {
           <Route
             path="/intranet/hr"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetHumanResourcer />
               </PrivateRoute>
             }
@@ -242,7 +242,7 @@ function App() {
           <Route
             path="/intranet/work-capsules"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <IntranetWorkCapsules />
               </PrivateRoute>
             }
@@ -254,7 +254,7 @@ function App() {
           <Route
             path="/intranet/tickets"
             element={
-              <PrivateRoute roles={["admin", "employee"]}>
+              <PrivateRoute roles={["admin", "empleado"]}>
                 <Tickets />
               </PrivateRoute>
             }
