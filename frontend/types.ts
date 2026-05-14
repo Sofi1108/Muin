@@ -21,6 +21,7 @@ export interface Customer {
   email: string;
   firstName?: string; // nombre
   lastName?: string; // apellido
+  dni?: string;
   phone?: string;
   role: "admin" | "empleado" | "cliente";
 }

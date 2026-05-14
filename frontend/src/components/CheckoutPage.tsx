@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 import type { CartItem } from "../../types";
 import "../styles/checkout-page.css";
 
 const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   const navigate = useNavigate();
+  const { customer } = useUser();
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState(1);
   const [cardNumber, setCardNumber] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [cvc, setCvc] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
 
   useEffect(() => {
     console.log("Contenido del carrito en Checkout:", cart);
@@ -86,15 +89,20 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
       return;
     }
     
+    if (!customer) {
+      alert("Debes iniciar sesión para realizar un pedido.");
+      navigate("/login"); // Asumiendo que existe esta ruta
+      return;
+    }
+    
     setIsProcessing(true);
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:3000/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
         },
+        credentials: "include",
         body: JSON.stringify({
           items: cart.map(c => ({
             productId: c.product.id_producto_perso,
@@ -102,7 +110,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
             unitPrice: c.product.precio_producto_perso,
             productData: c.product
           })),
-          address: "Dirección de prueba"
+          address: shippingAddress
         })
       });
 
@@ -157,7 +165,13 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
           <form onSubmit={handlePayment} className="muin-form">
             <div className="input-group">
               <label>DIRECTION</label>
-              <input type="text" placeholder="YOUR DIRECTION" required />
+              <input 
+                type="text" 
+                placeholder="YOUR DIRECTION" 
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
+                required 
+              />
             </div>
             <div className="input-group">
               <label>NAME OF CARDHOLDER</label>

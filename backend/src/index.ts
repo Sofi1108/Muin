@@ -60,32 +60,49 @@ interface AuthRequest extends Request {
     name: string;
     firstName?: string;
     lastName?: string;
+    dni?: string;
     role: string;
     phone?: string;
   };
 }
 
-export const verifyToken = (
+export const verifyToken = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction,
-): void => {
+): Promise<void> => {
   const token = req.cookies?.token ?? "";
 
   if (!token) {
-    res.status(401).json({ error: "Token requerido" });
+    res.status(401).json({ error: "Token requerido. Por favor, inicia sesión." });
     return;
   }
   try {
     const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    
+    // OBTENER DATOS FRESCOS DE LA BD: Esto asegura que si el usuario cambió su DNI, 
+    // se refleje inmediatamente al refrescar sin tener que re-loguearse.
+    const userCheck = await pool.query(
+      "SELECT id_usuario, nombre_usuario, correoelectronico, nombre, apellido, dni, tipo_usuario FROM USUARIO WHERE id_usuario = $1", 
+      [payload.id]
+    );
+
+    if (userCheck.rows.length === 0) {
+      res.status(401).json({ error: "Usuario no encontrado en el sistema." });
+      return;
+    }
+
+    const dbUser = userCheck.rows[0];
+
     req.customer = {
-      id: payload.id,
-      email: payload.email,
-      name: payload.name,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      role: payload.role,
-      phone: payload.phone || "",
+      id: dbUser.id_usuario,
+      email: dbUser.correoelectronico,
+      name: dbUser.nombre_usuario,
+      firstName: dbUser.nombre,
+      lastName: dbUser.apellido,
+      dni: dbUser.dni,
+      role: dbUser.tipo_usuario,
+      phone: "", // Si tienes teléfono en la BD, añádelo aquí
     };
     next();
   } catch {
@@ -189,6 +206,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
       email: customer.correoelectronico,
       firstName: customer.nombre,
       lastName: customer.apellido,
+      dni: customer.dni,
       role: customer.tipo_usuario,
     },
     JWT_SECRET,
@@ -210,6 +228,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
       email: customer.correoelectronico,
       firstName: customer.nombre,
       lastName: customer.apellido,
+      dni: customer.dni,
       role: customer.tipo_usuario,
     },
   });
@@ -280,6 +299,64 @@ app.post(
     }
   },
 );
+
+//--ACTUALIZAR PERFIL
+app.put("/api/auth/profile", verifyToken, async (req: AuthRequest, res: Response) => {
+  const {
+    DNI,
+    CorreoElectronico,
+    Nombre,
+    Apellido,
+    Nombre_Usuario,
+    Contrasena
+  } = req.body;
+
+  try {
+    // 1. Verificar si el nuevo email o username ya existen en otro usuario
+    const existing = await pool.query(
+      "SELECT id_usuario FROM USUARIO WHERE (nombre_usuario = $1 OR correoelectronico = $2) AND id_usuario != $3",
+      [Nombre_Usuario, CorreoElectronico, req.customer!.id]
+    );
+    
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: "El nombre de usuario o email ya están en uso por otra cuenta." });
+    }
+
+    let query = `
+      UPDATE USUARIO 
+      SET dni = $1, correoelectronico = $2, nombre = $3, apellido = $4, nombre_usuario = $5
+    `;
+    const params = [DNI, CorreoElectronico, Nombre, Apellido, Nombre_Usuario];
+
+    // Si se proporciona contraseña, la hasheamos y la añadimos a la query
+    if (Contrasena && Contrasena.trim() !== "") {
+      const hashedPassword = await bcrypt.hash(Contrasena, 10);
+      query += `, contrasena = $6 WHERE id_usuario = $7`;
+      params.push(hashedPassword, req.customer!.id);
+    } else {
+      query += ` WHERE id_usuario = $6`;
+      params.push(req.customer!.id);
+    }
+
+    await pool.query(query, params);
+
+    // Devolvemos los datos actualizados (menos la pass)
+    res.json({
+      message: "Perfil actualizado correctamente",
+      user: {
+        id: req.customer!.id,
+        email: CorreoElectronico,
+        name: Nombre_Usuario,
+        firstName: Nombre,
+        lastName: Apellido,
+        dni: DNI
+      }
+    });
+  } catch (error) {
+    console.error("Error al actualizar perfil:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
 
 //--LOGOUT
 
@@ -728,10 +805,17 @@ app.post(
       try {
         await client.query("BEGIN");
 
-        // Necesita una dirección existente en la nueva BD. Usaré 1 por defecto si no se puede crear al vuelo para el ejemplo
+        // 1. Insertar la dirección en la tabla DIRECCION y obtener su ID
+        const addressResult = await client.query(
+          "INSERT INTO DIRECCION (id_Usuario, calle) VALUES ($1, $2) RETURNING id_Direccion",
+          [req.customer!.id, address || "Sin dirección"]
+        );
+        const addressId = addressResult.rows[0].id_direccion || addressResult.rows[0].id_Direccion;
+
+        // 2. Crear el pedido usando el addressId real
         const orderResult = await client.query(
-          "INSERT INTO PEDIDO (id_Usuario, id_direccion, estado_pedido, fecha_realizado) VALUES ($1, $2, 'pendiente', NOW()) RETURNING id_pedido as id, estado_pedido as status",
-          [req.customer!.id, 1],
+          "INSERT INTO PEDIDO (id_Usuario, id_Direccion, estado_pedido, fecha_realizado) VALUES ($1, $2, 'pendiente', NOW()) RETURNING id_pedido as id, estado_pedido as status",
+          [req.customer!.id, addressId],
         );
         const orderId = orderResult.rows[0].id;
 
