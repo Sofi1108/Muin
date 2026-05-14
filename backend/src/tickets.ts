@@ -18,7 +18,7 @@ export const createTicket = async (req: Request, res: Response) => {
   }
   try {
     const result = await pool.query(
-      "INSERT INTO TICKET (id_usuario, id_asignado, descripcion, correo, estado) VALUES ($1,$2,$3,$4,'pendiente') RETURNING id_ticket as id, estado as status",
+      "INSERT INTO TICKET (id_usuario, id_asignado, descripcion, correo, estado_ticket) VALUES ($1,$2,$3,$4,'pendiente') RETURNING id_ticket as id, estado_ticket as status",
       [(req as any).customer?.id, assignedToId, description, email]
     );
     return res.status(201).json({ message: "Ticket creado", ticket: result.rows[0] });
@@ -32,7 +32,7 @@ export const createTicket = async (req: Request, res: Response) => {
 export const getMyTickets = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT id_ticket as id, id_asignado as assignedTo, descripcion as description, correo as email, estado as status FROM TICKET WHERE id_usuario = $1 ORDER BY id_ticket DESC",
+      "SELECT id_ticket as id, id_asignado as assignedTo, descripcion as description, correo as email, estado_ticket as status FROM TICKET WHERE id_usuario = $1 ORDER BY id_ticket DESC",
       [(req as any).customer?.id]
     );
     return res.json(result.rows);
@@ -51,7 +51,7 @@ export const updateTicketStatus = async (req: Request, res: Response) => {
   }
   try {
     const result = await pool.query(
-      "UPDATE TICKET SET estado = $1 WHERE id_ticket = $2 RETURNING id_ticket as id, estado as status",
+      "UPDATE TICKET SET estado_ticket = $1 WHERE id_ticket = $2 RETURNING id_ticket as id, estado_ticket as status",
       [status, parseInt(req.params.id as string)]
     );
     if (result.rows.length === 0) {

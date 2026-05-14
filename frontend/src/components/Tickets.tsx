@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import IntranetLayout from "./IntranetLayout";
-import "../styles/intranet-home.css"; // Usar un estilo similar
+import "../styles/ticket-form.css";
 
 interface Ticket {
   id: number;
@@ -99,7 +99,7 @@ const Tickets: React.FC = () => {
           <section className="section-card">
             <h2>Crear Incidencia</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <form onSubmit={handleSubmit} className="ticket-form">
               <label>
                 ID del empleado/administrador asignado:
                 <input
@@ -115,7 +115,7 @@ const Tickets: React.FC = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required
-                  rows={4}
+                  rows={6}
                 />
               </label>
               <label>

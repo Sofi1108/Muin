@@ -1,4 +1,4 @@
-﻿import WorkCouncilLayout from "./WorkCouncilLayout";
+import WorkCouncilLayout from "./WorkCouncilLayout";
 import "../styles/intranet-work-council.css";
 
 const IntranetWorkCouncil = () => {
@@ -12,7 +12,7 @@ const IntranetWorkCouncil = () => {
         {/* HERO SECTION */}
         <section className="work-capsules-hero">
           <span className="hero-label">COMITÉ DE EMPRESA</span>
-          <h1>COMITÉ DE EMPRESA</h1>
+          <h1>COMITEE AREA</h1>
           <p>
             Representamos a los trabajadores, defendemos sus derechos y apoyamos
             la comunicación directa con la dirección de Muin.
