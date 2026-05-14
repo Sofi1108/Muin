@@ -5,6 +5,7 @@ import shirtImg from "../assets/Img/shirtCategorie.jpg";
 import hoodieImg from "../assets/Img/hoodieCategorie.jpg";
 import comingSoonImg from "../assets/Img/comingsoon.png";
 import salesImg from "../assets/Img/sales.png";
+import customizeImg from "../assets/Img/shirtCustomize.jpg";
 
 import "../styles/Categories.css";
 
@@ -21,14 +22,15 @@ function Categories() {
         <img src={hoodieImg} />
         <span>HOODIES</span>
       </div>
+      <div className="column" onClick={() => navigate("/personalize")}>
+        <img src={customizeImg} style={{ filter: "hue-rotate(90deg)" }} />
+        <span>CUSTOMIZE</span>
+      </div>
       <div className="column" onClick={() => navigate("/products/accessories")}>
         <img src={comingSoonImg} />
         <span>ACCESORIES</span>
       </div>
-      <div className="column" onClick={() => navigate("/personalize")}>
-        <img src={comingSoonImg} style={{ filter: 'hue-rotate(90deg)' }} />
-        <span>CUSTOMIZE</span>
-      </div>
+
       <div className="column" onClick={() => navigate("/products/sales")}>
         <img src={salesImg} />
         <span>SALES</span>

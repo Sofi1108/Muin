@@ -10,10 +10,10 @@ const IntranetHome = () => {
     {
       time: "09:00 AM",
       activity: "Atención al Cliente - Turno 1",
-      role: "employee",
+      role: "empleado",
     },
     { time: "10:00 AM", activity: "Revisión de Producto", role: "admin" },
-    { time: "12:00 PM", activity: "Pausa para Almuerzo", role: "employee" },
+    { time: "12:00 PM", activity: "Pausa para Almuerzo", role: "empleado" },
     { time: "03:00 PM", activity: "Actualización de Proyectos", role: "admin" },
   ];
 
@@ -36,7 +36,7 @@ const IntranetHome = () => {
   };
 
   const filteredSchedule = scheduleData.filter(
-    (e) => customer?.role === "admin" || e.role === "employee",
+    (e) => customer?.role === "admin" || e.role === "empleado",
   );
 
   return (
