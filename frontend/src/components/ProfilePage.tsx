@@ -10,6 +10,15 @@ export default function ProfilePage() {
   const { customer, setCustomer } = useUser();
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    Nombre: "",
+    Apellido: "",
+    Nombre_Usuario: "",
+    CorreoElectronico: "",
+    DNI: "",
+    Contrasena: ""
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +44,52 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error("Error al desconectar:", error);
+    }
+  };
+
+  const handleEditClick = () => {
+    if (customer) {
+      setFormData({
+        Nombre: customer.firstName || "",
+        Apellido: customer.lastName || "",
+        Nombre_Usuario: customer.name || "",
+        CorreoElectronico: customer.email || "",
+        DNI: customer.dni || "",
+        Contrasena: "" // Siempre vacío al empezar
+      });
+      setIsEditing(true);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCustomer({
+          ...customer!,
+          name: data.user.name,
+          email: data.user.email,
+          firstName: data.user.firstName,
+          lastName: data.user.lastName,
+          dni: data.user.dni
+        });
+        setIsEditing(false);
+        alert("Profile updated successfully!");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Error connection to server");
     }
   };
 
@@ -69,7 +124,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="profile-info-column">
-            <span className="material-symbols-outlined" id="edit-icon">
+            <span className="material-symbols-outlined" id="edit-icon" onClick={handleEditClick} style={{cursor: 'pointer'}}>
               edit
             </span>
             <div className="profile-info-header">
@@ -96,6 +151,11 @@ export default function ProfilePage() {
               <div className="info-capsule">
                 <label>Correo Electrónico</label>
                 <p>{customer?.email || "email@ejemplo.com"}</p>
+              </div>
+
+              <div className="info-capsule">
+                <label>DNI</label>
+                <p>{customer?.dni || "No disponible"}</p>
               </div>
 
               <div className="info-capsule">
@@ -174,6 +234,79 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+
+      {isEditing && (
+        <div className="edit-profile-overlay">
+          <div className="edit-profile-modal">
+            <div className="modal-header">
+              <h2>EDIT PROFILE</h2>
+              <button className="close-btn" onClick={() => setIsEditing(false)}>×</button>
+            </div>
+            <form onSubmit={handleSave} className="edit-profile-form">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>First Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.Nombre} 
+                    onChange={e => setFormData({...formData, Nombre: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Last Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.Apellido} 
+                    onChange={e => setFormData({...formData, Apellido: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Username</label>
+                  <input 
+                    type="text" 
+                    value={formData.Nombre_Usuario} 
+                    onChange={e => setFormData({...formData, Nombre_Usuario: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input 
+                    type="email" 
+                    value={formData.CorreoElectronico} 
+                    onChange={e => setFormData({...formData, CorreoElectronico: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>DNI</label>
+                  <input 
+                    type="text" 
+                    value={formData.DNI} 
+                    onChange={e => setFormData({...formData, DNI: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>New Password (leave blank to keep current)</label>
+                  <input 
+                    type="password" 
+                    value={formData.Contrasena} 
+                    onChange={e => setFormData({...formData, Contrasena: e.target.value})} 
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>CANCEL</button>
+                <button type="submit" className="btn-save">SAVE CHANGES</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
