@@ -165,7 +165,6 @@ export default function ProfilePage() {
             </div>
 
             <div className="profile-button-group">
-              <button className="btn-muin-black">VER PEDIDOS</button>
               <button className="btn-muin-white-outline" onClick={handleLogout}>
                 CERRAR SESIÓN
               </button>
