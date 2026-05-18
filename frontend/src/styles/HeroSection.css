@@ -21,7 +21,7 @@ body {
 }
 
 .hero-section {
-  height: 35rem;
+  height: 25rem;
   background: url("../assets/Img/heroSection.jpeg") center/cover no-repeat;
   color: white;
   display: flex;
@@ -33,7 +33,7 @@ body {
 }
 
 .hero-section h1 {
-  font-family: kouzanbrush;
+  font-family: "KouzanBrush";
   font-size: 3rem;
   letter-spacing: 1.75rem;
   margin-bottom: -0.6rem;
@@ -69,4 +69,22 @@ body {
   background: #820000;
   box-shadow: #1f1f1f 0px 0px 1rem;
   transform: scale(1.1);
+}
+
+@media (max-width: 48rem) {
+  .hero-section {
+    height: 25rem;
+  }
+  .hero-section h1 {
+    font-size: 2rem;
+    letter-spacing: 0.8rem;
+    margin-right: -0.8rem;
+  }
+  .hero-section p {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  .hero-button {
+    padding: 0.8rem 2rem;
+  }
 }

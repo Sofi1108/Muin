@@ -1,0 +1,164 @@
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  font-family: "Sora", sans-serif;
+  color: var(--muin-black);
+}
+
+/* --- HERO --- */
+.about-hero {
+  text-align: center;
+  padding: 6rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.japanese-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12rem;
+  font-weight: 900;
+  color: #f0f0f0;
+  z-index: -1;
+  letter-spacing: 20px;
+}
+
+.main-title {
+  font-size: 6rem;
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: -2px;
+}
+
+.subtitle {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--muin-red);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* --- GRID & CARDS --- */
+.about-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.about-card.capsule {
+  background: white;
+  border: 1.5px solid var(--muin-border);
+  padding: 3rem;
+  border-radius: 24px; /* Tu radio de cápsula */
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--muin-black);
+}
+
+.section-title {
+  font-weight: 900;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 5px solid var(--muin-red);
+  padding-left: 1rem;
+}
+
+.highlight {
+  font-weight: 800;
+  color: var(--muin-red);
+}
+
+/* --- SLOGAN SECTION --- */
+.philosophy-section {
+  grid-column: span 2;
+  margin-top: 4rem;
+}
+
+.nindo-box {
+  background: var(--muin-black);
+  color: white;
+  padding: 5rem;
+  border-radius: 32px;
+  text-align: center;
+}
+
+.nindo-box .label {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.4em;
+  color: var(--muin-red);
+}
+
+.slogan-text {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin: 2rem 0;
+  font-style: italic;
+}
+
+.nindo-desc {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #ccc;
+}
+
+/* --- LIST --- */
+.specs-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 2rem;
+}
+
+.specs-list li {
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.specs-list li::before {
+  content: "■";
+  color: var(--muin-red);
+}
+
+.about-footer {
+  text-align: center;
+  margin-top: 6rem;
+  font-weight: 900;
+  font-size: 0.7rem;
+  color: #bbb;
+  letter-spacing: 0.2em;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 850px) {
+  .about-content-grid {
+    grid-template-columns: 1fr;
+  }
+  .philosophy-section {
+    grid-column: span 1;
+  }
+  .main-title {
+    font-size: 4rem;
+  }
+  .slogan-text {
+    font-size: 2rem;
+  }
+  .nindo-box {
+    padding: 3rem 1.5rem;
+  }
+}

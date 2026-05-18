@@ -14,70 +14,49 @@ export default function CartButton({
   product,
   cart,
   onAddToCart,
-  onRemoveFromCart,
-  onDecreaseQuantity,
 }: CartButtonProps) {
   const location = useLocation();
   const isProductDetail = location.pathname.startsWith("/product/");
+  const isProductsPage = location.pathname.includes("/products/");
 
-  const cartItem = cart.find((i) => i.product.id === product.id);
+  const cartItem = cart.find(
+    (i) => i.product.id_producto_perso === product.id_producto_perso,
+  );
   const quantity = cartItem?.quantity ?? 0;
+
+  // Check if out of stock or cart limit reached
+  const isOutOfStock = product.cantidad_u === 0;
+  const isLimitReached = quantity >= product.cantidad_u;
 
   return (
     <div
-      className={`cart-button-wrapper ${isProductDetail ? "cart-button-detail" : ""}`}
+      className={`cart-button-wrapper ${isProductDetail ? "cart-button-detail" : isProductsPage ? "cart-button-products" : ""}`}
     >
       <button
-        className="btn-add-corner material-symbols-outlined"
+        className="btn-add-corner"
         onClick={(e) => {
           e.stopPropagation();
           onAddToCart(product);
         }}
-        disabled={quantity >= product.stock || product.stock === 0}
+        disabled={isLimitReached || isOutOfStock}
       >
-        {quantity > 0 && <span className="qty-badge">{quantity}</span>}
-        shopping_cart
+        {isProductsPage && !isProductDetail && (
+          <span className="material-symbols-outlined">shopping_cart</span>
+        )}
+
+        {isProductDetail && (
+          <>
+            <span className="material-symbols-outlined">shopping_cart</span>
+            <span className="btn-text">
+              {isOutOfStock ? "OUT OF STOCK" : "ADD TO CART"}
+            </span>
+          </>
+        )}
+
+        {!isProductDetail && !isProductsPage && (
+          <span>{isOutOfStock ? "block" : <span>ADD TO CART</span>}</span>
+        )}
       </button>
-
-      {quantity > 0 && (
-        <div className="cart-menu">
-          <div className="menu-item">
-            <span className="menu-label">En carrito:</span>
-            <span className="menu-value">{quantity}</span>
-          </div>
-
-          <button
-            className="menu-btn decrease material-symbols-outlined"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDecreaseQuantity(product.id);
-            }}
-          >
-            minimize
-          </button>
-
-          <button
-            className="menu-btn add material-symbols-outlined"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(product);
-            }}
-            disabled={quantity >= product.stock}
-          >
-            add
-          </button>
-
-          <button
-            className="menu-btn remove material-symbols-outlined"
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemoveFromCart(product.id);
-            }}
-          >
-            delete
-          </button>
-        </div>
-      )}
     </div>
   );
 }

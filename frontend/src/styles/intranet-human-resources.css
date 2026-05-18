@@ -3,208 +3,199 @@
   min-height: 100vh;
   background: var(--page-bg);
   color: var(--text-primary);
-  border-radius: 1.5rem;
-  overflow: hidden;
 }
 
-/* --- HERO SECTION (Basado en el estilo de Noticias) --- */
+/* --- HERO SECTION --- */
 .hr-hero {
-  background: var(--panel-bg);
-  padding: 4rem 1.5rem 3.5rem;
+  background: var(--dark-bg);
+  color: #FFFFFF;
+  padding: 6rem 1.5rem 5rem;
   text-align: center;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hr-hero .tag-badge {
   display: inline-flex;
-  padding: 0.5rem 1.2rem;
-  background: var(--accent); /* El rojo de la imagen */
-  color: #fff;
-  font-weight: 800;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  font-weight: 600;
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  border-radius: 999px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .hr-hero h2 {
+  font-family: var(--font-title);
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 900;
-  letter-spacing: 0.18rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .hr-hero p {
-  max-width: 720px;
+  max-width: 600px;
   margin: 1.5rem auto 0;
-  color: var(--text-secondary);
+  color: #B0B0B0;
   line-height: 1.8;
   font-size: 1.1rem;
+  font-weight: 300;
 }
 
 /* --- CUERPO PRINCIPAL --- */
 .hr-main {
-  max-width: 1180px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 5rem;
+  padding: 5rem 1.5rem;
 }
 
 .section-card {
   background: var(--panel-bg);
   border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  padding: 3rem;
-  margin-bottom: 3rem;
+  padding: 3.5rem;
+  margin-bottom: 4rem;
+  border-radius: var(--br-main);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
 }
 
 .section-card h3 {
-  font-size: 1.6rem;
-  font-weight: 800;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
   text-transform: uppercase;
-  border-left: 0.25rem solid var(--accent);
-  padding-left: 1rem;
-  margin-bottom: 1.5rem;
+  border-left: 6px solid var(--accent);
+  padding-left: 1.5rem;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.05em;
 }
 
 /* --- LISTA DE RRHH --- */
 .hr-list {
   list-style: none;
   padding: 0;
-  margin-top: 2rem;
+  margin: 0;
 }
 
 .hr-list li {
-  margin-bottom: 1.25rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--surface);
   color: var(--text-secondary);
   line-height: 1.7;
 }
 
 .hr-list li strong {
-  color: var(--text-primary);
+  font-family: var(--font-title);
+  color: var(--accent);
   display: block;
   font-size: 1.1rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
 }
 
-/* --- GRID DE CURSOS (Estilo de tarjetas de la imagen) --- */
+/* --- GRID DE CURSOS --- */
 .courses-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
 }
 
 .course-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  padding: 3rem;
+  border-radius: var(--br-main);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--panel-bg);
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  padding: 2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
 }
 
 .course-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--accent);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  transform: translateY(-8px);
+  border-color: var(--text-primary);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
 .course-card.selected {
   border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
 }
 
 .course-card h4 {
-  margin: 0 0 1rem;
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-family: var(--font-title);
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 900;
   line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--text-primary);
 }
 
 .course-card p {
   font-size: 0.95rem;
   color: var(--text-secondary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   line-height: 1.6;
 }
 
 .course-card span {
   display: block;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent);
   text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 /* --- BOTONES DE INSCRIPCIÓN --- */
 .course-btn {
-  margin-top: 1.5rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: none;
-  font-weight: 700;
+  margin-top: 2rem;
+  padding: 1rem;
+  font-family: var(--font-title);
+  font-weight: 900;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.3s ease;
   text-transform: uppercase;
-  font-size: 0.8rem;
-}
-
-.course-btn:hover {
-  opacity: 0.9;
-  box-shadow: 0 4px 12px var(--panel-bg);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  border-radius: var(--br-main);
+  border: none;
 }
 
 .course-btn.enroll {
-  background: var(--accent);
-  color: white;
+  background: var(--text-primary);
+  color: #FFFFFF;
+}
+
+.course-btn.enroll:hover {
+  background: #000000;
 }
 
 .course-btn.unenroll {
-  background: #333;
-  color: var(--text-secondary);
-}
-
-.course-selected-label {
-  font-size: 0.75rem;
-  margin-top: 10px;
-  color: var(--text-secondary);
-  font-style: italic;
+  background: var(--accent);
+  color: #FFFFFF;
 }
 
 .hr-note {
-  margin-top: 2.5rem;
-  padding: 1.5rem;
-  background: var(--card-bg);
-  border-left: 0.25rem solid var(--accent);
-  border-radius: 0.25rem;
+  margin-top: 4rem;
+  padding: 2rem;
+  background: var(--surface);
+  border-left: 6px solid var(--accent);
   color: var(--text-secondary);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  min-height: 4rem;
-  line-height: 1.5;
-}
-
-/* --- RESPONSIVE --- */
-@media (max-width: 1024px) {
-  .courses-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  font-style: italic;
+  line-height: 1.6;
 }
 
 @media (max-width: 720px) {
-  .courses-grid {
-    grid-template-columns: 1fr;
+  .hr-main {
+    padding: 3rem 1.5rem;
   }
   .section-card {
-    padding: 1.5rem;
-  }
-  .hr-hero h2 {
-    font-size: 2.2rem;
+    padding: 2rem;
   }
 }

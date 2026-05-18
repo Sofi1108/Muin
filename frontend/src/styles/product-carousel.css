@@ -1,0 +1,109 @@
+.muin-carousel-section {
+  padding: 6rem 0;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.carousel-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* HEADER STYLE */
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 4rem;
+  margin-bottom: 3rem;
+}
+
+.carousel-tag {
+  font-weight: 900;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--muin-red);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+/* NAV BUTTONS */
+.carousel-nav-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid #eee;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn span {
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  margin-left: 5px; /* Ajuste óptico para la flecha de atrás */
+}
+
+.nav-btn:hover {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.nav-btn:hover span {
+  color: #fff;
+}
+
+/* TRACK SYSTEM */
+.muin-carousel-track {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding: 0 4rem 2rem 4rem;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+
+.muin-carousel-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.carousel-item {
+  flex: 0 0 300px; /* Ancho de la card */
+  transition: opacity 0.3s ease;
+}
+
+.carousel-spacer {
+  flex: 0 0 2rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .carousel-header {
+    padding: 0 2rem;
+  }
+  .muin-carousel-track {
+    padding: 0 2rem;
+  }
+  .carousel-title {
+    font-size: 1.8rem;
+  }
+  .carousel-nav-buttons {
+    display: none;
+  }
+}

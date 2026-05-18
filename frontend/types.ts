@@ -12,6 +12,7 @@ export interface Product {
 export interface CartItem {
   product: Product;
   quantity: number;
+  selectedSize?: string;
 }
 
 export interface Customer {
@@ -20,6 +21,7 @@ export interface Customer {
   email: string;
   firstName?: string; // nombre
   lastName?: string; // apellido
+  dni?: string;
   phone?: string;
   role: "admin" | "empleado" | "cliente";
 }

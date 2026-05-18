@@ -1,0 +1,173 @@
+.admin-panel-container {
+  padding: 0;
+  background: transparent;
+}
+
+.admin-form {
+  background: var(--panel-bg);
+  padding: 3.5rem;
+  border-radius: var(--br-main);
+  margin-bottom: 4rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.admin-form h3 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  border-left: 6px solid var(--accent);
+  padding-left: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.input-group {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.input-group label {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.input-group input[type="text"],
+.input-group input[type="number"] {
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--br-main);
+  background: var(--surface);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  border-color: var(--text-primary);
+}
+
+/* Custom File Input */
+.file-input-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-input-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: var(--br-main);
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.file-input-wrapper:hover .file-input-button {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-muin-red-solid {
+  width: 100%;
+  padding: 1.5rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--br-main);
+  font-family: var(--font-title);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 1rem;
+}
+
+.btn-muin-red-solid:hover {
+  background: var(--accent-strong);
+}
+
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-list-item {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--br-main);
+  transition: transform 0.3s;
+}
+
+.admin-list-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.admin-list-item img {
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 0.5rem;
+}
+
+.admin-list-item strong {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.admin-list-item p {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.btn-intranet-red {
+  padding: 0.8rem 1.5rem;
+  background: #fff;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: var(--br-main);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-intranet-red:hover {
+  background: var(--accent);
+  color: #fff;
+}

@@ -10,6 +10,15 @@ export default function ProfilePage() {
   const { customer, setCustomer } = useUser();
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    Nombre: "",
+    Apellido: "",
+    Nombre_Usuario: "",
+    CorreoElectronico: "",
+    DNI: "",
+    Contrasena: ""
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +44,52 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error("Error al desconectar:", error);
+    }
+  };
+
+  const handleEditClick = () => {
+    if (customer) {
+      setFormData({
+        Nombre: customer.firstName || "",
+        Apellido: customer.lastName || "",
+        Nombre_Usuario: customer.name || "",
+        CorreoElectronico: customer.email || "",
+        DNI: customer.dni || "",
+        Contrasena: "" // Siempre vacío al empezar
+      });
+      setIsEditing(true);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCustomer({
+          ...customer!,
+          name: data.user.name,
+          email: data.user.email,
+          firstName: data.user.firstName,
+          lastName: data.user.lastName,
+          dni: data.user.dni
+        });
+        setIsEditing(false);
+        alert("Profile updated successfully!");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Error connection to server");
     }
   };
 
@@ -69,7 +124,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="profile-info-column">
-            <span className="material-symbols-outlined" id="edit-icon">
+            <span className="material-symbols-outlined" id="edit-icon" onClick={handleEditClick} style={{cursor: 'pointer'}}>
               edit
             </span>
             <div className="profile-info-header">
@@ -99,29 +154,35 @@ export default function ProfilePage() {
               </div>
 
               <div className="info-capsule">
+                <label>DNI</label>
+                <p>{customer?.dni || "No disponible"}</p>
+              </div>
+
+              <div className="info-capsule">
                 <label>Rol de Cuenta</label>
                 <p className="role-badge-text">{customer?.role || "cliente"}</p>
               </div>
             </div>
 
             <div className="profile-button-group">
-              <button className="btn-muin-black">VER PEDIDOS</button>
               <button className="btn-muin-white-outline" onClick={handleLogout}>
                 CERRAR SESIÓN
               </button>
               {customer?.role === "admin" || customer?.role === "empleado" ? (
-                <button className="btn-intranet-red">
-                  <Link to="/intranet" className="btn-muin-red-solid">
-                    INTRANET
-                  </Link>
-                </button>
+                <Link to="/intranet" className="btn-intranet-red">
+                  INTRANET
+                </Link>
               ) : null}
             </div>
           </div>
         </div>
         {/* SECCIÓN INFERIOR: ORDER STATUS DINÁMICO */}
         <div className="order-status-section">
-          <h3>ORDER STATUS {selectedOrder && `#${selectedOrder.id}`}</h3>
+          <h3>
+            ORDER STATUS{" "}
+            {selectedOrder &&
+              `#${orders.length - orders.findIndex((o) => o.id === selectedOrder.id)}`}
+          </h3>
           <div className="status-container">
             <div className="status-line"></div>
             <div className="status-points">
@@ -156,15 +217,17 @@ export default function ProfilePage() {
                 <tr>
                   <th>ID Pedido</th>
                   <th>Fecha</th>
+                  <th>Dirección</th>
                   <th>Estado</th>
                   <th style={{ textAlign: "right" }}>Total</th>
                 </tr>
               </thead>
               <tbody>
-                {orders.slice(0, 5).map((o) => (
+                {orders.slice(0, 5).map((o, index) => (
                   <OrderRow
                     key={o.id}
                     order={o}
+                    displayId={orders.length - index}
                     isSelected={selectedOrder?.id === o.id}
                     onSelect={() => setSelectedOrder(o)}
                   />
@@ -174,16 +237,91 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+
+      {isEditing && (
+        <div className="edit-profile-overlay">
+          <div className="edit-profile-modal">
+            <div className="modal-header">
+              <h2>EDIT PROFILE</h2>
+              <button className="close-btn" onClick={() => setIsEditing(false)}>×</button>
+            </div>
+            <form onSubmit={handleSave} className="edit-profile-form">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>First Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.Nombre} 
+                    onChange={e => setFormData({...formData, Nombre: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Last Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.Apellido} 
+                    onChange={e => setFormData({...formData, Apellido: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Username</label>
+                  <input 
+                    type="text" 
+                    value={formData.Nombre_Usuario} 
+                    onChange={e => setFormData({...formData, Nombre_Usuario: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input 
+                    type="email" 
+                    value={formData.CorreoElectronico} 
+                    onChange={e => setFormData({...formData, CorreoElectronico: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>DNI</label>
+                  <input 
+                    type="text" 
+                    value={formData.DNI} 
+                    onChange={e => setFormData({...formData, DNI: e.target.value})} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>New Password (leave blank to keep current)</label>
+                  <input 
+                    type="password" 
+                    value={formData.Contrasena} 
+                    onChange={e => setFormData({...formData, Contrasena: e.target.value})} 
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>CANCEL</button>
+                <button type="submit" className="btn-save">SAVE CHANGES</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 function OrderRow({
   order,
+  displayId,
   isSelected,
   onSelect,
 }: {
   order: any;
+  displayId: number;
   isSelected: boolean;
   onSelect: () => void;
 }) {
@@ -216,9 +354,10 @@ function OrderRow({
           <span className="expand-icon" onClick={handleToggle}>
             {expanded ? "▼" : "▶"}
           </span>
-          #{order.id}
+          #{displayId}
         </td>
         <td>{new Date(order.created_at).toLocaleDateString()}</td>
+        <td>{order.address || "No especificada"}</td>
         <td>
           <span className={`status-badge ${order.status}`}>
             {order.status.toUpperCase()}
@@ -230,7 +369,7 @@ function OrderRow({
       </tr>
       {expanded && (
         <tr className="detail-row">
-          <td colSpan={4} className="order-detail-cell">
+          <td colSpan={5} className="order-detail-cell">
             {loading ? (
               <p>Cargando productos...</p>
             ) : (

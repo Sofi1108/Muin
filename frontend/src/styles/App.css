@@ -72,7 +72,107 @@ body {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 3rem;
   padding: 5rem 5%;
+}
+
+/* --- UNIVERSAL RESPONSIVE OVERRIDES --- */
+@media (max-width: 64rem) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 2rem;
+    padding: 3rem 5%;
+  }
+
+  .grid-two, 
+  .grid-three, 
+  .grid-four,
+  .news-grid,
+  .product-detail-grid,
+  .checkout-grid,
+  .cart-content-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .container, 
+  .wrapper, 
+  .main-content {
+    padding-left: 1.2rem !important;
+    padding-right: 1.2rem !important;
+  }
+
+  h1 { font-size: 2.2rem !important; }
+  h2 { font-size: 1.6rem !important; }
+  h3 { font-size: 1.3rem !important; }
+
+  /* Specific Component Fixes */
+  .row-inputs {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-popup-muin {
+    width: 90vw !important;
+    right: 5vw !important;
+    left: 5vw !important;
+    position: fixed !important;
+    top: 80px !important;
+  }
+
+  .model-preview {
+    height: 300px !important;
+  }
+
+  .order-summary-section {
+    padding: 1.5rem !important;
+  }
+
+  .summary-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .item-img-mini {
+    width: 100% !important;
+    height: 150px !important;
+  }
+
+  .item-info-mini {
+    width: 100%;
+  }
+
+  /* Organigram Fix */
+  .org-vertical-container {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .org-node-bottom {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 1rem !important;
+  }
+
+  .vocals-vertical-list {
+    border-left: none !important;
+    padding-left: 0 !important;
+    align-items: center !important;
+  }
+
+  .vocal-side-line, .org-horizontal-bridge {
+    display: none !important;
+  }
+}
+
+@media (max-width: 30rem) {
+  .products-grid {
+    grid-template-columns: 1fr !important;
+    padding: 2rem 1.2rem !important;
+  }
+
+  .hero-title {
+    font-size: 1.8rem !important;
+    letter-spacing: 0.5rem !important;
+  }
 }

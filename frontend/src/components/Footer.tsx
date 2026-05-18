@@ -53,23 +53,45 @@ const Footer = () => {
 
       <div className="footer-bottom-section">
         <div className="social-links">
-          <a href="https://www.youtube.com" className="social-icon">
-            <i className="fa-brands fa-youtube"></i>
+          <a
+            href="https://www.youtube.com"
+            className="social-icon"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FaYoutube />
           </a>
           <a
-            href="https://www.facebook.com/?locale=es_ES"
+            href="https://www.facebook.com"
             className="social-icon"
+            target="_blank"
+            rel="noreferrer"
           >
-            <i className="fa-brands fa-facebook"></i>
+            <FaFacebookF />
           </a>
-          <a href="https://x.com/home?lang=es" className="social-icon">
-            <i className="fa-brands fa-x"></i>
+          <a
+            href="https://x.com"
+            className="social-icon"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FaXTwitter />
           </a>
-          <a href="https://www.instagram.com/?hl=es" className="social-icon">
-            <i className="fa-brands fa-instagram"></i>
+          <a
+            href="https://www.instagram.com"
+            className="social-icon"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FaInstagram />
           </a>
-          <a href="https://es.linkedin.com" className="social-icon">
-            <i className="fa-brands fa-linkedin"></i>
+          <a
+            href="https://es.linkedin.com"
+            className="social-icon"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FaLinkedinIn />
           </a>
         </div>
 

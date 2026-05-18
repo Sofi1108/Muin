@@ -25,7 +25,7 @@ export default function EditProductPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost:3000/api/productos-personalizados/${id}`)
+    fetch(`http://localhost:3000/api/products/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Producto no encontrado");
         return res.json();
@@ -54,7 +54,7 @@ export default function EditProductPage() {
       url_imagen: product.url_imagen,
     };
 
-    fetch(`http://localhost:3000/api/productos-personalizados/${id}`, {
+    fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -63,7 +63,7 @@ export default function EditProductPage() {
       .then((res) => {
         if (!res.ok) throw new Error("Error al actualizar");
         setSuccess(true);
-        setTimeout(() => navigate("/intranet/productos"), 2000);
+        setTimeout(() => navigate("/admin/products"), 2000);
       })
       .catch((err) => {
         console.error(err);
@@ -96,7 +96,7 @@ export default function EditProductPage() {
           </div>
           <button
             className="btn-back"
-            onClick={() => navigate("/intranet/productos")}
+            onClick={() => navigate("/admin/products")}
           >
             ← Volver a Productos
           </button>
@@ -114,7 +114,7 @@ export default function EditProductPage() {
         <div className="edit-container">
           <button
             className="btn-back"
-            onClick={() => navigate("/intranet/productos")}
+            onClick={() => navigate("/admin/products")}
           >
             ← Volver a Productos
           </button>
@@ -239,7 +239,7 @@ export default function EditProductPage() {
               <div className="form-actions">
                 <button
                   type="button"
-                  onClick={() => navigate("/intranet/productos")}
+                  onClick={() => navigate("/admin/products")}
                   className="btn-cancel"
                 >
                   Cancelar

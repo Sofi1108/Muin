@@ -1,70 +1,82 @@
 /* --- LAYOUT GENERAL --- */
 .work-capsules-page {
-  background: #1a1a1a;
+  background: var(--page-bg);
   min-height: 100vh;
-  color: white;
+  color: var(--text-primary);
 }
 
 .work-capsules-main {
-  max-width: 73.75rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 5rem;
+  padding: 5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 4rem;
+  box-sizing: border-box;
 }
 
 /* --- HERO SECTION --- */
 .work-capsules-hero {
-  background: var(--panel-bg);
-  border-bottom: 0.06rem solid var(--border);
-  padding: 5rem 1.5rem 4rem;
+  background: var(--dark-bg);
+  color: #FFFFFF;
+  padding: 6rem 1.5rem 5rem;
   text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hero-label {
+  border-radius: var(--br-main);
   display: inline-flex;
-  padding: 0.6rem 1.2rem;
-  background: var(--accent);
-  color: white;
-  font-weight: 900;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  font-weight: 600;
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  border-radius: 999px;
-  margin-bottom: 1.5rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 2rem;
 }
 
 .work-capsules-hero h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 900;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.1em;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .work-capsules-hero p {
-  max-width: 45rem;
+  max-width: 600px;
   margin: 1.5rem auto 0;
-  color: var(--text-secondary);
+  color: #B0B0B0;
   line-height: 1.8;
   font-size: 1.1rem;
+  font-weight: 300;
 }
 
 /* --- TARJETAS (SECTION CARDS) --- */
 .section-card {
   background: var(--panel-bg);
-  border: 0.06rem solid var(--border);
-  border-radius: 1.5rem; /* 24px */
-  padding: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--br-main);
+  padding: 3.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  overflow: hidden;
 }
 
 .section-card h2 {
-  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  font-family: var(--font-title);
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
   font-weight: 900;
   text-transform: uppercase;
-  margin: 1.5rem 0;
-  border-left: 5px solid var(--accent);
-  padding-left: 1.2rem;
+  margin: 0 0 2.5rem;
+  border-left: 6px solid var(--accent);
+  padding-left: 1.5rem;
+  letter-spacing: 0.05em;
 }
 
 .tag-badge {
@@ -73,123 +85,260 @@
   background: var(--accent);
   color: white;
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
-  border-radius: 24px;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  border-radius: var(--br-main);
 }
 
 /* --- GRIDS --- */
 .grid-two-capsules {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
 }
 
 .infographic-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
 }
 
 .infographic-card {
-  background: var(--card-bg);
-  border: 0.06rem solid var(--border);
-  padding: 2rem;
-  border-radius: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  border-radius: var(--br-main);
 }
 
 .infographic-card h4 {
+  font-family: var(--font-title);
   font-weight: 900;
   text-transform: uppercase;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
 }
 
 .infographic-card ul {
   padding-left: 1.2rem;
   color: var(--text-secondary);
+  line-height: 1.8;
 }
 
 .infographic-card li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
 }
 
-/* --- MIEMBROS (ORGANIGRAMA) --- */
-.members-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+/* --- VIDEO --- */
+.video-placeholder {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background: #000;
 }
 
-.member-capsule {
-  background: var(--card-bg);
-  border: 0.06rem solid var(--border);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  text-align: center;
+.video-placeholder iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
-.member-avatar {
-  width: 60px;
-  height: 60px;
-  background: var(--accent);
-  border-radius: 50%;
-  margin: 0 auto 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 1.5rem;
-}
-
-.member-capsule h4 {
-  font-weight: 900;
-  text-transform: uppercase;
-  margin: 0.5rem 0;
-}
-.member-capsule p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-/* --- SUMMARY CARDS (LAS ROJAS) --- */
+/* --- SUMMARY CARDS --- */
 .summary-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .red-summary-card {
-  background: var(--accent);
-  padding: 2rem;
-  border-radius: 1.5rem;
-  color: white;
+  background: var(--dark-bg);
+  padding: 3.5rem 2.5rem;
+  border-radius: var(--br-main);
+  color: #FFFFFF;
+  border-top: 4px solid var(--accent);
 }
 
 .red-summary-card h3 {
+  font-family: var(--font-title);
   font-weight: 900;
   text-transform: uppercase;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  color: #FFFFFF;
 }
 
 .red-summary-card p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  opacity: 0.9;
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  font-weight: 300;
 }
 
-/* --- RESPONSIVE --- */
-@media (max-width: 48rem) {
+/* --- ORGANIGRAMA VERTICAL --- */
+.org-vertical-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  padding: 4rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.org-horizontal-bridge {
+  position: absolute;
+  top: 195px;
+  left: 25%;
+  right: 25%;
+  height: 2px;
+  background-color: var(--border);
+}
+
+.org-vertical-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 450px;
+}
+
+.vertical-connector-line {
+  width: 2px;
+  height: 40px;
+  background-color: var(--border);
+}
+
+.vocals-vertical-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+}
+
+.vocal-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.vocal-side-line {
+  width: 20px;
+  height: 2px;
+  background-color: var(--border);
+  position: absolute;
+  left: -20px;
+}
+
+.org-node-top {
+  width: 100%;
+  text-align: center;
+}
+
+.org-node-top .member-avatar {
+  width: 70px;
+  height: 70px;
+  background-color: var(--accent);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 0 auto 1rem;
+}
+
+.org-node-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: left;
+  background: var(--surface);
+  padding: 1rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--br-main);
+}
+
+.org-node-bottom .member-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background-color: var(--accent);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.member-capsule .role-title {
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.org-node-bottom h4 {
+  font-family: var(--font-main);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.org-node-top h4 {
+  font-family: var(--font-title);
+  font-weight: 900;
+  color: var(--text-primary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* --- RESPONSIVE SWEEP --- */
+@media (max-width: 64rem) {
+  .work-capsules-main {
+    padding: 3rem 1.2rem;
+    gap: 3rem;
+  }
   .section-card {
+    padding: 2.5rem 1.5rem !important;
+  }
+  .org-vertical-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    padding: 2rem 0;
+  }
+  .org-horizontal-bridge {
+    display: none;
+  }
+  .org-node-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
     padding: 1.5rem;
   }
-  .work-capsules-main {
-    gap: 1.5rem;
+  .vocals-vertical-list {
+    border-left: none;
+    padding-left: 0;
+    align-items: center;
   }
-  .work-capsules-hero {
-    padding: 3rem 1rem;
+  .vocal-side-line {
+    display: none;
   }
 }
