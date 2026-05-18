@@ -2,6 +2,7 @@ import type { Product } from "../../types";
 import "../styles/product-card.css";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { HashLink as Link } from "react-router-hash-link";
 
 interface ProductCardProps {
   product: Product;
@@ -39,9 +40,10 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
   };
 
   return (
-    <div
+    <Link
+      to={`/products/${product.id_producto_perso}#product-detail_back`}
       className="product-card"
-      onClick={() => onSelect && onSelect(product.id_producto_perso!)}
+      style={{ textDecoration: "none", color: "inherit" }}
     >
       <div className="product-image-container">
         {product.url_imagen ? (
@@ -115,7 +117,7 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
             )}
           </div>
         )}
-    </div>
+    </Link>
   );
 }
 
