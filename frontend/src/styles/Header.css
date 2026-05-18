@@ -28,9 +28,12 @@ a {
 header {
   display: flex;
   justify-content: space-between;
-  padding: 1rem 5%;
+  padding: 0.5rem 5%;
   background-color: #1f1f1f;
   color: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .logo-container {
@@ -93,4 +96,21 @@ nav {
   color: #820000;
   text-shadow: #1f1f1f 0px 0px 0.2rem;
   transform: scale(1.27);
+}
+
+@media (max-width: 48rem) {
+  header {
+    padding: 1rem 3%;
+  }
+  .logo-kanji {
+    font-size: 1.8rem;
+  }
+  .logo-text {
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+  }
+  #profile-icon {
+    font-size: 2rem;
+    margin-left: 10px;
+  }
 }

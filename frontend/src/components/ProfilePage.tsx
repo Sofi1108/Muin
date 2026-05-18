@@ -169,11 +169,9 @@ export default function ProfilePage() {
                 CERRAR SESIÓN
               </button>
               {customer?.role === "admin" || customer?.role === "empleado" ? (
-                <button className="btn-intranet-red">
-                  <Link to="/intranet" className="btn-muin-red-solid">
-                    INTRANET
-                  </Link>
-                </button>
+                <Link to="/intranet" className="btn-intranet-red">
+                  INTRANET
+                </Link>
               ) : null}
             </div>
           </div>

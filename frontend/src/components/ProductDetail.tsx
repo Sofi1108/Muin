@@ -88,7 +88,7 @@ function ProductDetail({
   if (!product) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="product-detail-container">
+    <div className="product-detail-container" id="product-detail_back">
       <div className={`cart-toast ${showToast ? "show" : ""}`}>
         <span className="material-symbols-outlined">check_circle</span>
         ADDED TO CART

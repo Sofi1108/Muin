@@ -279,3 +279,25 @@
     text-align: center;
   }
 }
+
+@media (max-width: 48rem) {
+  .fichajes-hero h1 {
+    font-size: 2.2rem !important;
+  }
+  .fichajes-control {
+    padding: 2rem 1.5rem;
+  }
+  .time-display {
+    font-size: 3.5rem;
+  }
+  .clock-button {
+    padding: 1.2rem;
+    font-size: 1rem;
+  }
+  .fichajes-history {
+    padding: 2rem 1.2rem;
+  }
+  .history-header h2 {
+    font-size: 1.5rem;
+  }
+}

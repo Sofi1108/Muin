@@ -48,6 +48,9 @@ function Shirts({
 
   return (
     <div className="container">
+      <button className="back-link" onClick={() => navigate("/")}>
+        ← COME BACK TO HOME
+      </button>
       <h2 className="section-title">OUR SHIRTS</h2>
 
       {loading ? (

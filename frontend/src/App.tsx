@@ -128,7 +128,9 @@ function App() {
                   products={products}
                   title="NUEVOS PRODUCTOS"
                   tag="COLECCIÓN 2026"
-                  onSelect={(id) => navigate(`/products/${id}`)}
+                  onSelect={(id) =>
+                    navigate(`/products/${id}#product-detail_back`)
+                  }
                 />
               </>
             }

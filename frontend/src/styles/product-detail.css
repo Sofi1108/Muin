@@ -258,3 +258,36 @@
 .cart-toast span {
   color: #16a34a;
 }
+
+@media (max-width: 64rem) {
+  .product-detail-container {
+    padding: 1rem 1.2rem;
+    margin: 1rem auto;
+  }
+  
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .product-title {
+    font-size: 2.5rem;
+  }
+
+  .price-tag {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .main-image-wrapper {
+    border-radius: 16px;
+  }
+
+  .product-detail_img {
+    aspect-ratio: 1;
+  }
+
+  .size-selector {
+    justify-content: center;
+  }
+}

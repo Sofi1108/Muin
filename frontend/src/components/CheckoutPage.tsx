@@ -88,13 +88,13 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
       alert("El carrito está vacío");
       return;
     }
-    
+
     if (!customer) {
       alert("Debes iniciar sesión para realizar un pedido.");
       navigate("/login"); // Asumiendo que existe esta ruta
       return;
     }
-    
+
     setIsProcessing(true);
     try {
       const res = await fetch("http://localhost:3000/api/orders", {
@@ -122,7 +122,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
       // Clear the cart
       sessionStorage.removeItem("cart");
       window.dispatchEvent(new Event("cartUpdated"));
-      
+
       setStep(2);
     } catch (err: any) {
       alert(err.message || "Ha ocurrido un error durante el pago");
@@ -156,21 +156,22 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   return (
     <div className="checkout-container">
       <div className="checkout-grid">
+        <button className="back-link" onClick={() => navigate(-1)}>
+          ← COME BACK TO CART
+        </button>
+
         <div className="payment-form-section">
-          <button className="back-link" onClick={() => navigate(-1)}>
-            ← COME BACK TO CART
-          </button>
           <h2 className="section-title">PAYMENT DETAILS</h2>
 
           <form onSubmit={handlePayment} className="muin-form">
             <div className="input-group">
               <label>DIRECTION</label>
-              <input 
-                type="text" 
-                placeholder="YOUR DIRECTION" 
+              <input
+                type="text"
+                placeholder="YOUR DIRECTION"
                 value={shippingAddress}
                 onChange={(e) => setShippingAddress(e.target.value)}
-                required 
+                required
               />
             </div>
             <div className="input-group">
@@ -222,7 +223,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
               {isProcessing ? (
                 <div className="spinner"></div>
               ) : (
-                `PAGAR ${total.toFixed(2)}€`
+                `PAYMENT ${total.toFixed(2)}€`
               )}
             </button>
           </form>

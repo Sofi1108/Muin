@@ -183,3 +183,25 @@
   align-items: center;
   justify-content: space-between;
 }
+
+@media (max-width: 48rem) {
+  .personalize-container {
+    padding: 1rem;
+    margin-top: 10px;
+  }
+  .personalize-header h1 {
+    font-size: 1.8rem;
+  }
+  .model-preview {
+    height: 350px;
+  }
+  .options-panel {
+    padding: 1.5rem;
+  }
+  .action-buttons {
+    flex-direction: column;
+  }
+  .price-display {
+    font-size: 1.2rem;
+  }
+}

@@ -148,7 +148,7 @@
   font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
-  border-radius: 6px;
+  border-radius: var(--br-main);
   cursor: pointer;
   white-space: nowrap;
   text-decoration: none;
