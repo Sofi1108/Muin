@@ -145,7 +145,25 @@ p {
 .intranet-page-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 1.5rem 6rem;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* --- GLOBAL SPACING OVERRIDES --- */
+.work-capsules-main,
+.hr-main,
+.fichajes-main,
+.news-main {
+  padding: 1.5rem 0 !important;
+  gap: 2rem !important;
+}
+
+.grid-two {
+  gap: 2rem !important;
+}
+
+.section-card {
+  margin-bottom: 2rem !important;
+  padding: 2rem !important;
 }
 
 /* --- GLOBAL TABLE STYLES --- */
