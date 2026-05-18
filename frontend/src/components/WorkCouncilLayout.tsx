@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
+import { useUser } from "../context/UserContext";
 import WorkCouncilNavbar from "./WorkCouncilNavbar";
 import "../styles/intranet-layout.css";
-import HeroSectionIntranet from "./HeroSectionIntranet";
 
 interface WorkCouncilLayoutProps {
   title: string;
@@ -10,9 +10,14 @@ interface WorkCouncilLayoutProps {
 }
 
 const WorkCouncilLayout = ({ title, subtitle, children }: WorkCouncilLayoutProps) => {
+  const { customer } = useUser();
+  const userName = customer?.name || "Usuario";
+
   return (
     <div className="intranet-page-wrapper">
-      <HeroSectionIntranet />
+      <div className="intranet-top-welcome">
+        <span>Bienvenido/a, {userName}</span>
+      </div>
       <WorkCouncilNavbar />
       <main className="intranet-page-content">{children}</main>
     </div>

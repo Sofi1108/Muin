@@ -84,7 +84,7 @@ const IntranetHome = () => {
         {/* SECCIÓN HERO */}
         <section className="work-capsules-hero">
           <span className="hero-label">Inicio</span>
-          <h1>Bienvenido, {customer?.email?.split("@")[0] || "Usuario"}</h1>
+          <h1>Panel Principal</h1>
           <p>
             Consulta tu horario semanal y los próximos días festivos de la
             empresa.
