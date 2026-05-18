@@ -270,6 +270,33 @@
   width: fit-content;
 }
 
+/* --- CHECKBOX TERMS --- */
+.terms-checkbox-container {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terms-checkbox-container input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: #000;
+}
+
+.terms-checkbox-container label {
+  cursor: pointer;
+  color: #555;
+}
+
+.terms-checkbox-container label a {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
 @media (max-width: 850px) {
   .checkout-grid {
     display: flex;

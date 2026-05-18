@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import type { CartItem } from "../../types";
 import "../styles/checkout-page.css";
@@ -13,7 +13,7 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   const [expirationDate, setExpirationDate] = useState("");
   const [cvc, setCvc] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
-
+  const [termsAccepted, setTermsAccepted] = useState(false);
   useEffect(() => {
     console.log("Contenido del carrito en Checkout:", cart);
   }, [cart]);
@@ -216,9 +216,22 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
               </div>
             </div>
 
+            <div className="terms-checkbox-container">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                required
+              />
+              <label htmlFor="terms">
+                Acepto las condiciones de la <Link to="/privacy-policy" target="_blank">Política de Privacidad</Link>.
+              </label>
+            </div>
+
             <button
               className="btn-pay-now"
-              disabled={isProcessing || cart.length === 0}
+              disabled={isProcessing || cart.length === 0 || !termsAccepted}
             >
               {isProcessing ? (
                 <div className="spinner"></div>
