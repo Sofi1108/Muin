@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows, Center, Decal, useTexture, Text } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows, Center, useTexture, Text, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/PersonalizarProducto.css';
@@ -42,142 +42,129 @@ const COLOR_MAP: Record<string, string> = {
   'Verde': '#4a5e42',   // Olive/Forest green
 };
 
-const DesignImage = ({ url, position, rotation, scale }: { url: string, position: [number, number, number], rotation: [number, number, number], scale: [number, number, number] }) => {
-  const texture = useTexture(url);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return (
-    <Decal position={position} rotation={rotation} scale={scale}>
-      <meshBasicMaterial 
-        map={texture} 
-        transparent 
-        depthTest={true} 
-        depthWrite={false} 
-        polygonOffset 
-        polygonOffsetFactor={-1} 
-      />
-    </Decal>
-  );
-};
+// ─── GLB model paths ─────────────────────────────────────────────────────────
+const SHIRT_PATH = '/models/t-shirt_3d_mockup_editable.glb';
+const HOODIE_PATH = '/models/hoodie_mockup_final_template_download.glb';
+const CANVAS_SIZE = 2048;
 
-// 3D Garment Component
-const StylizedGarment = ({ type, color, layers }: { type: GarmentType, color: string, layers: Layer[] }) => {
+// ─── GLB-based garment with UV painting ──────────────────────────────────────
+const StylizedGarment = ({ type, color, layers }: { type: GarmentType; color: string; layers: Layer[] }) => {
   const group = useRef<THREE.Group>(null);
-  
-  // Create dynamic material
-  const material = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color,
-    roughness: 0.8,
-    metalness: 0.1,
-  }), [color]);
+  const modelPath = type === 'shirt' ? SHIRT_PATH : HOODIE_PATH;
+  const { scene } = useGLTF(modelPath) as any;
 
-  const shape = useMemo(() => {
-    const s = new THREE.Shape();
-    if (type === 'shirt') {
-      s.moveTo(0, 1.3);
-      s.quadraticCurveTo(0.3, 1.3, 0.4, 1.2); 
-      s.lineTo(1.1, 0.9);
-      s.lineTo(1.6, 0.2); 
-      s.lineTo(1.2, -0.3); 
-      s.lineTo(0.95, 0.0); 
-      s.lineTo(0.85, -1.8); 
-      s.lineTo(-0.85, -1.8); 
-      s.lineTo(-0.95, 0.0); 
-      s.lineTo(-1.2, -0.3); 
-      s.lineTo(-1.6, 0.2); 
-      s.lineTo(-1.1, 0.9);
-      s.lineTo(-0.4, 1.2);
-      s.quadraticCurveTo(-0.3, 1.3, 0, 1.3);
-    } else {
-      // Hoodie
-      s.moveTo(0, 1.9); 
-      s.quadraticCurveTo(0.5, 1.9, 0.6, 1.3); 
-      s.lineTo(1.2, 0.9); 
-      s.lineTo(1.9, -0.4); 
-      s.lineTo(1.4, -0.8); 
-      s.lineTo(1.05, -0.1); 
-      s.lineTo(0.95, -1.9); 
-      s.lineTo(-0.95, -1.9); 
-      s.lineTo(-1.05, -0.1); 
-      s.lineTo(-1.4, -0.8); 
-      s.lineTo(-1.9, -0.4); 
-      s.lineTo(-1.2, 0.9); 
-      s.lineTo(-0.6, 1.3); 
-      s.quadraticCurveTo(-0.5, 1.9, 0, 1.9);
-    }
-    return s;
-  }, [type]);
+  // Clone scene + create canvas texture (runs once per model)
+  const { clonedScene, canvas, texture } = useMemo(() => {
+    const clone = scene.clone(true);
+    const cvs = document.createElement('canvas');
+    cvs.width = CANVAS_SIZE;
+    cvs.height = CANVAS_SIZE;
 
-  const extrudeSettings = {
-    steps: 2,
-    depth: type === 'shirt' ? 0.3 : 0.4,
-    bevelEnabled: true,
-    bevelThickness: 0.1,
-    bevelSize: 0.1,
-    bevelOffset: 0,
-    bevelSegments: 4
-  };
+    const tex = new THREE.CanvasTexture(cvs);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
 
-  // Subtle floating animation
+    // Replace materials with fresh ones that use our canvas
+    clone.traverse((child: THREE.Object3D) => {
+      const mesh = child as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      mesh.material = new THREE.MeshStandardMaterial({
+        map: tex,
+        roughness: 0.85,
+        metalness: 0.02,
+        color: new THREE.Color('#ffffff'),
+      });
+    });
+
+    return { clonedScene: clone, canvas: cvs, texture: tex };
+  }, [scene]);
+
+  // Scale to fit viewport
+  const s = useMemo(() => {
+    clonedScene.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(clonedScene);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    return 2.5 / (Math.max(size.x, size.y, size.z) || 1);
+  }, [clonedScene]);
+
+  // Paint canvas: garment color + design layers at correct UV positions
+  // UV layout: front=top-left quadrant (RED), back=top-right quadrant (GREEN) for BOTH models
+  useEffect(() => {
+    const ctx = canvas.getContext('2d')!;
+    const S = CANVAS_SIZE;
+
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, S, S);
+
+    // Per-type UV centers in canvas pixels (calibrated from user testing)
+    const UV = type === 'shirt'
+      ? { frontCX: 663, frontCY: 663, backCX: 1400, backCY: 600, scale: 250 }
+      : { frontCX: 413, frontCY: 350, backCX: 1213, backCY: 263, scale: 250 };
+
+    const paintAll = async () => {
+      for (const layer of layers) {
+        const isBack = layer.side === 'back';
+        const cx = isBack ? UV.backCX : UV.frontCX;
+        const cy = isBack ? UV.backCY : UV.frontCY;
+        const px = cx + layer.x * UV.scale;
+        const py = cy - layer.y * UV.scale;
+
+        if (layer.type === 'text') {
+          ctx.save();
+          ctx.font = `bold ${layer.scale * 80}px Arial`;
+          ctx.fillStyle = layer.color || '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(layer.content, px, py);
+          ctx.restore();
+        } else {
+          const url = layer.type === 'db_design'
+            ? `http://localhost:3000/api/proxy-image?url=${encodeURIComponent(layer.content)}`
+            : layer.content;
+          try {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = url;
+            await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = rej; });
+            const sz = layer.scale * 200;
+            ctx.drawImage(img, px - sz / 2, py - sz / 2, sz, sz);
+          } catch (e) {
+            console.warn('Design image load failed:', url);
+          }
+        }
+      }
+      texture.needsUpdate = true;
+    };
+    paintAll();
+  }, [canvas, texture, color, layers, type]);
+
+  // Floating animation + position adjustments per type
   useFrame((state) => {
     if (group.current) {
-      group.current.position.y = Math.sin(state.clock.elapsedTime) * 0.05 - 0.2;
+      const float = Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
+      if (type === 'hoodie') {
+        group.current.position.set(-0.85, float + 6.0, 10); // up + closer to camera
+      } else {
+        group.current.position.set(0, float, 0);
+      }
     }
   });
 
   return (
-    <group ref={group} dispose={null}>
-      <Center>
-        <mesh material={material} castShadow receiveShadow>
-          <extrudeGeometry args={[shape, extrudeSettings]} />
-          {/* === DESIGN OVERLAYS === */}
-          {layers.map(layer => {
-            const isBack = layer.side === 'back';
-            const garmentDepth = type === 'shirt' ? 0.3 : 0.4;
-            const bevel = 0.1;
-            
-            // Positions: Front face is at z=depth+bevel, Back face is at z=-bevel
-            // We move them slightly away from the surface (0.01) to avoid z-fighting
-            const zPos = isBack ? -bevel - 0.01 : garmentDepth + bevel + 0.01;
-            const rotation: [number, number, number] = isBack ? [0, Math.PI, 0] : [0, 0, 0];
-
-            if (layer.type === 'text') {
-              return (
-                <Text 
-                  key={layer.id}
-                  position={[layer.x, layer.y, zPos]}
-                  rotation={rotation}
-                  fontSize={layer.scale * 0.15}
-                  color={layer.color || '#ffffff'}
-                  anchorX="center" 
-                  anchorY="middle"
-                  outlineWidth={0.01}
-                  outlineColor="#000"
-                  depthOffset={-1}
-                >
-                  {layer.content}
-                </Text>
-              );
-            } else {
-              const isDb = layer.type === 'db_design';
-              const url = isDb ? `http://localhost:3000/api/proxy-image?url=${encodeURIComponent(layer.content)}` : layer.content;
-              return (
-                <Suspense fallback={null} key={layer.id}>
-                  <DesignImage 
-                    url={url}
-                    position={[layer.x, layer.y, zPos]}
-                    rotation={rotation}
-                    // Small Z scale (0.1) prevents bleed-through to the other side
-                    scale={[layer.scale, layer.scale, 0.1]}
-                  />
-                </Suspense>
-              );
-            }
-          })}
-        </mesh>
-      </Center>
+    <group ref={group}>
+      <group scale={[s, s, s]}>
+        <Center>
+          <primitive object={clonedScene} castShadow receiveShadow />
+        </Center>
+      </group>
     </group>
   );
 };
+
+useGLTF.preload(SHIRT_PATH);
+useGLTF.preload(HOODIE_PATH);
 
 interface Props {
   onAddToCart?: (product: Product, quantity: number, size?: string) => void;
@@ -191,7 +178,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const [activeColor, setActiveColor] = useState<ColorType>({ name: 'Negro', hex: '#1a1a1a' });
   const [layers, setLayers] = useState<Layer[]>([]);
   const [fileMap, setFileMap] = useState<Record<string, File>>({}); // Store original files for lazy upload
-  
+
   const [dbProducts, setDbProducts] = useState<DBProduct[]>([]);
   const [dbDesigns, setDbDesigns] = useState<DBDesign[]>([]);
   const [loading, setLoading] = useState(true);
@@ -240,11 +227,11 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
   const currentBaseProduct = dbProducts.find(p => p.talla === size && p.color === activeColor.name && p.tipo_producto === type) || dbProducts.find(p => p.tipo_producto === type);
   const basePrice = currentBaseProduct ? Number(currentBaseProduct.precio) : (type === 'shirt' ? 25.00 : 45.00);
-  
+
   const designPrice = layers.reduce((acc, l) => {
-    if(l.type === 'db_design') return acc + 5.00;
-    if(l.type === 'custom_image') return acc + 3.00;
-    if(l.type === 'text') return acc + 2.00;
+    if (l.type === 'db_design') return acc + 5.00;
+    if (l.type === 'custom_image') return acc + 3.00;
+    if (l.type === 'text') return acc + 2.00;
     return acc;
   }, 0);
   const totalPrice = basePrice + designPrice;
@@ -266,15 +253,15 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
   const handleAddCustomImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if(file) {
+    if (file) {
       const id = Date.now().toString();
       const localUrl = URL.createObjectURL(file);
-      
+
       setFileMap(prev => ({ ...prev, [id]: file }));
       setLayers([...layers, {
         id: id,
         type: 'custom_image',
-        content: localUrl, 
+        content: localUrl,
         name: file.name,
         scale: 1.0,
         x: 0,
@@ -341,7 +328,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
   const handleAddToCart = async () => {
     setLoading(true); // Show loading while uploading
-    
+
     try {
       // 1. Upload any pending local files
       const updatedLayers = await uploadPendingLayers();
@@ -349,7 +336,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
       // 2. Add to cart with final URLs
       const customId = Date.now();
       const firstDbDesign = updatedLayers.find(l => l.type === 'db_design');
-      
+
       const customProduct: any = {
         id_producto_perso: customId,
         id_diseño: firstDbDesign ? firstDbDesign.dbId : undefined,
@@ -369,7 +356,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
         cart.push({ product: customProduct, quantity: 1, selectedSize: size });
         sessionStorage.setItem("cart", JSON.stringify(cart));
       }
-      
+
       alert("Customized product successfully added to cart.");
       navigate('/checkout');
     } catch (err) {
@@ -468,11 +455,16 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
             <ambientLight intensity={0.5} />
             <spotLight position={[5, 5, 5]} angle={0.15} penumbra={1} intensity={1} castShadow />
             <pointLight position={[-5, 5, -5]} intensity={0.5} />
-            
+
             <StylizedGarment type={type} color={activeColor.hex} layers={layers} />
-            
+
             <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2} far={4} />
-            <OrbitControls enablePan={false} enableZoom={true} minDistance={3} maxDistance={7} />
+            <OrbitControls
+              enablePan={false}
+              enableZoom={true}
+              minDistance={1}
+              maxDistance={20}
+            />
             <Environment preset="city" />
           </Canvas>
           <div className="model-controls-overlay">
@@ -482,7 +474,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
         {/* Controls Panel */}
         <div className="options-panel">
-          
+
           <div className="option-group">
             <h3>Garment</h3>
             <div className="btn-group">
@@ -495,9 +487,9 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
             <h3>Size</h3>
             <div className="btn-group">
               {ALL_SIZES.map(s => (
-                <button 
-                  key={s} 
-                  className={`option-btn ${size === s ? 'active' : ''}`} 
+                <button
+                  key={s}
+                  className={`option-btn ${size === s ? 'active' : ''}`}
                   onClick={() => setSize(s)}
                 >
                   {s}
@@ -510,7 +502,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
             <h3>Color</h3>
             <div className="btn-group">
               {ALL_COLORS.map(cName => (
-                <button 
+                <button
                   key={cName}
                   className={`color-btn ${activeColor.name === cName ? 'active' : ''}`}
                   style={{ backgroundColor: COLOR_MAP[cName] || '#cccccc' }}
@@ -527,7 +519,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
               <select className="option-btn" style={{ appearance: 'none', textAlign: 'center' }} onChange={(e) => {
                 const id = parseInt(e.target.value);
                 const d = dbDesigns.find(x => x.id_diseno === id);
-                if(d) handleAddDbDesign(d);
+                if (d) handleAddDbDesign(d);
                 e.target.value = "";
               }}>
                 <option value="">+ Add Catalog Design</option>
@@ -536,7 +528,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
                 ))}
               </select>
 
-              <label className="option-btn" style={{cursor: 'pointer', textAlign: 'center', display: 'block' }}>
+              <label className="option-btn" style={{ cursor: 'pointer', textAlign: 'center', display: 'block' }}>
                 + Upload Image
                 <input type="file" accept="image/*" hidden onChange={handleAddCustomImage} />
               </label>
@@ -552,38 +544,38 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
               <h3>Active Layers</h3>
               <div className="layers-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 {layers.map(layer => (
-                  <div key={layer.id} className="layer-item" style={{border: '1px solid #444', padding: '10px', marginBottom: '10px', borderRadius: '5px'}}>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
+                  <div key={layer.id} className="layer-item" style={{ border: '1px solid #444', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                       <strong style={{ fontSize: '0.9rem' }}>{layer.name}</strong>
-                      <button onClick={() => removeLayer(layer.id)} style={{background: '#8b0000', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px'}}>X</button>
+                      <button onClick={() => removeLayer(layer.id)} style={{ background: '#8b0000', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px' }}>X</button>
                     </div>
 
                     {layer.type === 'text' && (
-                       <div style={{marginBottom: '10px', display: 'flex', gap: '5px'}}>
-                         <input type="text" value={layer.content} onChange={e => updateLayer(layer.id, { content: e.target.value })} style={{flex: 1, padding: '5px', borderRadius: '4px', border: 'none'}}/>
-                         <input type="color" value={layer.color} onChange={e => updateLayer(layer.id, { color: e.target.value })} style={{width: '30px', padding: '0', border: 'none', background: 'none'}}/>
-                       </div>
+                      <div style={{ marginBottom: '10px', display: 'flex', gap: '5px' }}>
+                        <input type="text" value={layer.content} onChange={e => updateLayer(layer.id, { content: e.target.value })} style={{ flex: 1, padding: '5px', borderRadius: '4px', border: 'none' }} />
+                        <input type="color" value={layer.color} onChange={e => updateLayer(layer.id, { color: e.target.value })} style={{ width: '30px', padding: '0', border: 'none', background: 'none' }} />
+                      </div>
                     )}
 
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
-                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                         <label style={{fontSize: '0.8rem'}}>Side: {layer.side.toUpperCase()}</label>
-                         <button 
-                           onClick={() => updateLayer(layer.id, { side: layer.side === 'front' ? 'back' : 'front' })}
-                           style={{background: '#444', color: 'white', border: '1px solid #666', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px', fontSize: '0.7rem'}}
-                         >
-                           Flip to {layer.side === 'front' ? 'Back' : 'Front'}
-                         </button>
-                       </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <label style={{ fontSize: '0.8rem' }}>Side: {layer.side.toUpperCase()}</label>
+                        <button
+                          onClick={() => updateLayer(layer.id, { side: layer.side === 'front' ? 'back' : 'front' })}
+                          style={{ background: '#444', color: 'white', border: '1px solid #666', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px', fontSize: '0.7rem' }}
+                        >
+                          Flip to {layer.side === 'front' ? 'Back' : 'Front'}
+                        </button>
+                      </div>
 
-                       <label style={{fontSize: '0.8rem'}}>Scale: {layer.scale.toFixed(1)}</label>
-                       <input type="range" min="0.1" max="4" step="0.1" value={layer.scale} onChange={e => updateLayer(layer.id, { scale: parseFloat(e.target.value) })} />
+                      <label style={{ fontSize: '0.8rem' }}>Scale: {layer.scale.toFixed(1)}</label>
+                      <input type="range" min="0.1" max="4" step="0.1" value={layer.scale} onChange={e => updateLayer(layer.id, { scale: parseFloat(e.target.value) })} />
 
-                       <label style={{fontSize: '0.8rem'}}>X Pos: {layer.x.toFixed(2)}</label>
-                       <input type="range" min="-1.5" max="1.5" step="0.05" value={layer.x} onChange={e => updateLayer(layer.id, { x: parseFloat(e.target.value) })} />
+                      <label style={{ fontSize: '0.8rem' }}>X Pos: {layer.x.toFixed(2)}</label>
+                      <input type="range" min="-1.5" max="1.5" step="0.05" value={layer.x} onChange={e => updateLayer(layer.id, { x: parseFloat(e.target.value) })} />
 
-                       <label style={{fontSize: '0.8rem'}}>Y Pos: {layer.y.toFixed(2)}</label>
-                       <input type="range" min="-2.0" max="2.0" step="0.05" value={layer.y} onChange={e => updateLayer(layer.id, { y: parseFloat(e.target.value) })} />
+                      <label style={{ fontSize: '0.8rem' }}>Y Pos: {layer.y.toFixed(2)}</label>
+                      <input type="range" min="-2.0" max="2.0" step="0.05" value={layer.y} onChange={e => updateLayer(layer.id, { y: parseFloat(e.target.value) })} />
                     </div>
                   </div>
                 ))}

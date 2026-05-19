@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html><head><title>GLB Inspector</title>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head><body style="background:#111;color:#0f0;font-family:monospace;padding:20px;">
+<h2>GLB Model Inspector</h2>
+<pre id="log"></pre>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const log = document.getElementById('log');
+const models = ['/models/t-shirt_3d_mockup_editable.glb', '/models/hoodie_mockup_final_template_download.glb'];
+const loader = new GLTFLoader();
+
+for (const path of models) {
+  try {
+    const gltf = await new Promise((res, rej) => loader.load(path, res, undefined, rej));
+    log.textContent += `\n${'═'.repeat(60)}\nMODEL: ${path}\n${'═'.repeat(60)}\n`;
+    
+    const box = new THREE.Box3().setFromObject(gltf.scene);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+    log.textContent += `BBox size: [${size.x.toFixed(3)}, ${size.y.toFixed(3)}, ${size.z.toFixed(3)}]\n`;
+    log.textContent += `BBox center: [${center.x.toFixed(3)}, ${center.y.toFixed(3)}, ${center.z.toFixed(3)}]\n\n`;
+    
+    let meshCount = 0;
+    gltf.scene.traverse((child) => {
+      if (!child.isMesh) return;
+      meshCount++;
+      const mesh = child;
+      const geo = mesh.geometry;
+      const hasUV = !!geo?.attributes?.uv;
+      const vertCount = geo?.attributes?.position?.count || 0;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      
+      log.textContent += `MESH #${meshCount}: "${mesh.name}"\n`;
+      log.textContent += `  Vertices: ${vertCount}\n`;
+      log.textContent += `  Has UV: ${hasUV}\n`;
+      
+      if (hasUV) {
+        const uv = geo.attributes.uv;
+        let minU = Infinity, maxU = -Infinity, minV = Infinity, maxV = -Infinity;
+        for (let i = 0; i < uv.count; i++) {
+          const u = uv.getX(i), v = uv.getY(i);
+          if (u < minU) minU = u; if (u > maxU) maxU = u;
+          if (v < minV) minV = v; if (v > maxV) maxV = v;
+        }
+        log.textContent += `  UV range: U[${minU.toFixed(3)}, ${maxU.toFixed(3)}] V[${minV.toFixed(3)}, ${maxV.toFixed(3)}]\n`;
+      }
+      
+      mats.forEach((mat, i) => {
+        log.textContent += `  Material[${i}]: type=${mat.type}, color=${mat.color?.getHexString?.() || '?'}`;
+        if (mat.map) log.textContent += `, hasTexture=YES (${mat.map.image?.width}x${mat.map.image?.height})`;
+        else log.textContent += `, hasTexture=NO`;
+        log.textContent += `\n`;
+      });
+      log.textContent += '\n';
+    });
+    log.textContent += `Total meshes: ${meshCount}\n`;
+  } catch (e) {
+    log.textContent += `\nERROR loading ${path}: ${e.message}\n`;
+  }
+}
+</script></body></html>
