@@ -79,18 +79,49 @@ p {
   border-radius: var(--br-main);
 }
 
-.hero-label {
-  display: inline-flex;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #FFFFFF;
-  font-weight: 600;
+.hero-label,
+.fichajes-hero .hero-label,
+.hr-hero .tag-badge,
+.news-hero .hero-label {
+  display: none !important;
+}
+
+.intranet-top-welcome {
+  background: var(--dark-bg);
+  color: #B0B0B0;
+  padding: 0.6rem 1.5rem;
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  margin-bottom: 2rem;
-  border-radius: var(--br-main);
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.work-capsules-hero,
+.fichajes-hero,
+.hr-hero,
+.news-hero {
+  padding: 2.5rem 1.5rem 2.5rem !important;
+  text-align: left !important;
+}
+
+.work-capsules-hero h1,
+.fichajes-hero h1,
+.hr-hero h2,
+.news-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem) !important;
+  margin-bottom: 0.5rem !important;
+  text-align: left !important;
+}
+
+.work-capsules-hero p,
+.fichajes-hero p,
+.hr-hero p,
+.news-hero p {
+  margin: 0 !important;
+  font-size: 1rem !important;
+  max-width: 800px !important;
+  text-align: left !important;
 }
 
 .employee-zone-header h1 {
@@ -114,7 +145,25 @@ p {
 .intranet-page-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 1.5rem 6rem;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* --- GLOBAL SPACING OVERRIDES --- */
+.work-capsules-main,
+.hr-main,
+.fichajes-main,
+.news-main {
+  padding: 1.5rem 0 !important;
+  gap: 2rem !important;
+}
+
+.grid-two {
+  gap: 2rem !important;
+}
+
+.section-card {
+  margin-bottom: 2rem !important;
+  padding: 2rem !important;
 }
 
 /* --- GLOBAL TABLE STYLES --- */

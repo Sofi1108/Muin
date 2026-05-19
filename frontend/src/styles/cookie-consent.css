@@ -1,0 +1,244 @@
+.cookie-consent-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+}
+
+.cookie-consent-modal {
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 550px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.cookie-consent-modal h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.cookie-consent-modal p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.cookie-consent-modal p a {
+  color: #820000;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.cookie-consent-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cookie-consent-actions button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.btn-accept {
+  background-color: #1a1a1a;
+  color: white;
+}
+.btn-accept:hover {
+  background-color: #820000;
+  transform: translateY(-2px);
+}
+
+.btn-reject {
+  background-color: transparent;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+}
+.btn-reject:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.btn-config {
+  background-color: transparent;
+  color: #555;
+  text-decoration: underline;
+  padding: 0.8rem 1rem;
+}
+.btn-config:hover {
+  color: #1a1a1a;
+}
+
+/* Preferences View */
+.preferences-desc {
+  margin-bottom: 1.5rem !important;
+}
+
+.cookie-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.cookie-option {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.cookie-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.cookie-option h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.cookie-option p {
+  font-size: 0.8rem !important;
+  color: #666 !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.prefs-actions {
+  margin-top: 2rem;
+}
+
+.btn-save {
+  background-color: #1a1a1a;
+  color: white;
+  flex: 1;
+}
+.btn-save:hover {
+  background-color: #820000;
+}
+
+.btn-back {
+  background-color: #eee;
+  color: #1a1a1a;
+}
+.btn-back:hover {
+  background-color: #ddd;
+}
+
+/* Toggles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #1a1a1a;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #1a1a1a;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.toggle-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #1a1a1a;
+}
+
+/* Floating button */
+.cookie-floating-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1a1a1a;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 9998;
+  transition: all 0.3s;
+}
+
+.cookie-floating-btn:hover {
+  background-color: #820000;
+  transform: scale(1.1);
+}
+
+.cookie-floating-btn .material-symbols-outlined {
+  font-size: 24px;
+}

@@ -43,6 +43,7 @@ import AdminUsers from "./components/AdminUsers";
 import PersonalizarProducto from "./components/PersonalizarProducto";
 import AdminDesignsPanel from "./components/AdminDesignsPanel";
 import AdminCustomDesignsPanel from "./components/AdminCustomDesignsPanel";
+import CookieConsent from "./components/CookieConsent";
 
 import type { Product, CartItem } from "../types";
 
@@ -110,6 +111,7 @@ function App() {
 
   return (
     <div id="app-wrapper">
+      <CookieConsent />
       <Header
         cart={cart}
         onAddToCart={addToCart}
