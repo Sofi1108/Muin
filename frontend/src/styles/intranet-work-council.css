@@ -52,8 +52,8 @@
   margin: 1.5rem auto 0;
   color: #B0B0B0;
   line-height: 1.8;
-  font-size: 1.1rem;
-  font-weight: 300;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 /* --- TARJETAS (SECTION CARDS) --- */
@@ -66,6 +66,14 @@
   box-sizing: border-box;
   box-shadow: 0 10px 30px rgba(0,0,0,0.02);
   overflow: hidden;
+}
+
+.section-card > p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: -1.5rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.85;
 }
 
 .section-card h2 {
@@ -90,6 +98,82 @@
   letter-spacing: 0.1em;
   margin-bottom: 1rem;
   border-radius: var(--br-main);
+}
+
+/* --- DOWNLOAD BUTTONS --- */
+.download-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 1.5rem;
+}
+
+.download-btn {
+  background: var(--accent);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--br-main);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.download-btn:hover {
+  background: #ff3b30;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+}
+
+.legal-summary-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 2rem;
+  border-radius: var(--br-main);
+  margin: 1.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.legal-summary-box h3 {
+  color: var(--text-primary);
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.legal-summary-box .download-btn {
+  margin-bottom: 1.5rem;
+}
+
+.legal-summary-box ul {
+  padding-left: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.legal-summary-box li {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.legal-summary-box li strong {
+  color: var(--text-primary);
+}
+
+.legal-summary-box .summary-note {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* --- GRIDS --- */

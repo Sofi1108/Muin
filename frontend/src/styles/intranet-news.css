@@ -40,7 +40,7 @@
   color: #B0B0B0;
   line-height: 1.8;
   font-size: 1.1rem;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .news-main {
@@ -114,7 +114,7 @@
   color: var(--text-secondary);
   line-height: 1.7;
   font-size: 0.95rem;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .news-details {
@@ -171,7 +171,7 @@
   color: var(--text-secondary);
   line-height: 1.85;
   font-size: 1.1rem;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .article-footer {
