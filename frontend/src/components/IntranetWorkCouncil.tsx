@@ -106,12 +106,7 @@ const IntranetWorkCouncil = () => {
                 <div className="vertical-connector-line"></div>
                 <div className="vocals-vertical-list">
                   {[
-                    { name: "Ana Ruiz López", role: "VOCAL / PRL C.Social" },
-                    { name: "Javier Sanz Díaz", role: "VOCAL / PRL C.Social" },
-                    { name: "Luis Fernández Gil", role: "VOCAL / PRL C.Social" },
-                    { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" },
-                    { name: "Pilar Gómez Torres", role: "VOCAL / PRL C.Social" },
-                    { name: "Miguel Moreno Ruiz", role: "VOCAL / PRL C.Social" }
+                    { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" }
                   ].map((member, i) => (
                     <div key={i} className="vocal-item">
                       <div className="vocal-side-line"></div>
@@ -135,10 +130,7 @@ const IntranetWorkCouncil = () => {
                 <div className="vertical-connector-line"></div>
                 <div className="vocals-vertical-list">
                   {[
-                    { name: "David Castro León", role: "VOCAL / PRL C.Social" },
-                    { name: "Sofía Torcal Valentín", role: "VOCAL" },
-                    { name: "Jorge Navarro Cruz", role: "VOCAL" },
-                    { name: "Carmen Pérez Ortiz", role: "VOCAL" },
+                    { name: "Sofía Torcal Valentín", role: "VOCAL / PRL C.Social" },
                     { name: "Ainara Gorría Planté", role: "VOCAL" }
                   ].map((member, i) => (
                     <div key={i} className="vocal-item">
