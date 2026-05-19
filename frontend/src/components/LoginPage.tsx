@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { HashLink as Link } from "react-router-hash-link";
 import { useUser } from "../context/UserContext.tsx";
 import "../styles/auth-pages.css";
 
@@ -34,7 +35,7 @@ export default function LoginPage() {
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
+      <div className="auth-card" id="login-header">
         <Link to="/" className="btn-muin-back">
           ←
         </Link>
@@ -76,7 +77,7 @@ export default function LoginPage() {
         <div className="auth-footer">
           <p>
             DON'T HAVE AN ACCOUNT?{" "}
-            <Link to="/register" className="muin-link">
+            <Link to="/register#register-header" className="muin-link">
               REGISTER NOW
             </Link>
           </p>

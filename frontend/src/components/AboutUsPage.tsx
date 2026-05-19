@@ -1,8 +1,9 @@
 import "../styles/about-us-page.css";
+import { Link } from "react-router-dom";
 
 function AboutUsPage() {
   return (
-    <div className="about-container">
+    <div className="about-container" id="about-header">
       <section className="about-hero">
         <div className="hero-content">
           <span className="japanese-bg">無韻</span>

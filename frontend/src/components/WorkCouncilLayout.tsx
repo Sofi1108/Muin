@@ -14,7 +14,7 @@ const WorkCouncilLayout = ({ title, subtitle, children }: WorkCouncilLayoutProps
   const userName = customer?.name || "Usuario";
 
   return (
-    <div className="intranet-page-wrapper">
+    <div className="intranet-page-wrapper" id="intranet-header">
       <div className="intranet-top-welcome">
         <span>Bienvenido/a, {userName}</span>
       </div>

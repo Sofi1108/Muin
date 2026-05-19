@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "../styles/careers.css";
 
 const Careers = () => {
@@ -33,7 +34,7 @@ const Careers = () => {
   }
 
   return (
-    <div className="careers-container">
+    <div className="careers-container" id="careers-header">
       <div className="careers-grid">
         {/* LEFT COLUMN: INFO */}
         <div className="careers-info">

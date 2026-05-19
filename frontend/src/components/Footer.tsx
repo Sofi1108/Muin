@@ -14,21 +14,21 @@ const Footer = () => {
       body: "Got a doubt? From order tracking to custom designs, our team is here to help you navigate. We'll respond faster than a teleportation jutsu.",
       footer: "Reach out anytime.",
       date: "Link to contact page",
-      link: "/contact",
+      link: "/contact#contact-header",
     },
     {
       title: "About us",
       body: "MUIN means No Seal. We believe your passion shouldn't be restricted by labels or boundaries. Inspired by the stories that define us, we create premium anime streetwear for those who follow their own path.",
       footer: "Your nindo needs no seal.",
       date: "Link to about us page",
-      link: "/about",
+      link: "/about#about-header",
     },
     {
       title: "Wanna work with us?",
       body: "Join the village. We are looking for artists and creators who share our vision. If you have a story to tell, let’s build together. Write us and let's create something epic.",
       footer: "Define your path with us.",
       date: "Link to careers page",
-      link: "/careers",
+      link: "/careers#careers-header",
     },
   ];
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavHashLink as NavLink } from "react-router-hash-link";
 import "../styles/intranet-navbar.css";
 
 import { useUser } from "../context/UserContext";
@@ -34,7 +34,7 @@ const IntranetNavbar = () => {
           {navItems.map((item) => (
             <NavLink
               key={item.path}
-              to={item.path}
+              to={`${item.path}#intranet-header`}
               end={item.end}
               className={({ isActive }) =>
                 isActive ? "intranet-nav-link active" : "intranet-nav-link"
@@ -49,7 +49,7 @@ const IntranetNavbar = () => {
             <>
               <div className="intranet-nav-separator"></div>
               <NavLink
-                to="/intranet/admin-users"
+                to="/intranet/admin-users#intranet-header"
                 className={({ isActive }) =>
                   isActive ? "intranet-nav-link active" : "intranet-nav-link"
                 }
@@ -58,7 +58,7 @@ const IntranetNavbar = () => {
                 USUARIOS
               </NavLink>
               <NavLink
-                to="/intranet/admin-designs"
+                to="/intranet/admin-designs#intranet-header"
                 className={({ isActive }) =>
                   isActive ? "intranet-nav-link active" : "intranet-nav-link"
                 }

@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { HashLink as Link } from "react-router-hash-link";
 import "../styles/contact-page-form.css";
 export default function ContactPage() {
   return (
     <div className="auth-container">
-      <div className="auth-card">
+      <div className="auth-card" id="contact-header">
         <Link to="/" className="btn-muin-back">
           ←
         </Link>

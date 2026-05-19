@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavHashLink as NavLink } from "react-router-hash-link";
 import "../styles/intranet-navbar.css"; // Usar el mismo estilo
 
 const workCouncilNavItems = [
@@ -16,7 +16,7 @@ const WorkCouncilNavbar = () => {
         {workCouncilNavItems.map((item) => (
           <NavLink
             key={item.path}
-            to={item.path}
+            to={`${item.path}#intranet-header`}
             end={item.end}
             className={({ isActive }) =>
               isActive ? "intranet-nav-link active" : "intranet-nav-link"

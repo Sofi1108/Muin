@@ -169,7 +169,7 @@ export default function ProfilePage() {
                 CERRAR SESIÓN
               </button>
               {customer?.role === "admin" || customer?.role === "empleado" ? (
-                <Link to="/intranet" className="btn-intranet-red">
+                <Link to="/intranet#intranet-header" className="btn-intranet-red">
                   INTRANET
                 </Link>
               ) : null}
