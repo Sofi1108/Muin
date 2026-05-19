@@ -1,8 +1,8 @@
-import React, { useState, useRef, useMemo, Suspense } from 'react';
+import React, { useState, useRef, useMemo, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, Center, Decal, useTexture, Text } from '@react-three/drei';
 import * as THREE from 'three';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/PersonalizarProducto.css';
 import type { Product, CartItem } from '../../types';
 
@@ -185,6 +185,7 @@ interface Props {
 
 const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [type, setType] = useState<GarmentType>('shirt');
   const [size, setSize] = useState<SizeType>('M');
   const [activeColor, setActiveColor] = useState<ColorType>({ name: 'Negro', hex: '#1a1a1a' });
@@ -195,6 +196,11 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const [dbDesigns, setDbDesigns] = useState<DBDesign[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [savedDesigns, setSavedDesigns] = useState<any[]>(() => {
+    const saved = localStorage.getItem('saved_custom_designs');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   React.useEffect(() => {
     Promise.all([
       fetch('http://localhost:3000/api/base-products').then(res => res.ok ? res.json() : []),
@@ -202,13 +208,27 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
     ]).then(([products, designs]) => {
       setDbProducts(products);
       setDbDesigns(designs);
-      // Auto-add first design for demo if we wanted, but we'll leave it empty so they can choose
+      
+      // Parse shared design from URL if present
+      const params = new URLSearchParams(location.search);
+      const sharedDesign = params.get('design');
+      if (sharedDesign) {
+        try {
+          const decoded = JSON.parse(atob(sharedDesign));
+          if (decoded.t) setType(decoded.t);
+          if (decoded.s) setSize(decoded.s);
+          if (decoded.cn && decoded.c) setActiveColor({ name: decoded.cn, hex: decoded.c });
+          if (decoded.l) setLayers(decoded.l);
+        } catch (e) {
+          console.error("Error decoding shared design", e);
+        }
+      }
       setLoading(false);
     }).catch(err => {
       console.error("Error fetching db data", err);
       setLoading(false);
     });
-  }, []);
+  }, [location.search]);
 
   // Instead of dynamically checking base products for sizes/colors, we use the constraints
   React.useEffect(() => {
@@ -296,31 +316,35 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
     });
   };
 
+  const uploadPendingLayers = async () => {
+    return await Promise.all(layers.map(async (layer) => {
+      if (layer.type === 'custom_image' && layer.content.startsWith('blob:')) {
+        const file = fileMap[layer.id];
+        if (!file) return layer;
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const res = await fetch('http://localhost:3000/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!res.ok) throw new Error(`Error uploading image: ${layer.name}`);
+        const data = await res.json();
+        
+        return { ...layer, content: data.url };
+      }
+      return layer;
+    }));
+  };
+
   const handleAddToCart = async () => {
     setLoading(true); // Show loading while uploading
     
     try {
       // 1. Upload any pending local files
-      const updatedLayers = await Promise.all(layers.map(async (layer) => {
-        if (layer.type === 'custom_image' && layer.content.startsWith('blob:')) {
-          const file = fileMap[layer.id];
-          if (!file) return layer;
-
-          const formData = new FormData();
-          formData.append('image', file);
-
-          const res = await fetch('http://localhost:3000/api/upload', {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!res.ok) throw new Error(`Error uploading image: ${layer.name}`);
-          const data = await res.json();
-          
-          return { ...layer, content: data.url };
-        }
-        return layer;
-      }));
+      const updatedLayers = await uploadPendingLayers();
 
       // 2. Add to cart with final URLs
       const customId = Date.now();
@@ -354,6 +378,75 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSaveDesign = async () => {
+    setLoading(true);
+    try {
+      const updatedLayers = await uploadPendingLayers();
+      setLayers(updatedLayers); // Update state to replace blob URLs
+      
+      const newDesign = {
+        id: Date.now(),
+        name: `My Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
+        type,
+        size,
+        activeColor,
+        layers: updatedLayers,
+        date: new Date().toISOString()
+      };
+      
+      const updatedDesigns = [...savedDesigns, newDesign];
+      setSavedDesigns(updatedDesigns);
+      localStorage.setItem('saved_custom_designs', JSON.stringify(updatedDesigns));
+      
+      alert("Design saved successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Error saving design.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleShareDesign = async () => {
+    setLoading(true);
+    try {
+      const updatedLayers = await uploadPendingLayers();
+      setLayers(updatedLayers);
+      
+      const designConfig = {
+        t: type,
+        s: size,
+        cn: activeColor.name,
+        c: activeColor.hex,
+        l: updatedLayers
+      };
+      
+      const base64Config = btoa(JSON.stringify(designConfig));
+      const shareUrl = `${window.location.origin}${window.location.pathname}?design=${base64Config}`;
+      
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Design link copied to clipboard!");
+    } catch (err) {
+      console.error(err);
+      alert("Error sharing design.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadSavedDesign = (design: any) => {
+    setType(design.type);
+    setSize(design.size);
+    setActiveColor(design.activeColor);
+    setLayers(design.layers);
+  };
+
+  const deleteSavedDesign = (id: number) => {
+    const updated = savedDesigns.filter(d => d.id !== id);
+    setSavedDesigns(updated);
+    localStorage.setItem('saved_custom_designs', JSON.stringify(updated));
   };
 
   if (loading) {
@@ -507,7 +600,37 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
             <button className="add-cart-btn" onClick={handleAddToCart}>
               Add to Cart
             </button>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+              <button className="option-btn" onClick={handleSaveDesign} style={{ flex: 1 }}>
+                Save Design
+              </button>
+              <button className="option-btn" onClick={handleShareDesign} style={{ flex: 1 }}>
+                Share Design
+              </button>
+            </div>
           </div>
+
+          {savedDesigns.length > 0 && (
+            <div className="option-group" style={{ marginTop: '20px' }}>
+              <h3>My Saved Designs</h3>
+              <div className="layers-list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                {savedDesigns.map(d => (
+                  <div key={d.id} className="layer-item" style={{ border: '1px solid #444', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <strong>{d.name}</strong>
+                        <div style={{ fontSize: '0.8rem', color: '#aaa' }}>{new Date(d.date).toLocaleDateString()}</div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '5px' }}>
+                        <button onClick={() => loadSavedDesign(d)} style={{ background: '#4a5e42', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer', padding: '5px' }}>Load</button>
+                        <button onClick={() => deleteSavedDesign(d.id)} style={{ background: '#8b0000', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer', padding: '5px' }}>X</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
         </div>
       </div>
