@@ -189,6 +189,21 @@
   font-weight: 800;
 }
 
+.calendar-day.holiday {
+  background-color: #E2E8F0 !important; /* Nice elegant grey */
+  color: #64748B !important; /* Text color in grey */
+  border-color: var(--border) !important;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.calendar-day.sunday {
+  background-color: #000000 !important; /* Black background */
+  color: #FFFFFF !important; /* White number */
+  border-color: #000000 !important;
+  font-weight: 700;
+}
+
 .calendar-day.empty {
   background: transparent;
   border: none;

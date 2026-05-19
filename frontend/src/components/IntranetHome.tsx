@@ -67,6 +67,17 @@ const IntranetHome = () => {
     return days;
   };
 
+  const isHoliday = (day: number | null) => {
+    if (!day) return false;
+    const holidays: Record<number, number[]> = {
+      7: [15],      // Agosto (7) -> 15
+      9: [12],      // Octubre (9) -> 12
+      10: [2],      // Noviembre (10) -> 2
+      11: [7, 8, 25] // Diciembre (11) -> 7, 8, 25
+    };
+    return holidays[currentMonth]?.includes(day) || false;
+  };
+
   const today = new Date();
   const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
   const todayDate = today.getDate();
@@ -83,45 +94,31 @@ const IntranetHome = () => {
       <div className="work-capsules-page">
         {/* SECCIÓN HERO */}
         <section className="work-capsules-hero">
-          <span className="hero-label">Inicio</span>
-          <h1>Panel Principal</h1>
+          <span className="hero-label">PORTAL</span>
+          <h1>Panel de Inicio</h1>
           <p>
-            Consulta tu horario semanal y los próximos días festivos de la
-            empresa.
+            Bienvenido al portal interno de la intranet de Muin. Aquí tienes tu horario y las novedades de la empresa.
           </p>
         </section>
 
         <main className="work-capsules-main">
-          {/* SECCIÓN DE HORARIOS */}
+          {/* HORARIO */}
           <section className="section-card">
-            <span className="tag-badge">Horarios</span>
-            <div className="schedule-header">
-              <h2>Horario Semanal</h2>
-              <span className="schedule-info">Personal Muin</span>
-            </div>
+            <span className="tag-badge">Horario</span>
+            <h2>Horario Semanal</h2>
             <div className="schedule-table-wrapper">
               <table className="schedule-table">
                 <thead>
                   <tr>
                     <th>Hora</th>
-                    <th>Actividad</th>
-                    {customer?.role === "admin" && <th>Rol</th>}
+                    <th>Actividad / Tarea</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSchedule.map((entry, i) => (
-                    <tr key={i}>
-                      <td className="time-cell">{entry.time}</td>
-                      <td>{entry.activity}</td>
-                      {customer?.role === "admin" && (
-                        <td>
-                          <span className={`role-badge ${entry.role}`}>
-                            {entry.role === "admin"
-                              ? "Administrador"
-                              : "Empleado"}
-                          </span>
-                        </td>
-                      )}
+                  {filteredSchedule.map((item, index) => (
+                    <tr key={index}>
+                      <td className="time-cell">{item.time}</td>
+                      <td>{item.activity}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -148,11 +145,19 @@ const IntranetHome = () => {
                   ))}
                   {generateCalendar().map((day, i) => {
                     const isToday = day && isCurrentMonth && day === todayDate;
+                    const isHolidayDay = isHoliday(day);
+                    const isSundayDay = day && i % 7 === 0;
+
+                    const classes = [
+                      "calendar-day",
+                      !day ? "empty" : "",
+                      isToday ? "today" : "",
+                      isSundayDay ? "sunday" : "",
+                      isHolidayDay ? "holiday" : ""
+                    ].filter(Boolean).join(" ");
+
                     return (
-                      <div
-                        key={i}
-                        className={`calendar-day ${!day ? "empty" : ""} ${isToday ? "today" : ""}`}
-                      >
+                      <div key={i} className={classes}>
                         {day}
                       </div>
                     );
