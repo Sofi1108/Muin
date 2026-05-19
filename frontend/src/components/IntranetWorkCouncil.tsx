@@ -2,7 +2,7 @@ import WorkCouncilLayout from "./WorkCouncilLayout";
 import "../styles/intranet-work-council.css";
 
 const IntranetWorkCouncil = () => {
-  const VIDEO_URL = "https://www.youtube.com/embed/placeholder";
+  const VIDEO_URL = "https://www.youtube.com/embed/MPkNDCxRhRc";
   return (
     <WorkCouncilLayout
       title="ÁREA DE EMPLEADOS"
@@ -33,13 +33,22 @@ const IntranetWorkCouncil = () => {
             <span className="tag-badge">MISIÓN</span>
             <h2>QUÉ ES EL COMITÉ DE EMPRESA</h2>
             <p>
-              El Comité de Empresa es el órgano representativo colegiado de los trabajadores (en centros de 50 o más empleados). En empresas de 10 a 49 trabajadores, esta labor recae en los "Delegados de Personal". Su finalidad es defender los intereses laborales, sociales y económicos de la plantilla frente a la dirección, con un mandato de cuatro años tras ser elegidos democráticamente mediante elecciones sindicales.
+              El Comité de Empresa es el órgano representativo colegiado de los
+              trabajadores (en centros de 50 o más empleados). En empresas de 10
+              a 49 trabajadores, esta labor recae en los "Delegados de
+              Personal". Su finalidad es defender los intereses laborales,
+              sociales y económicos de la plantilla frente a la dirección, con
+              un mandato de cuatro años tras ser elegidos democráticamente
+              mediante elecciones sindicales.
             </p>
             <div className="grid-two-capsules">
               <div className="infographic-card">
                 <h4>PERFIL DEL COMITÉ</h4>
                 <ul>
-                  <li>Representa a todos los empleados del proyecto (50+ trabajadores).</li>
+                  <li>
+                    Representa a todos los empleados del proyecto (50+
+                    trabajadores).
+                  </li>
                   <li>Elegido democráticamente por toda la plantilla.</li>
                   <li>Interlocutor oficial con la dirección de la empresa.</li>
                   <li>Mandato representativo de 4 años de duración.</li>
@@ -48,10 +57,21 @@ const IntranetWorkCouncil = () => {
               <div className="infographic-card">
                 <h4>FUNCIONES CLAVE</h4>
                 <ul>
-                  <li><strong>Información y Consulta:</strong> Situación económica, empleo, ERE, ERTE, IA.</li>
-                  <li><strong>Vigilancia:</strong> Normativa, Registro Horario y Prevención de Riesgos.</li>
-                  <li><strong>Igualdad:</strong> Planes de Género y LGTBI+.</li>
-                  <li><strong>Negociación:</strong> Convenios y acuerdos colectivos justos.</li>
+                  <li>
+                    <strong>Información y Consulta:</strong> Situación
+                    económica, empleo, ERE, ERTE, IA.
+                  </li>
+                  <li>
+                    <strong>Vigilancia:</strong> Normativa, Registro Horario y
+                    Prevención de Riesgos.
+                  </li>
+                  <li>
+                    <strong>Igualdad:</strong> Planes de Género y LGTBI+.
+                  </li>
+                  <li>
+                    <strong>Negociación:</strong> Convenios y acuerdos
+                    colectivos justos.
+                  </li>
                 </ul>
               </div>
             </div>
@@ -64,31 +84,41 @@ const IntranetWorkCouncil = () => {
               <div className="infographic-card">
                 <h4>INFORMACIÓN Y CONSULTA</h4>
                 <p>
-                  Analizamos la situación económica y de empleo. Evaluamos la <strong>transparencia algorítmica (IA)</strong> y emitimos informes legales ante cambios sustanciales, planes de formación, EREs o traslados.
+                  Analizamos la situación económica y de empleo. Evaluamos la{" "}
+                  <strong>transparencia algorítmica (IA)</strong> y emitimos
+                  informes legales ante cambios sustanciales, planes de
+                  formación, EREs o traslados.
                 </p>
               </div>
               <div className="infographic-card">
                 <h4>VIGILANCIA Y CONTROL</h4>
                 <p>
-                  Supervisamos de forma estricta la normativa laboral, el <strong>registro horario real</strong>, los derechos de desconexión digital, el teletrabajo y la prevención de riesgos laborales y salud.
+                  Supervisamos de forma estricta la normativa laboral, el{" "}
+                  <strong>registro horario real</strong>, los derechos de
+                  desconexión digital, el teletrabajo y la prevención de riesgos
+                  laborales y salud.
                 </p>
               </div>
               <div className="infographic-card">
                 <h4>IGUALDAD Y DIVERSIDAD</h4>
                 <p>
-                  Participamos activamente en los <strong>Planes de Igualdad de Género</strong> (evitando la brecha salarial) y negociamos protocolos en favor de la igualdad real del colectivo LGTBI+.
+                  Participamos activamente en los{" "}
+                  <strong>Planes de Igualdad de Género</strong> (evitando la
+                  brecha salarial) y negociamos protocolos en favor de la
+                  igualdad real del colectivo LGTBI+.
                 </p>
               </div>
               <div className="infographic-card">
                 <h4>NEGOCIACIÓN</h4>
                 <p>
-                  Somos el actor principal para defender condiciones justas negociando el <strong>Convenio Colectivo</strong>, los pactos de empresa, los horarios, turnos y calendarios laborales de la plantilla.
+                  Somos el actor principal para defender condiciones justas
+                  negociando el <strong>Convenio Colectivo</strong>, los pactos
+                  de empresa, los horarios, turnos y calendarios laborales de la
+                  plantilla.
                 </p>
               </div>
             </div>
           </section>
-
-
 
           <section className="section-card">
             <span className="tag-badge">EQUIPO</span>
@@ -106,12 +136,14 @@ const IntranetWorkCouncil = () => {
                 <div className="vertical-connector-line"></div>
                 <div className="vocals-vertical-list">
                   {[
-                    { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" }
+                    { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" },
                   ].map((member, i) => (
                     <div key={i} className="vocal-item">
                       <div className="vocal-side-line"></div>
                       <article className="member-capsule org-node-bottom">
-                        <div className="member-avatar">{member.name.charAt(0)}</div>
+                        <div className="member-avatar">
+                          {member.name.charAt(0)}
+                        </div>
                         <p className="role-title">{member.role}</p>
                         <h4>{member.name}</h4>
                       </article>
@@ -130,13 +162,18 @@ const IntranetWorkCouncil = () => {
                 <div className="vertical-connector-line"></div>
                 <div className="vocals-vertical-list">
                   {[
-                    { name: "Sofía Torcal Valentín", role: "VOCAL / PRL C.Social" },
-                    { name: "Ainara Gorría Planté", role: "VOCAL" }
+                    {
+                      name: "Sofía Torcal Valentín",
+                      role: "VOCAL / PRL C.Social",
+                    },
+                    { name: "Ainara Gorría Planté", role: "VOCAL" },
                   ].map((member, i) => (
                     <div key={i} className="vocal-item">
                       <div className="vocal-side-line"></div>
                       <article className="member-capsule org-node-bottom">
-                        <div className="member-avatar">{member.name.charAt(0)}</div>
+                        <div className="member-avatar">
+                          {member.name.charAt(0)}
+                        </div>
                         <p className="role-title">{member.role}</p>
                         <h4>{member.name}</h4>
                       </article>
