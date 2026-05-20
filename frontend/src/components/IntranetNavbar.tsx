@@ -4,18 +4,19 @@ import "../styles/intranet-navbar.css";
 
 import { useUser } from "../context/UserContext";
 
-const navItems = [
-  // Añadimos 'end: true' para que solo sea exacto
-  { path: "/intranet", label: "INICIO", end: true },
-  { path: "/intranet/fichajes", label: "FICHAJE" },
-  { path: "/intranet/work-council", label: "PÁGINA COMITÉ" },
-  { path: "/intranet/hr", label: "RECURSOS HUMANOS" },
-  { path: "/intranet/tickets", label: "TICKETS" },
-];
-
 const IntranetNavbar = () => {
   const { customer } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navItems = [
+    ...(customer?.role !== "cliente" ? [
+      { path: "/intranet", label: "INICIO", end: true },
+      { path: "/intranet/fichajes", label: "FICHAJE" },
+      { path: "/intranet/work-council", label: "PÁGINA COMITÉ" },
+      { path: "/intranet/hr", label: "RECURSOS HUMANOS" },
+    ] : []),
+    { path: "/intranet/tickets", label: "TICKETS" },
+  ];
 
   return (
     <nav className="intranet-navbar">

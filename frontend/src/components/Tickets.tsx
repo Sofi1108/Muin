@@ -93,41 +93,43 @@ const Tickets: React.FC = () => {
         <section className="work-capsules-hero">
           <span className="hero-label">Tickets</span>
           <h1>Incidencias</h1>
-          <p>Reporta una nueva incidencia.</p>
+          <p>{user?.role === "cliente" ? "Visualiza tus incidencias." : "Reporta una nueva incidencia."}</p>
         </section>
         <main className="work-capsules-main">
-          <section className="section-card">
-            <h2>Crear Incidencia</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit} className="ticket-form">
-              <label>
-                ID del empleado/administrador asignado:
-                <input
-                  type="number"
-                  value={assignedToId}
-                  onChange={(e) => setAssignedToId(e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Descripción de la incidencia:
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  rows={6}
-                />
-              </label>
-              <label>
-                Tu correo electrónico:
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </label>
-              <button type="submit" className="primary-button" style={{ width: "fit-content" }}>
-                Enviar
-              </button>
-            </form>
-          </section>
-          <section className="section-card" style={{ marginTop: "2rem" }}>
+          {user && user.role !== "cliente" && (
+            <section className="section-card">
+              <h2>Crear Incidencia</h2>
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              <form onSubmit={handleSubmit} className="ticket-form">
+                <label>
+                  ID del empleado/administrador asignado:
+                  <input
+                    type="number"
+                    value={assignedToId}
+                    onChange={(e) => setAssignedToId(e.target.value)}
+                    required
+                  />
+                </label>
+                <label>
+                  Descripción de la incidencia:
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                    rows={6}
+                  />
+                </label>
+                <label>
+                  Tu correo electrónico:
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </label>
+                <button type="submit" className="primary-button" style={{ width: "fit-content" }}>
+                  Enviar
+                </button>
+              </form>
+            </section>
+          )}
+          <section className="section-card" style={{ marginTop: user?.role === "cliente" ? "0" : "2rem" }}>
             <h2>Mis Incidencias</h2>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
@@ -147,7 +149,12 @@ const Tickets: React.FC = () => {
                     <td>{t.assignedTo}</td>
                     <td>{t.description}</td>
                     <td>{t.email}</td>
-                    <td>{t.status}</td>
+                    <td>
+                      {t.status === "en curso" ? "En Curso" : 
+                       t.status === "resuelto" ? "Resuelto" : 
+                       t.status === "cerrado" ? "Cerrado" : 
+                       t.status.charAt(0).toUpperCase() + t.status.slice(1)}
+                    </td>
                     {user && (
                       <td>
                         {t.assignedTo === user.id && (
@@ -156,8 +163,9 @@ const Tickets: React.FC = () => {
                             onChange={(e) => handleStatusChange(t.id, e.target.value)}
                           >
                             <option value="pendiente">Pendiente</option>
-                            <option value="en proceso">En Proceso</option>
-                            <option value="solucionado">Solucionado</option>
+                            <option value="en curso">En Curso</option>
+                            <option value="resuelto">Resuelto</option>
+                            <option value="cerrado">Cerrado</option>
                           </select>
                         )}
                       </td>

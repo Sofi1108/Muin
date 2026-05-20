@@ -172,7 +172,11 @@ export default function ProfilePage() {
                 <Link to="/intranet#intranet-header" className="btn-intranet-red">
                   INTRANET
                 </Link>
-              ) : null}
+              ) : (
+                <Link to="/intranet/tickets#intranet-header" className="btn-intranet-red">
+                  MIS INCIDENCIAS
+                </Link>
+              )}
             </div>
           </div>
         </div>

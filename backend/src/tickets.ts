@@ -32,7 +32,7 @@ export const createTicket = async (req: Request, res: Response) => {
 export const getMyTickets = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT id_ticket as id, id_asignado as assignedTo, descripcion as description, correo as email, estado_ticket as status FROM TICKET WHERE id_usuario = $1 ORDER BY id_ticket DESC",
+      "SELECT id_ticket as id, id_asignado as assignedTo, descripcion as description, correo as email, estado_ticket as status FROM TICKET WHERE id_usuario = $1 OR id_asignado = $1 ORDER BY id_ticket DESC",
       [(req as any).customer?.id]
     );
     return res.json(result.rows);
@@ -45,7 +45,7 @@ export const getMyTickets = async (req: Request, res: Response) => {
 // PATCH /api/tickets/:id/status - change ticket status (employee/admin only)
 export const updateTicketStatus = async (req: Request, res: Response) => {
   const { status } = req.body;
-  const allowed = ["pendiente", "en proceso", "solucionado"];
+  const allowed = ["pendiente", "en curso", "resuelto", "cerrado"];
   if (!allowed.includes(status)) {
     return res.status(400).json({ error: "Estado no válido" });
   }
