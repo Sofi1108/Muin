@@ -1,5 +1,10 @@
 import WorkCouncilLayout from "./WorkCouncilLayout";
 import "../styles/intranet-work-council.css";
+import imgElena  from "../assets/Img/ElenaM.png";
+import imgCarlos from "../assets/Img/CarlosR.png";
+import imgAndres from "../assets/Img/AndresA.jpg";
+import imgSofia  from "../assets/Img/SofiaT.jpg";
+import imgAinara from "../assets/Img/AinaraG.jpg";
 
 const IntranetWorkCouncil = () => {
   const VIDEO_URL = "https://www.youtube.com/embed/MPkNDCxRhRc";
@@ -130,14 +135,14 @@ const IntranetWorkCouncil = () => {
               <div className="org-top-row">
                 <div className="org-top-node">
                   <article className="member-capsule org-node-top">
-                    <div className="member-avatar">E</div>
+                    <img src={imgElena} alt="Elena Martínez García" className="member-avatar member-photo" />
                     <p className="role-title">PRESIDENTA</p>
                     <h4>Elena Martínez García</h4>
                   </article>
                 </div>
                 <div className="org-top-node">
                   <article className="member-capsule org-node-top">
-                    <div className="member-avatar">C</div>
+                    <img src={imgCarlos} alt="Carlos Rodríguez Pérez" className="member-avatar member-photo" />
                     <p className="role-title">SECRETARIO</p>
                     <h4>Carlos Rodríguez Pérez</h4>
                   </article>
@@ -155,15 +160,15 @@ const IntranetWorkCouncil = () => {
               <div className="org-bottom-row-wrapper">
                 <div className="org-bottom-row">
                   {[
-                    { initial: "A", name: "Andrés Ara Monge",      role: "VOCAL / PRL C.Social" },
-                    { initial: "S", name: "Sofía Torcal Valentín",  role: "VOCAL / PRL C.Social" },
-                    { initial: "A", name: "Ainara Gorría Planté",   role: "VOCAL" },
+                    { img: imgAndres, name: "Andrés Ara Monge",     role: "VOCAL / PRL C.Social" },
+                    { img: imgSofia,  name: "Sofía Torcal Valentín", role: "VOCAL / PRL C.Social" },
+                    { img: imgAinara, name: "Ainara Gorría Planté",  role: "VOCAL" },
                   ].map((member, i) => (
                     <div key={i} className="org-bottom-node">
                       {/* Small vertical line from bar down to card */}
                       <div className="org-leaf-drop"></div>
                       <article className="member-capsule org-node-bottom">
-                        <div className="member-avatar">{member.initial}</div>
+                        <img src={member.img} alt={member.name} className="member-avatar member-photo" />
                         <p className="role-title">{member.role}</p>
                         <h4>{member.name}</h4>
                       </article>
