@@ -14,8 +14,15 @@ const pool = new Pool({
 
 async function run() {
   try {
-    const res = await pool.query("SELECT column_name, data_type, character_maximum_length FROM information_schema.columns WHERE table_name = 'usuario';");
-    console.log(JSON.stringify(res.rows, null, 2));
+    console.log("Running migration: ALTER TABLE TICKET ADD COLUMN acciones TEXT;");
+    try {
+      await pool.query("ALTER TABLE TICKET ADD COLUMN acciones TEXT;");
+      console.log("Migration executed successfully or column already exists.");
+    } catch (migError) {
+      console.log("Migration warning/info:", migError.message);
+    }
+    const res = await pool.query("SELECT column_name, data_type, character_maximum_length FROM information_schema.columns WHERE table_name = 'ticket';");
+    console.log("Updated TICKET columns:", JSON.stringify(res.rows, null, 2));
     await pool.end();
   } catch (err) {
     console.error(err);

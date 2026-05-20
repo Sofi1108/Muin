@@ -14,8 +14,8 @@ const IntranetNavbar = () => {
       { path: "/intranet/fichajes", label: "FICHAJE" },
       { path: "/intranet/work-council", label: "PÁGINA COMITÉ" },
       { path: "/intranet/hr", label: "RECURSOS HUMANOS" },
+      { path: "/intranet/tickets", label: "TICKETS" },
     ] : []),
-    { path: "/intranet/tickets", label: "TICKETS" },
   ];
 
   return (
