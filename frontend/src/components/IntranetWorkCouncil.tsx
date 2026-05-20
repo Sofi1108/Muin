@@ -124,56 +124,46 @@ const IntranetWorkCouncil = () => {
             <span className="tag-badge">EQUIPO</span>
             <h2>ORGANIGRAMA DEL COMITÉ</h2>
 
-            <div className="org-vertical-container">
-              <div className="org-horizontal-bridge"></div>
-              {/* COLUMNA IZQUIERDA: PRESIDENTA */}
-              <div className="org-vertical-column">
-                <article className="member-capsule org-node-top">
-                  <div className="member-avatar">E</div>
-                  <p className="role-title">PRESIDENTA</p>
-                  <h4>Elena Martínez García</h4>
-                </article>
-                <div className="vertical-connector-line"></div>
-                <div className="vocals-vertical-list">
-                  {[
-                    { name: "Andrés Ara Monge", role: "VOCAL / PRL C.Social" },
-                  ].map((member, i) => (
-                    <div key={i} className="vocal-item">
-                      <div className="vocal-side-line"></div>
-                      <article className="member-capsule org-node-bottom">
-                        <div className="member-avatar">
-                          {member.name.charAt(0)}
-                        </div>
-                        <p className="role-title">{member.role}</p>
-                        <h4>{member.name}</h4>
-                      </article>
-                    </div>
-                  ))}
+            {/* --- TOP ROW: two leaders --- */}
+            <div className="org-tree">
+              {/* Top layer */}
+              <div className="org-top-row">
+                <div className="org-top-node">
+                  <article className="member-capsule org-node-top">
+                    <div className="member-avatar">E</div>
+                    <p className="role-title">PRESIDENTA</p>
+                    <h4>Elena Martínez García</h4>
+                  </article>
+                </div>
+                <div className="org-top-node">
+                  <article className="member-capsule org-node-top">
+                    <div className="member-avatar">C</div>
+                    <p className="role-title">SECRETARIO</p>
+                    <h4>Carlos Rodríguez Pérez</h4>
+                  </article>
                 </div>
               </div>
 
-              {/* COLUMNA DERECHA: SECRETARIO */}
-              <div className="org-vertical-column">
-                <article className="member-capsule org-node-top">
-                  <div className="member-avatar">C</div>
-                  <p className="role-title">SECRETARIO</p>
-                  <h4>Carlos Rodríguez Pérez</h4>
-                </article>
-                <div className="vertical-connector-line"></div>
-                <div className="vocals-vertical-list">
+              {/* Horizontal bridge between the two top nodes */}
+              <div className="org-bridge-wrapper">
+                <div className="org-top-bridge"></div>
+                {/* Vertical drop from centre of bridge to bottom row */}
+                <div className="org-center-drop"></div>
+              </div>
+
+              {/* Bottom row – horizontal bar drawn via CSS ::before */}
+              <div className="org-bottom-row-wrapper">
+                <div className="org-bottom-row">
                   {[
-                    {
-                      name: "Sofía Torcal Valentín",
-                      role: "VOCAL / PRL C.Social",
-                    },
-                    { name: "Ainara Gorría Planté", role: "VOCAL" },
+                    { initial: "A", name: "Andrés Ara Monge",      role: "VOCAL / PRL C.Social" },
+                    { initial: "S", name: "Sofía Torcal Valentín",  role: "VOCAL / PRL C.Social" },
+                    { initial: "A", name: "Ainara Gorría Planté",   role: "VOCAL" },
                   ].map((member, i) => (
-                    <div key={i} className="vocal-item">
-                      <div className="vocal-side-line"></div>
+                    <div key={i} className="org-bottom-node">
+                      {/* Small vertical line from bar down to card */}
+                      <div className="org-leaf-drop"></div>
                       <article className="member-capsule org-node-bottom">
-                        <div className="member-avatar">
-                          {member.name.charAt(0)}
-                        </div>
+                        <div className="member-avatar">{member.initial}</div>
                         <p className="role-title">{member.role}</p>
                         <h4>{member.name}</h4>
                       </article>

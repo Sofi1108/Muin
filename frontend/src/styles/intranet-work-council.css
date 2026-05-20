@@ -265,64 +265,106 @@
   font-weight: 300;
 }
 
-/* --- ORGANIGRAMA VERTICAL --- */
-.org-vertical-container {
+/* =============================================
+   ORGANIGRAMA – ÁRBOL CLÁSICO TOP-DOWN
+   ============================================= */
+
+/* Wrapper de todo el árbol */
+.org-tree {
   display: flex;
-  justify-content: space-around;
-  gap: 2rem;
-  padding: 4rem 1rem;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem 2rem;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* --- FILA SUPERIOR (dos líderes) --- */
+.org-top-row {
+  display: flex;
+  justify-content: center;
+  gap: 12rem;
+  width: 100%;
+}
+
+.org-top-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- PUENTE HORIZONTAL + CAÍDA CENTRAL --- */
+.org-bridge-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;       /* mismo ancho que el gap entre los dos nodos superiores */
   position: relative;
 }
 
-.org-horizontal-bridge {
-  position: absolute;
-  top: 195px;
-  left: 25%;
-  right: 25%;
+/* Línea horizontal que une los dos nodos de arriba */
+.org-top-bridge {
+  width: 100%;
   height: 2px;
   background-color: var(--border);
 }
 
-.org-vertical-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  max-width: 450px;
-}
-
-.vertical-connector-line {
+/* Línea vertical que baja desde el centro del puente */
+.org-center-drop {
   width: 2px;
   height: 40px;
   background-color: var(--border);
 }
 
-.vocals-vertical-list {
+/* --- FILA INFERIOR (tres vocales) --- */
+.org-bottom-row-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-  position: relative;
-  padding-left: 20px;
-  border-left: 2px solid var(--border);
-}
-
-.vocal-item {
-  display: flex;
   align-items: center;
+  width: 80%;
+}
+
+/* La barra horizontal se dibuja con ::before,
+   de centro del 1er nodo (1/6) al centro del 3er nodo (5/6),
+   para que nunca sobresalga por los extremos. */
+.org-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
   position: relative;
 }
 
-.vocal-side-line {
-  width: 20px;
+.org-bottom-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  /* Con gap:2rem entre 3 nodos → 2 gaps = 4rem en total.
+     Cada nodo ocupa (100% - 4rem)/3, su centro está a (100% - 4rem)/6
+     desde el borde, lo que alinea la barra exactamente con los leaf-drops. */
+  left: calc((100% - 4rem) / 6);
+  right: calc((100% - 4rem) / 6);
   height: 2px;
   background-color: var(--border);
-  position: absolute;
-  left: -20px;
 }
 
+.org-bottom-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* Línea corta que baja desde la barra hasta la tarjeta */
+.org-leaf-drop {
+  width: 2px;
+  height: 30px;
+  background-color: var(--border);
+}
+
+/* =============================================
+   TARJETAS MIEMBRO (reutilizadas)
+   ============================================= */
 .org-node-top {
   width: 100%;
   text-align: center;
@@ -345,10 +387,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   text-align: left;
   background: var(--surface);
-  padding: 1rem 1.5rem;
+  padding: 0.85rem 1.2rem;
   width: 100%;
   box-sizing: border-box;
   border-radius: var(--br-main);
@@ -393,7 +435,7 @@
   margin: 0;
 }
 
-/* --- RESPONSIVE SWEEP --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 64rem) {
   .work-capsules-main {
     padding: 3rem 1.2rem;
@@ -402,27 +444,40 @@
   .section-card {
     padding: 2.5rem 1.5rem !important;
   }
-  .org-vertical-container {
+
+  /* En móvil colapsar el árbol en columna simple */
+  .org-top-row {
     flex-direction: column;
     align-items: center;
-    gap: 4rem;
-    padding: 2rem 0;
+    gap: 2rem;
   }
-  .org-horizontal-bridge {
+  .org-bridge-wrapper {
     display: none;
+  }
+  /* Ocultar también la barra horizontal generada por ::before */
+  .org-bottom-row::before {
+    display: none;
+  }
+  .org-bottom-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .org-bottom-row-wrapper {
+    width: 100%;
+    margin-top: 2rem;
   }
   .org-node-bottom {
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
-    padding: 1.5rem;
+    padding: 1.2rem;
   }
-  .vocals-vertical-list {
-    border-left: none;
-    padding-left: 0;
-    align-items: center;
+  .org-center-drop {
+    display: none;
   }
-  .vocal-side-line {
+  .org-leaf-drop {
     display: none;
   }
 }
+
