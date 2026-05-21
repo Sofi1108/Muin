@@ -160,6 +160,11 @@ const IntranetHome = () => {
     return holidays[currentMonth]?.includes(day) || false;
   };
 
+  const isSunday = (day: number | null) => {
+    if (!day) return false;
+    return new Date(currentYear, currentMonth, day).getDay() === 0;
+  };
+
   const today = new Date();
   const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
   const todayDate = today.getDate();
@@ -232,6 +237,10 @@ const IntranetHome = () => {
 
   // ── Handlers Modal ─────────────────────────────────────────────────────────
   const openAddModal = (day: number) => {
+    if (isHoliday(day) || isSunday(day)) {
+      alert("No se pueden añadir eventos en domingos ni días festivos.");
+      return;
+    }
     setEditingEvent(null);
     setModalDay(day);
     setForm({ titulo: "", descripcion: "", hora_evento: "", es_publico: true });
@@ -420,7 +429,7 @@ const IntranetHome = () => {
                   {generateCalendar().map((day, i) => {
                     const isToday = day && isCurrentMonth && day === todayDate;
                     const isHolidayDay = isHoliday(day);
-                    const isSundayDay = day && i % 7 === 0;
+                    const isSundayDay = isSunday(day);
                     const dayEvents = day ? eventsForDay(day) : [];
                     const hasEvents = dayEvents.length > 0;
 
@@ -470,7 +479,7 @@ const IntranetHome = () => {
                               <span className="tooltip-date">
                                 {day} {currentMonthName}
                               </span>
-                              {!isPreview && (
+                              {!isPreview && !isHolidayDay && !isSundayDay && (
                                 <button
                                   className="tooltip-add-btn"
                                   onClick={(e) => {
@@ -485,15 +494,21 @@ const IntranetHome = () => {
                             </div>
 
                             {dayEvents.length === 0 ? (
-                              <button
-                                className="tooltip-empty-add"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  openAddModal(day);
-                                }}
-                              >
-                                ＋ Añadir nuevo evento...
-                              </button>
+                              (isHolidayDay || isSundayDay) ? (
+                                <div className="tooltip-no-events-notice" style={{ padding: "8px", fontSize: "0.8rem", color: "#64748b", textAlign: "center", fontStyle: "italic" }}>
+                                  No hay eventos (festivos y domingos no permiten eventos)
+                                </div>
+                              ) : (
+                                <button
+                                  className="tooltip-empty-add"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openAddModal(day);
+                                  }}
+                                >
+                                  ＋ Añadir nuevo evento...
+                                </button>
+                              )
                             ) : (
                               <ul className="tooltip-event-list">
                                 {dayEvents.map((ev) => {

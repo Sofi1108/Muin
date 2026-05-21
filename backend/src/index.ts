@@ -1163,6 +1163,23 @@ app.get(
   }
 );
 
+const isHolidayOrSunday = (dateStr: string): boolean => {
+  const parts = dateStr.split("-");
+  if (parts.length !== 3) return false;
+  const year = parseInt(parts[0] as string);
+  const month = parseInt(parts[1] as string) - 1; // JS months are 0-indexed
+  const day = parseInt(parts[2] as string);
+  const date = new Date(year, month, day);
+  if (date.getDay() === 0) return true;
+  const holidays: Record<number, number[]> = {
+    7: [15],
+    9: [12],
+    10: [2],
+    11: [7, 8, 25]
+  };
+  return holidays[month]?.includes(day) || false;
+};
+
 // POST /api/calendar/events — Crea un nuevo evento
 app.post(
   "/api/calendar/events",
@@ -1172,6 +1189,9 @@ app.post(
     const { titulo, descripcion, fecha_evento, hora_evento, es_publico } = req.body;
     if (!titulo || !fecha_evento) {
       return res.status(400).json({ error: "Título y fecha son obligatorios" });
+    }
+    if (isHolidayOrSunday(fecha_evento)) {
+      return res.status(400).json({ error: "No se permiten eventos en domingos ni días festivos" });
     }
     try {
       const result = await pool.query(
@@ -1205,6 +1225,9 @@ app.put(
     const { titulo, descripcion, fecha_evento, hora_evento, es_publico } = req.body;
     if (!titulo || !fecha_evento) {
       return res.status(400).json({ error: "Título y fecha son obligatorios" });
+    }
+    if (isHolidayOrSunday(fecha_evento)) {
+      return res.status(400).json({ error: "No se permiten eventos en domingos ni días festivos" });
     }
     try {
       // Solo el creador puede editar
