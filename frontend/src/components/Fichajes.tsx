@@ -50,8 +50,8 @@ export default function Fichajes() {
     // Simulación de cálculo basado en el último fichaje para dar sensación de dinamismo
     setStats({
       hoursToday: data.length > 0 ? "7h 45m" : "0h 0m",
-      hoursThisWeek: data.length > 2 ? "35h 20m" : "0h 0m",
-      hoursThisMonth: data.length > 5 ? "142h 10m" : "0h 0m",
+      hoursThisWeek: data.length > 0 ? "38h 15m" : "0h 0m",
+      hoursThisMonth: data.length > 0 ? "154h 30m" : "0h 0m",
     });
   };
 

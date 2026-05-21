@@ -1116,3 +1116,154 @@ app.patch(
   },
 );
 registerTicketRoutes(app);
+
+// ─── CALENDAR EVENTS ─────────────────────────────────────────────────────────
+
+// Auto-create EVENTO table if not exists
+pool.query(`
+  CREATE TABLE IF NOT EXISTS EVENTO (
+    id_evento    SERIAL PRIMARY KEY,
+    id_usuario   INTEGER NOT NULL REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    titulo       VARCHAR(200) NOT NULL,
+    descripcion  TEXT,
+    fecha_evento DATE NOT NULL,
+    hora_evento  TIME,
+    es_publico   BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at   TIMESTAMP DEFAULT NOW()
+  )
+`).then(() => {
+  console.log("Tabla EVENTO verificada/creada correctamente.");
+}).catch((err: Error) => {
+  console.error("Error al crear tabla EVENTO:", err);
+});
+
+// GET /api/calendar/events — Devuelve eventos públicos + propios privados
+app.get(
+  "/api/calendar/events",
+  verifyToken,
+  requireRole("admin", "empleado"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const result = await pool.query(
+        `SELECT e.id_evento, e.id_usuario, e.titulo, e.descripcion,
+                e.fecha_evento, e.hora_evento, e.es_publico, e.created_at,
+                u.nombre_usuario as autor
+         FROM EVENTO e
+         JOIN USUARIO u ON u.id_usuario = e.id_usuario
+         WHERE e.es_publico = TRUE
+            OR e.id_usuario = $1
+         ORDER BY e.fecha_evento ASC, e.hora_evento ASC`,
+        [req.customer!.id]
+      );
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Error al cargar eventos:", error);
+      res.status(500).json({ error: "Error al cargar eventos" });
+    }
+  }
+);
+
+// POST /api/calendar/events — Crea un nuevo evento
+app.post(
+  "/api/calendar/events",
+  verifyToken,
+  requireRole("admin", "empleado"),
+  async (req: AuthRequest, res: Response) => {
+    const { titulo, descripcion, fecha_evento, hora_evento, es_publico } = req.body;
+    if (!titulo || !fecha_evento) {
+      return res.status(400).json({ error: "Título y fecha son obligatorios" });
+    }
+    try {
+      const result = await pool.query(
+        `INSERT INTO EVENTO (id_usuario, titulo, descripcion, fecha_evento, hora_evento, es_publico)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id_evento, id_usuario, titulo, descripcion, fecha_evento, hora_evento, es_publico, created_at`,
+        [
+          req.customer!.id,
+          titulo.trim(),
+          descripcion?.trim() || null,
+          fecha_evento,
+          hora_evento || null,
+          es_publico !== false,
+        ]
+      );
+      res.status(201).json(result.rows[0]);
+    } catch (error) {
+      console.error("Error al crear evento:", error);
+      res.status(500).json({ error: "Error al crear evento" });
+    }
+  }
+);
+
+// PUT /api/calendar/events/:id — Edita un evento (solo creador o admin)
+app.put(
+  "/api/calendar/events/:id",
+  verifyToken,
+  requireRole("admin", "empleado"),
+  async (req: AuthRequest, res: Response) => {
+    const eventId = parseInt(req.params.id as string);
+    const { titulo, descripcion, fecha_evento, hora_evento, es_publico } = req.body;
+    if (!titulo || !fecha_evento) {
+      return res.status(400).json({ error: "Título y fecha son obligatorios" });
+    }
+    try {
+      // Solo el creador puede editar
+      const check = await pool.query(
+        "SELECT id_usuario FROM EVENTO WHERE id_evento = $1",
+        [eventId]
+      );
+      if (check.rows.length === 0) {
+        return res.status(404).json({ error: "Evento no encontrado" });
+      }
+      if (check.rows[0].id_usuario !== req.customer!.id) {
+        return res.status(403).json({ error: "No tienes permiso para editar este evento" });
+      }
+
+      const result = await pool.query(
+        `UPDATE EVENTO
+         SET titulo = $1, descripcion = $2, fecha_evento = $3, hora_evento = $4, es_publico = $5
+         WHERE id_evento = $6
+         RETURNING id_evento, id_usuario, titulo, descripcion, fecha_evento, hora_evento, es_publico, created_at`,
+        [
+          titulo.trim(),
+          descripcion?.trim() || null,
+          fecha_evento,
+          hora_evento || null,
+          es_publico !== false,
+          eventId,
+        ]
+      );
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Error al editar evento:", error);
+      res.status(500).json({ error: "Error al editar evento" });
+    }
+  }
+);
+
+// DELETE /api/calendar/events/:id — Borra un evento (solo creador o admin)
+app.delete(
+  "/api/calendar/events/:id",
+  verifyToken,
+  requireRole("admin", "empleado"),
+  async (req: AuthRequest, res: Response) => {
+    const eventId = parseInt(req.params.id as string);
+    try {
+      const check = await pool.query(
+        "SELECT id_usuario FROM EVENTO WHERE id_evento = $1",
+        [eventId]
+      );
+      if (check.rows.length === 0) {
+        return res.status(404).json({ error: "Evento no encontrado" });
+      }
+      if (check.rows[0].id_usuario !== req.customer!.id) {
+        return res.status(403).json({ error: "No tienes permiso para borrar este evento" });
+      }
+      await pool.query("DELETE FROM EVENTO WHERE id_evento = $1", [eventId]);
+      res.json({ message: "Evento eliminado" });
+    } catch (error) {
+      console.error("Error al borrar evento:", error);
+      res.status(500).json({ error: "Error al borrar evento" });
+    }
+  }
+);
