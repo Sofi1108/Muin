@@ -79,11 +79,11 @@ export const verifyToken = async (
   }
   try {
     const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
-    
+
     // OBTENER DATOS FRESCOS DE LA BD: Esto asegura que si el usuario cambió su DNI, 
     // se refleje inmediatamente al refrescar sin tener que re-loguearse.
     const userCheck = await pool.query(
-      "SELECT id_usuario, nombre_usuario, correoelectronico, nombre, apellido, dni, tipo_usuario FROM USUARIO WHERE id_usuario = $1", 
+      "SELECT id_usuario, nombre_usuario, correoelectronico, nombre, apellido, dni, tipo_usuario FROM USUARIO WHERE id_usuario = $1",
       [payload.id]
     );
 
@@ -319,7 +319,7 @@ app.put("/api/auth/profile", verifyToken, async (req: AuthRequest, res: Response
       "SELECT id_usuario FROM USUARIO WHERE (nombre_usuario = $1 OR correoelectronico = $2) AND id_usuario != $3",
       [Nombre_Usuario, CorreoElectronico, req.customer!.id]
     );
-    
+
     if (existing.rows.length > 0) {
       return res.status(409).json({ error: "El nombre de usuario o email ya están en uso por otra cuenta." });
     }
@@ -454,21 +454,21 @@ app.get("/api/proxy-image", async (req: Request, res: Response) => {
   if (!imageUrl) {
     return res.status(400).json({ error: "URL de imagen requerida" });
   }
-  
+
   try {
     const response = await fetch(imageUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch image: ${response.statusText}`);
     }
-    
+
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    
+
     // Set headers
     res.setHeader('Content-Type', response.headers.get('content-type') || 'image/jpeg');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache 1 day
-    
+
     res.send(buffer);
   } catch (error) {
     console.error("Error proxying image:", error);
@@ -836,30 +836,30 @@ app.post(
                 item.productData.nombre_producto_perso,
                 item.productData.descripcion,
                 item.productData.precio_producto_perso,
-                item.quantity, 
+                item.quantity,
                 item.productData.url_imagen
               ]
             );
             actualProductId = insertCustom.rows[0].id_producto_perso;
-            
+
             // Insertar todas las capas en DISENO_PERSONALIZADO
             const layers = item.productData.layers;
             for (const layer of layers) {
-               await client.query(
-                 `INSERT INTO DISENO_PERSONALIZADO 
+              await client.query(
+                `INSERT INTO DISENO_PERSONALIZADO 
                   (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color) 
                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-                 [
-                   actualProductId,
-                   layer.type,
-                   layer.content,
-                   layer.dbId || null,
-                   layer.scale,
-                   layer.x,
-                   layer.y,
-                   layer.color || null
-                 ]
-               );
+                [
+                  actualProductId,
+                  layer.type,
+                  layer.content,
+                  layer.dbId || null,
+                  layer.scale,
+                  layer.x,
+                  layer.y,
+                  layer.color || null
+                ]
+              );
             }
           } else {
             // Actualizar el stock del producto normal
@@ -1119,24 +1119,6 @@ registerTicketRoutes(app);
 
 // ─── CALENDAR EVENTS ─────────────────────────────────────────────────────────
 
-// Auto-create EVENTO table if not exists
-pool.query(`
-  CREATE TABLE IF NOT EXISTS EVENTO (
-    id_evento    SERIAL PRIMARY KEY,
-    id_usuario   INTEGER NOT NULL REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
-    titulo       VARCHAR(200) NOT NULL,
-    descripcion  TEXT,
-    fecha_evento DATE NOT NULL,
-    hora_evento  TIME,
-    es_publico   BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at   TIMESTAMP DEFAULT NOW()
-  )
-`).then(() => {
-  console.log("Tabla EVENTO verificada/creada correctamente.");
-}).catch((err: Error) => {
-  console.error("Error al crear tabla EVENTO:", err);
-});
-
 // GET /api/calendar/events — Devuelve eventos públicos + propios privados
 app.get(
   "/api/calendar/events",
@@ -1264,22 +1246,25 @@ app.put(
   }
 );
 
-// DELETE /api/calendar/events/:id — Borra un evento (solo creador o admin)
 app.delete(
   "/api/calendar/events/:id",
   verifyToken,
   requireRole("admin", "empleado"),
   async (req: AuthRequest, res: Response) => {
-    const eventId = parseInt(req.params.id as string);
     try {
+      const eventId = parseInt(req.params.id as string);
       const check = await pool.query(
-        "SELECT id_usuario FROM EVENTO WHERE id_evento = $1",
+        "SELECT id_usuario, es_publico FROM EVENTO WHERE id_evento = $1",
         [eventId]
       );
       if (check.rows.length === 0) {
         return res.status(404).json({ error: "Evento no encontrado" });
       }
-      if (check.rows[0].id_usuario !== req.customer!.id) {
+      
+      const isOwner = check.rows[0].id_usuario === req.customer!.id;
+      const isAdminDeletingPublic = req.customer!.role === "admin" && check.rows[0].es_publico === true;
+
+      if (!isOwner && !isAdminDeletingPublic) {
         return res.status(403).json({ error: "No tienes permiso para borrar este evento" });
       }
       await pool.query("DELETE FROM EVENTO WHERE id_evento = $1", [eventId]);
