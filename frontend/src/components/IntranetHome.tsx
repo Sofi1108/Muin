@@ -360,8 +360,12 @@ const IntranetHome = () => {
     }
   };
 
-  const canEditOrDelete = (ev: CalendarEvent) =>
+  const canEdit = (ev: CalendarEvent) =>
     ev.id_usuario === (customer as any)?.id;
+
+  const canDelete = (ev: CalendarEvent) =>
+    ev.id_usuario === (customer as any)?.id ||
+    (customer?.role === "admin" && ev.es_publico === true);
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
@@ -559,26 +563,30 @@ const IntranetHome = () => {
                                       {ended && (
                                         <span className="event-ended">El evento ha terminado</span>
                                       )}
-                                      {canEditOrDelete(ev) && (
+                                      {(canEdit(ev) || canDelete(ev)) && (
                                         <div className="tei-actions">
-                                          <button
-                                            className="tei-btn edit"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              openEditModal(ev);
-                                            }}
-                                          >
-                                            <IconEdit size={12} /> Editar
-                                          </button>
-                                          <button
-                                            className="tei-btn delete"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setDeleteConfirm(ev);
-                                            }}
-                                          >
-                                            <IconTrash size={12} /> Borrar
-                                          </button>
+                                          {canEdit(ev) && (
+                                            <button
+                                              className="tei-btn edit"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                openEditModal(ev);
+                                              }}
+                                            >
+                                              <IconEdit size={12} /> Editar
+                                            </button>
+                                          )}
+                                          {canDelete(ev) && (
+                                            <button
+                                              className="tei-btn delete"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setDeleteConfirm(ev);
+                                              }}
+                                            >
+                                              <IconTrash size={12} /> Borrar
+                                            </button>
+                                          )}
                                         </div>
                                       )}
                                     </li>
