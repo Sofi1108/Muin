@@ -9,7 +9,8 @@ interface WorkCouncilLayoutProps {
   children: ReactNode;
 }
 
-const WorkCouncilLayout = ({ title, subtitle, children }: WorkCouncilLayoutProps) => {
+const WorkCouncilLayout = (props: WorkCouncilLayoutProps) => {
+  const { children } = props;
   const { customer } = useUser();
   const userName = customer?.name || "Usuario";
 

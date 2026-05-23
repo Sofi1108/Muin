@@ -20,6 +20,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   background: linear-gradient(90deg, #1a1a1a, #444444);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
@@ -465,6 +466,7 @@
   font-family: monospace;
   font-size: 0.8rem;
   text-align: center;
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
