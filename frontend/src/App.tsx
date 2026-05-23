@@ -43,6 +43,7 @@ import AdminUsers from "./components/AdminUsers";
 import PersonalizarProducto from "./components/PersonalizarProducto";
 import AdminDesignsPanel from "./components/AdminDesignsPanel";
 import AdminCustomDesignsPanel from "./components/AdminCustomDesignsPanel";
+import AdminOrdersPanel from "./components/AdminOrdersPanel";
 import CookieConsent from "./components/CookieConsent";
 
 import type { Product, CartItem } from "../types";
@@ -296,6 +297,14 @@ function App() {
             element={
               <PrivateRoute roles={["admin"]}>
                 <AdminCustomDesignsPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/intranet/admin-orders"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminOrdersPanel />
               </PrivateRoute>
             }
           />

@@ -1,0 +1,222 @@
+/* ─── Admin Orders Panel ───────────────────────────────────────────────────── */
+
+.admin-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.admin-orders-table th {
+  border-bottom: 2px solid #555;
+  padding: 0.7rem 0.5rem;
+  text-align: left;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #444444;
+}
+
+.admin-orders-table td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #333;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  vertical-align: middle;
+}
+
+.admin-orders-table tbody tr {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.admin-orders-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.admin-orders-table tbody tr.selected-order-row {
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 3px solid #fff;
+}
+
+/* Status badge */
+.order-status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.order-status-badge.pendiente {
+  background: #3a3520;
+  color: #f5c542;
+  border: 1px solid #5c5020;
+}
+
+.order-status-badge.enviado {
+  background: #1a2e3a;
+  color: #42a5f5;
+  border: 1px solid #204060;
+}
+
+.order-status-badge.entregado {
+  background: #1e3a20;
+  color: #66bb6a;
+  border: 1px solid #2a5030;
+}
+
+.order-status-badge.cancelado {
+  background: #3a1a1a;
+  color: #ef5350;
+  border: 1px solid #5c2020;
+}
+
+/* Status select */
+.order-status-select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #1e1e1e;
+  color: #ddd;
+  font-size: 0.8rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.order-status-select:focus {
+  border-color: #888;
+}
+
+/* Detail panel */
+.order-detail-panel {
+  margin-top: 1.5rem;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 1.5rem;
+  animation: fadeInDetail 0.25s ease;
+}
+
+@keyframes fadeInDetail {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.order-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #444;
+}
+
+.order-detail-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.order-detail-close {
+  background: #333;
+  border: 1px solid #555;
+  color: #aaa;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.order-detail-close:hover {
+  background: #444;
+  color: #fff;
+}
+
+.order-detail-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+
+.detail-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-meta-item .meta-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #777;
+  letter-spacing: 0.5px;
+}
+
+.detail-meta-item .meta-value {
+  font-size: 0.95rem;
+  color: #eee;
+}
+
+/* Items table inside the detail panel */
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-items-table th {
+  border-bottom: 1px solid #444;
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.order-items-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #333;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.order-items-table tfoot td {
+  border-top: 2px solid #555;
+  font-weight: 700;
+  color: #fff;
+  padding-top: 0.6rem;
+}
+
+.order-total-text {
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+.order-total-value {
+  text-align: right;
+  font-size: 1rem;
+}
+
+/* Loading spinner */
+.admin-orders-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #888;
+  font-size: 0.9rem;
+}

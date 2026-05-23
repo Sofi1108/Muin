@@ -1305,12 +1305,13 @@ app.get(
   async (req: Request, res: Response) => {
     try {
       const result = await pool.query(
-        `SELECT p.id_pedido as id, p.id_usuario as customer_id, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at, p.fecha_recibido as received_at,
+        `SELECT p.id_pedido as id, p.id_usuario as customer_id, u.nombre_usuario as customer_name, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at, p.fecha_recibido as received_at,
               COALESCE(SUM(l.cant_Producto * l.precio_U), 0) AS total
        FROM PEDIDO p 
        LEFT JOIN LINEA_PRODUCTO l ON l.id_pedido = p.id_pedido
        LEFT JOIN DIRECCION d ON p.id_direccion = d.id_direccion
-       GROUP BY p.id_pedido, d.calle ORDER BY p.fecha_realizado DESC`,
+       LEFT JOIN USUARIO u ON p.id_usuario = u.id_usuario
+       GROUP BY p.id_pedido, d.calle, u.nombre_usuario ORDER BY p.fecha_realizado DESC`,
       );
       res.json(result.rows);
     } catch (error) {

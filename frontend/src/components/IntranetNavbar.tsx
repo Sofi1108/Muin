@@ -67,6 +67,15 @@ const IntranetNavbar = () => {
               >
                 DISEÑOS
               </NavLink>
+              <NavLink
+                to="/intranet/admin-orders#intranet-header"
+                className={({ isActive }) =>
+                  isActive ? "intranet-nav-link active" : "intranet-nav-link"
+                }
+                onClick={() => setIsMenuOpen(false)}
+              >
+                PEDIDOS
+              </NavLink>
             </>
           )}
         </div>
