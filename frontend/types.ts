@@ -1,7 +1,7 @@
 export interface Product {
   id_producto_perso?: number;
   id_producto?: number;
-  id_diseño?: number;
+  id_diseno?: number;
   nombre_producto_perso: string;
   descripcion: string;
   precio_producto_perso: number;
