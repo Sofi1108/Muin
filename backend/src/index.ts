@@ -371,7 +371,7 @@ app.post("/api/auth/logout", (req: Request, res: Response) => {
 app.get("/api/products", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO",
+      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO",
     );
     res.json(result.rows);
   } catch (error) {
@@ -522,11 +522,10 @@ app.post(
 );
 
 //--CARGAR PRODUCTOS DE CATEGORIA CAMISAS
-
 app.get("/api/products/shirts", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'shirt' OR P.tipo_producto = 'shirt' ORDER BY PP.Id_Producto_Perso;");
+      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen, PP.nota_media, PP.total_resenas FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'shirt' OR P.tipo_producto = 'shirt' ORDER BY PP.Id_Producto_Perso;");
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No shirts found" });
@@ -543,7 +542,7 @@ app.get("/api/products/shirts", async (req: Request, res: Response) => {
 app.get("/api/products/hoodies", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'hoodie' OR P.tipo_producto = 'hoodie' ORDER BY PP.Id_Producto_Perso;");
+      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen, PP.nota_media, PP.total_resenas FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'hoodie' OR P.tipo_producto = 'hoodie' ORDER BY PP.Id_Producto_Perso;");
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No hoodies found" });
     }
@@ -555,14 +554,13 @@ app.get("/api/products/hoodies", async (req: Request, res: Response) => {
 });
 
 //--CARGAR PRODUCTOS ESPECIFICOS POR ID
-
 app.get(
   "/api/products/:id",
   async (req: Request<{ id: string }>, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
         [id],
       );
 
@@ -675,7 +673,7 @@ app.get(
   async (req: Request, res: Response) => {
     try {
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño FROM PRODUCTO_PERSONALIZADO ORDER BY id_producto_perso",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO ORDER BY id_producto_perso",
       );
       res.json(result.rows);
     } catch (error) {
@@ -694,7 +692,7 @@ app.get(
     try {
       const id = parseInt(req.params.id as string);
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
         [id],
       );
 
@@ -1275,3 +1273,59 @@ app.delete(
     }
   }
 );
+
+//RESEÑAS
+
+// OBTENER reseñas de un producto
+app.get(
+  "/api/products/:id/reviews",
+  async (req: Request<{ id: string }>, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const result = await pool.query(
+        `SELECT r.id_resena, r.puntuacion, r.titulo, r.comentario, r.fecha_creacion, u.nombre_usuario 
+         FROM RESENA r 
+         INNER JOIN USUARIO u ON r.id_usuario = u.id_usuario 
+         WHERE r.id_producto_perso = $1 
+         ORDER BY r.fecha_creacion DESC`,
+        [id]
+      );
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Error al cargar reseñas:", error);
+      res.status(500).json({ error: "Error al cargar las reseñas" });
+    }
+  }
+);
+
+app.post(
+  '/api/reviews', 
+  verifyToken, 
+  async (req: AuthRequest, res: Response) => {
+    const { id_producto_perso, puntuacion, titulo, comentario } = req.body;
+    
+    const id_usuario = req.customer!.id;
+
+    try {
+      const query = `
+        INSERT INTO RESENA (Id_Producto_Perso, Id_Usuario, Puntuacion, Titulo, Comentario) 
+        VALUES ($1, $2, $3, $4, $5)
+      `;
+      await pool.query(query, [id_producto_perso, id_usuario, puntuacion, titulo, comentario]);
+      
+      // Recalcular y actualizar nota_media y total_resenas del producto
+      const updateQuery = `
+        UPDATE PRODUCTO_PERSONALIZADO 
+        SET 
+          total_resenas = (SELECT COUNT(*) FROM RESENA WHERE Id_Producto_Perso = $1),
+          nota_media = COALESCE((SELECT AVG(Puntuacion) FROM RESENA WHERE Id_Producto_Perso = $1), 0)
+        WHERE id_producto_perso = $1
+      `;
+      await pool.query(updateQuery, [id_producto_perso]);
+
+      res.status(201).json({ message: "Reseña creada con éxito" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error al crear la reseña" });
+    }
+});

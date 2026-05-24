@@ -4,6 +4,10 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { HashLink as Link } from "react-router-hash-link";
 
+// NUEVO: Importamos el componente de las estrellas
+// (Ajusta la ruta según dónde hayas guardado el archivo)
+import { StarRating } from "./StarRating";
+
 interface ProductCardProps {
   product: Product;
   onSelect?: (id: number) => void;
@@ -58,10 +62,19 @@ function ProductCard({ product, onSelect }: ProductCardProps) {
           </div>
         )}
       </div>
+      
       <div className="product-info">
         <h2 className="product-name">
           {product.nombre_producto_perso?.toUpperCase()}
         </h2>
+        
+        {/* NUEVO: Añadimos las estrellas en tamaño pequeño */}
+        <StarRating 
+          score={Number(product.nota_media || 0)} 
+          reviewCount={Number(product.total_resenas || 0)} 
+          size="small" 
+        />
+
         <p className="product-price">
           {Number(product.precio_producto_perso).toFixed(2)}€
         </p>

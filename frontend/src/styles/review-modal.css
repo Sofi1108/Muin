@@ -1,0 +1,71 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px; right: 15px;
+  background: none; border: none;
+  cursor: pointer; color: #666;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group input, .form-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.btn-submit-review {
+  background-color: #000;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-submit-review:hover { background-color: #333; }
+
+/* Estrellas Interactivas */
+.interactive-stars {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.star-select { font-size: 32px; user-select: none; }
+.star-filled { color: #FFA41C; font-variation-settings: 'FILL' 1 !important; }
+.star-half-filled { color: #FFA41C; font-variation-settings: 'FILL' 0 !important; }
+.star-empty { color: #ccc; font-variation-settings: 'FILL' 0 !important; }

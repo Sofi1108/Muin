@@ -52,7 +52,7 @@ export default function ProductsPanel() {
       .then((res) => {
         if (!res.ok) throw new Error("Error al eliminar");
         setProducts((prev) =>
-          prev.filter((p) => (p.id_producto_perso || p.id) !== id),
+          prev.filter((p) => (p.id_producto_perso || p.id_producto) !== id),
         );
       })
       .catch((err) => {
@@ -145,11 +145,11 @@ export default function ProductsPanel() {
               </thead>
               <tbody>
                 {filteredProducts.map((product) => {
-                  const productId = product.id_producto_perso || product.id;
+                  const productId = product.id_producto_perso || product.id_producto || product.id || 0;
                   const productName =
                     product.nombre_producto_perso || product.name || "-";
                   const productDesc =
-                    product.descripcion || product.description || "-";
+                    product.descripcion || product.descripcion || "-";
                   const productPrice =
                     product.precio_producto_perso || product.price || 0;
                   const productQty = product.cantidad_u || product.stock || 0;

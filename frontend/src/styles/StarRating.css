@@ -1,0 +1,52 @@
+/* Layout del contenedor */
+.contenedor-estrellas {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+/* Configuración base de Material Symbols */
+.contenedor-estrellas .material-symbols-outlined { 
+    color: #FFA41C; /* Naranja Amazon */
+    user-select: none; 
+}
+
+/* Truco de fuente para rellenar o vaciar el icono */
+.icono-estrella-llena { 
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important; 
+}
+.icono-estrella-vacia { 
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important; 
+    color: #DE7921; 
+}
+
+/* Tamaños controlados por React */
+.estrellas-sm .material-symbols-outlined { font-size: 16px; }
+.estrellas-lg .material-symbols-outlined { font-size: 24px; }
+
+/* Textos de "No hay reseñas" */
+.no-reviews-text-sm {
+    font-size: 12px;
+    color: #666;
+}
+
+.no-reviews-text-lg {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    color: #333;
+}
+
+/* Botón de añadir reseña */
+.btn-add-review {
+    padding: 8px 16px;
+    background-color: #FFF;
+    border: 1px solid #D5D9D9;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.btn-add-review:hover { background-color: #F7F8F8; }

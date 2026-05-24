@@ -7,6 +7,8 @@ export interface Product {
   precio_producto_perso: number;
   cantidad_u: number;
   url_imagen: string;
+  nota_media?: number | string; 
+  total_resenas?: number | string;
 }
 
 export interface CartItem {
