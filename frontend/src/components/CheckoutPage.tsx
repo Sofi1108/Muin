@@ -34,38 +34,11 @@ const CheckoutPage = ({ cart = [], setCart }: { cart: CartItem[]; setCart?: Reac
     // Limitar a 4 dígitos máximo
     if (value.length > 4) value = value.slice(0, 4);
 
-    // Validar mes (primeros 2 dígitos)
-    if (value.length >= 2) {
-      const month = parseInt(value.slice(0, 2), 10);
-      // Si el mes es mayor a 12 o es 00, no permitir
-      if (month > 12 || month === 0) {
-        // Solo tomar el primer dígito si es válido como mes
-        if (value[0] === "0" || value[0] === "1") {
-          value = value[0];
-        } else {
-          return; // No permitir
-        }
-      }
-    }
-
-    // Validar año (últimos 2 dígitos) - debe ser año actual o futuro
-    if (value.length === 4) {
-      const year = parseInt(value.slice(2, 4), 10);
-      const currentYear = new Date().getFullYear() % 100; // Últimos 2 dígitos del año actual
-
-      if (year < currentYear) {
-        // Rechazar años del pasado
-        return;
-      }
-    }
-
     // Formatear con barra diagonal
     if (value.length <= 2) {
       setExpirationDate(value);
-    } else if (value.length === 3) {
+    } else {
       setExpirationDate(`${value.slice(0, 2)}/${value.slice(2)}`);
-    } else if (value.length === 4) {
-      setExpirationDate(`${value.slice(0, 2)}/${value.slice(2, 4)}`);
     }
   };
 
@@ -100,6 +73,28 @@ const CheckoutPage = ({ cart = [], setCart }: { cart: CartItem[]; setCart?: Reac
     if (!customer) {
       alert("Debes iniciar sesión para realizar un pedido.");
       navigate("/login"); // Asumiendo que existe esta ruta
+      return;
+    }
+
+    // Validar fecha de expiración (MM/YY)
+    if (expirationDate.length !== 5) {
+      alert("Por favor, introduce una fecha de expiración válida (MM/YY).");
+      return;
+    }
+    const [monthStr, yearStr] = expirationDate.split("/");
+    const month = parseInt(monthStr, 10);
+    const year = parseInt(yearStr, 10);
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1; // 1-12
+    const currentYear = now.getFullYear() % 100; // 2 dígitos
+
+    if (isNaN(month) || isNaN(year) || month < 1 || month > 12) {
+      alert("El mes de expiración debe estar entre 01 y 12.");
+      return;
+    }
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      alert("La tarjeta introducida está caducada.");
       return;
     }
 
