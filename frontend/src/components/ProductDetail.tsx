@@ -151,6 +151,8 @@ function ProductDetail({
 
   if (!product) return <div className="loading">Loading...</div>;
 
+  const safeReviews = Array.isArray(reviews) ? reviews : [];
+
   return (
     <div className="product-detail-container" id="product-detail_back">
       <div className={`cart-toast ${showToast ? "show" : ""}`}>
@@ -183,14 +185,14 @@ function ProductDetail({
           {/* ESTRELLAS DEBAJO DEL TÍTULO */}
           <div className="product-rating-header" style={{ marginBottom: "1rem" }}>
             <StarRating 
-              score={reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.puntuacion, 0) / reviews.length) : Number(product.nota_media || 0)} 
+              score={safeReviews.length > 0 ? (safeReviews.reduce((acc, r) => acc + Number(r.puntuacion || 0), 0) / safeReviews.length) : Number(product.nota_media || 0)} 
               // Le pasamos un 1 falso para que siempre pinte estrellas (llenas o vacías) 
               // y no muestre el texto de "There are no reviews" aquí arriba
-              reviewCount={reviews.length > 0 ? reviews.length : 1} 
+              reviewCount={safeReviews.length > 0 ? safeReviews.length : 1} 
               size="large" 
             />
             <span style={{ marginLeft: "8px", fontSize: "14px", color: "#666" }}>
-              ({reviews.length})
+              ({safeReviews.length})
             </span>
           </div>
 
@@ -243,7 +245,7 @@ function ProductDetail({
       <div className="reviews-section" style={{ marginTop: "4rem", borderTop: "1px solid #eee", paddingTop: "2rem" }}>
         <h2>CUSTOMER REVIEWS</h2>
         
-        {reviews.length === 0 ? (
+        {safeReviews.length === 0 ? (
           // ESTADO VACÍO (0 Reseñas)
           <div className="no-reviews-container" style={{ marginTop: "1rem", backgroundColor: "#f9f9f9", padding: "2rem", borderRadius: "8px" }}>
             <p style={{ marginBottom: "1rem", color: "#555" }}>
@@ -257,14 +259,14 @@ function ProductDetail({
           // ESTADO CON RESEÑAS
           <div className="reviews-list-container">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-              <p>Based on {reviews.length} reviews</p>
+              <p>Based on {safeReviews.length} reviews</p>
               <button onClick={handleAddReview} className="btn-add-review">
                 Write a review
               </button>
             </div>
             
             <div className="review-list" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-              {reviews.map((review) => (
+              {safeReviews.map((review) => (
                 <div 
                   key={review.id_resena} 
                   className="review-card" 
@@ -282,7 +284,9 @@ function ProductDetail({
                       <strong style={{ fontSize: "1.1rem" }}>{review.titulo}</strong>
                     </div>
                     <span style={{ fontSize: "0.9rem", color: "#888" }}>
-                      {new Date(review.fecha_creacion).toLocaleDateString()}
+                      {review.fecha_creacion && !isNaN(Date.parse(review.fecha_creacion))
+                        ? new Date(review.fecha_creacion).toLocaleDateString()
+                        : "Fecha no disponible"}
                     </span>
                   </div>
                   <p style={{ margin: 0, color: "#333", lineHeight: "1.5" }}>{review.comentario}</p>

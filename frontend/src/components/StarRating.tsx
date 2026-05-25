@@ -56,7 +56,8 @@ export const StarRating: React.FC<StarRatingProps> = ({
   }
 
   // 2. Cálculo de estrellas
-  const safeScore = Math.max(0, Math.min(5, Number(score)));
+  const parsedScore = Number(score);
+  const safeScore = isNaN(parsedScore) ? 0 : Math.max(0, Math.min(5, parsedScore));
   const roundedScore = Math.round(safeScore * 2) / 2;
 
   const fullStars = Math.floor(roundedScore);
