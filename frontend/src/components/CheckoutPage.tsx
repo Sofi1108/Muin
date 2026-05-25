@@ -4,7 +4,7 @@ import { useUser } from "../context/UserContext";
 import type { CartItem } from "../../types";
 import "../styles/checkout-page.css";
 
-const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
+const CheckoutPage = ({ cart = [], setCart }: { cart: CartItem[]; setCart?: React.Dispatch<React.SetStateAction<CartItem[]>> }) => {
   const navigate = useNavigate();
   const { customer } = useUser();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -12,7 +12,15 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [cvc, setCvc] = useState("");
-  const [shippingAddress, setShippingAddress] = useState("");
+  const [calle, setCalle] = useState("");
+  const [numPortal, setNumPortal] = useState("");
+  const [piso, setPiso] = useState("");
+  const [puerta, setPuerta] = useState("");
+  const [codigoPostal, setCodigoPostal] = useState("");
+  const [ciudad, setCiudad] = useState("");
+  const [provincia, setProvincia] = useState("");
+  const [comunidadAutonoma, setComunidadAutonoma] = useState("");
+  const [pais, setPais] = useState("España");
   const [termsAccepted, setTermsAccepted] = useState(false);
   useEffect(() => {
     console.log("Contenido del carrito en Checkout:", cart);
@@ -110,7 +118,17 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
             unitPrice: c.product.precio_producto_perso,
             productData: c.product
           })),
-          address: shippingAddress
+          address: {
+            calle,
+            num_portal: numPortal,
+            codigopostal: codigoPostal,
+            ciudad,
+            provincia,
+            comunidad_autonoma: comunidadAutonoma,
+            pais,
+            piso: piso || null,
+            puerta: puerta || null
+          }
         })
       });
 
@@ -121,6 +139,9 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
 
       // Clear the cart
       sessionStorage.removeItem("cart");
+      if (setCart) {
+        setCart([]);
+      }
       window.dispatchEvent(new Event("cartUpdated"));
 
       setStep(2);
@@ -135,15 +156,10 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
     return (
       <div className="checkout-container success">
         <div className="success-card">
-          <span
-            className="material-symbols-outlined success-icon"
-            style={{ fontSize: "5rem", color: "#16a34a" }}
-          >
+          <span className="material-symbols-outlined success-icon">
             check_circle
           </span>
-          <h1 style={{ fontWeight: 900, marginTop: "1rem" }}>
-            PAYMENT SUCCESSFUL!
-          </h1>
+          <h1>PAYMENT SUCCESSFUL!</h1>
           <p>Your order with MUIN has been processed.</p>
           <button className="btn-pay-now" onClick={() => navigate("/")}>
             COME BACK TO HOME
@@ -164,15 +180,107 @@ const CheckoutPage = ({ cart = [] }: { cart: CartItem[] }) => {
           <h2 className="section-title">PAYMENT DETAILS</h2>
 
           <form onSubmit={handlePayment} className="muin-form">
-            <div className="input-group">
-              <label>DIRECTION</label>
-              <input
-                type="text"
-                placeholder="YOUR DIRECTION"
-                value={shippingAddress}
-                onChange={(e) => setShippingAddress(e.target.value)}
-                required
-              />
+            <div className="address-section" style={{ borderTop: "1px solid #eee", paddingTop: "1.5rem", marginTop: "1rem" }}>
+              <h3 style={{ fontSize: "1rem", fontWeight: 900, marginBottom: "1.5rem", textTransform: "uppercase", color: "#1a1a1a" }}>SHIPPING ADDRESS</h3>
+              
+              <div className="input-group">
+                <label>STREET *</label>
+                <input
+                  type="text"
+                  placeholder="Street name, avenue, etc."
+                  value={calle}
+                  onChange={(e) => setCalle(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="row-inputs" style={{ marginTop: "1rem" }}>
+                <div className="input-group">
+                  <label>PORTAL NO. *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 14"
+                    value={numPortal}
+                    onChange={(e) => setNumPortal(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="input-group">
+                  <label>FLOOR</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 3rd (Optional)"
+                    value={piso}
+                    onChange={(e) => setPiso(e.target.value)}
+                  />
+                </div>
+                <div className="input-group">
+                  <label>DOOR</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. B (Optional)"
+                    value={puerta}
+                    onChange={(e) => setPuerta(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="row-inputs" style={{ marginTop: "1rem" }}>
+                <div className="input-group">
+                  <label>ZIP CODE *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 28001"
+                    value={codigoPostal}
+                    onChange={(e) => setCodigoPostal(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="input-group">
+                  <label>CITY *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Madrid"
+                    value={ciudad}
+                    onChange={(e) => setCiudad(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="row-inputs" style={{ marginTop: "1rem" }}>
+                <div className="input-group">
+                  <label>PROVINCE *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Madrid"
+                    value={provincia}
+                    onChange={(e) => setProvincia(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="input-group">
+                  <label>STATE / REGION *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Madrid Region"
+                    value={comunidadAutonoma}
+                    onChange={(e) => setComunidadAutonoma(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="input-group" style={{ marginTop: "1rem", marginBottom: "1.5rem" }}>
+                <label>COUNTRY *</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Spain"
+                  value={pais}
+                  onChange={(e) => setPais(e.target.value)}
+                  required
+                />
+              </div>
             </div>
             <div className="input-group">
               <label>NAME OF CARDHOLDER</label>

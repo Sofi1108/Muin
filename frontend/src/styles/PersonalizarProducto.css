@@ -19,7 +19,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  background: linear-gradient(90deg, #000000, #000000);
+  background: linear-gradient(90deg, #1a1a1a, #444444);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
@@ -29,6 +30,8 @@
   color: #aaa;
   font-size: 1.1rem;
 }
+
+/* ─── Two-column layout ────────────────────────────────────────────────────── */
 
 .personalize-content {
   display: flex;
@@ -43,8 +46,19 @@
   }
 }
 
+/* Left column: 3D viewer + layers editor */
+.personalize-left-col {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* ─── 3D Preview ───────────────────────────────────────────────────────────── */
+
 .model-preview {
-  flex: 1;
+  width: 100%;
   height: 500px;
   background: radial-gradient(circle at center, #2a2a2a 0%, #333 100%);
   border-radius: 12px;
@@ -78,8 +92,467 @@
   backdrop-filter: blur(4px);
 }
 
-.options-panel {
+/* ─── Layers Panel (below 3D viewer) ───────────────────────────────────────── */
+
+.layers-panel {
+  background: #333;
+  border-radius: 12px;
+  border: 1px solid #444;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.layers-panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #ddd;
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.5rem;
+  margin: 0;
+}
+
+.layers-panel .layers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* ─── Layer Item ───────────────────────────────────────────────────────────── */
+
+.layer-item {
+  border: 1px solid #444;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  background: #2a2a2a;
+}
+
+.layer-item.layer-expanded {
+  border-color: #666;
+}
+
+.layer-item.layer-minimized {
+  opacity: 0.75;
+}
+
+.layer-item.layer-minimized:hover {
+  opacity: 1;
+}
+
+/* Layer header — always visible */
+.layer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 8px;
+  background: #2f2f2f;
+}
+
+.layer-header-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.layer-type-badge {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.layer-name {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #eee;
+}
+
+.layer-side-badge {
+  font-size: 0.65rem;
+  background: #555;
+  color: #ccc;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.layer-header-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.layer-toggle-btn {
+  width: 26px;
+  height: 26px;
+  background: #444;
+  color: #ccc;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.layer-toggle-btn:hover {
+  background: #555;
+  border-color: #777;
+  color: #fff;
+}
+
+.layer-remove-btn {
+  width: 26px;
+  height: 26px;
+  background: #5c1a1a;
+  color: #ff9999;
+  border: 1px solid #722;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.layer-remove-btn:hover {
+  background: #8b0000;
+  color: #fff;
+  border-color: #a33;
+}
+
+/* Layer controls — only shown when expanded */
+.layer-controls {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #3a3a3a;
+  animation: layerExpand 0.2s ease;
+}
+
+@keyframes layerExpand {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.layer-text-edit {
+  display: flex;
+  gap: 6px;
+}
+
+.layer-text-input {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.layer-text-input:focus {
+  outline: none;
+  border-color: #888;
+}
+
+.layer-color-input {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* ─── Side Toggle ──────────────────────────────────────────────────────────── */
+
+.layer-side-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.side-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #1e1e1e;
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.side-btn:hover {
+  border-color: #666;
+  color: #ccc;
+}
+
+.side-btn.side-active {
+  background: #3a3a3a;
+  border-color: #888;
+  color: #fff;
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.05);
+}
+
+.side-icon {
+  font-size: 1rem;
+}
+
+/* ─── 2D Position Pad ──────────────────────────────────────────────────────── */
+
+.layer-position-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.position-label {
+  font-size: 0.8rem;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.position-coords {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.position-pad {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 160px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  cursor: crosshair;
+  overflow: hidden;
+  user-select: none;
+  touch-action: none;
+}
+
+.position-pad:hover {
+  border-color: #666;
+}
+
+.position-pad:active {
+  border-color: #999;
+}
+
+/* Garment silhouette in pad */
+.pad-silhouette {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pad-silhouette-body {
+  width: 50%;
+  height: 70%;
+  border: 1px dashed #333;
+  border-radius: 8px 8px 4px 4px;
+  opacity: 0.6;
+}
+
+/* Crosshair lines */
+.pad-crosshair-h,
+.pad-crosshair-v {
+  position: absolute;
+  pointer-events: none;
+}
+
+.pad-crosshair-h {
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pad-crosshair-v {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Position dot */
+.position-dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.position-dot::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255,255,255,0.5);
+  position: absolute;
+  z-index: 2;
+}
+
+.dot-ring {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  min-width: 12px;
+  min-height: 12px;
+  max-width: 72px;
+  max-height: 72px;
+  transition: width 0.15s ease, height 0.15s ease;
+}
+
+.position-manual-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.position-input-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.position-input-group label {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: 600;
+  min-width: 14px;
+}
+
+.position-number-input {
+  width: 100%;
+  padding: 4px 6px;
+  background: #1e1e1e;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ddd;
+  font-family: monospace;
+  font-size: 0.8rem;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.position-number-input::-webkit-inner-spin-button,
+.position-number-input::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.position-number-input:focus {
+  outline: none;
+  border-color: #888;
+}
+
+.position-reset-btn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #777;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  transition: color 0.2s;
+}
+
+.position-reset-btn:hover {
+  color: #ccc;
+}
+
+/* ─── Scale Slider ─────────────────────────────────────────────────────────── */
+
+.layer-scale-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scale-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scale-header label {
+  font-size: 0.8rem;
+  color: #bbb;
+}
+
+.scale-value {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #999;
+  background: #1e1e1e;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.scale-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scale-slider-wrap input[type="range"] {
+  flex: 1;
+  accent-color: #888;
+}
+
+.scale-icon {
+  color: #666;
+  font-weight: 700;
+  user-select: none;
+}
+
+.scale-small {
+  font-size: 0.7rem;
+}
+
+.scale-large {
+  font-size: 1.1rem;
+}
+
+
+/* ─── Right Panel (Options) ────────────────────────────────────────────────── */
+
+.options-panel {
+  flex: 0.8;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -100,7 +573,7 @@
   font-weight: 600;
   text-transform: uppercase;
   color: #ddd;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #555;
   padding-bottom: 0.5rem;
 }
 
@@ -149,6 +622,8 @@
   box-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
+/* ─── Price & Action buttons ───────────────────────────────────────────────── */
+
 .action-buttons {
   margin-top: 1rem;
   display: flex;
@@ -183,6 +658,8 @@
   align-items: center;
   justify-content: space-between;
 }
+
+/* ─── Mobile ───────────────────────────────────────────────────────────────── */
 
 @media (max-width: 48rem) {
   .personalize-container {

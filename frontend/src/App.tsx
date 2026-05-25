@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles/App.css";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
 import ProductDetail from "./components/ProductDetail";
@@ -43,6 +43,7 @@ import AdminUsers from "./components/AdminUsers";
 import PersonalizarProducto from "./components/PersonalizarProducto";
 import AdminDesignsPanel from "./components/AdminDesignsPanel";
 import AdminCustomDesignsPanel from "./components/AdminCustomDesignsPanel";
+import AdminOrdersPanel from "./components/AdminOrdersPanel";
 import CookieConsent from "./components/CookieConsent";
 
 import type { Product, CartItem } from "../types";
@@ -52,6 +53,11 @@ function App() {
   const ROUTE = `http://localhost:${PORT}/`;
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -295,6 +301,14 @@ function App() {
             }
           />
           <Route
+            path="/intranet/admin-orders"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminOrdersPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/admin/products"
             element={
               <PrivateRoute roles={["admin", "empleado"]}>
@@ -336,7 +350,7 @@ function App() {
             }
           />
 
-          <Route path="/checkout" element={<CheckoutPage cart={cart} />} />
+          <Route path="/checkout" element={<CheckoutPage cart={cart} setCart={setCart} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

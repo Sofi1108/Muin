@@ -448,6 +448,302 @@ app.get("/api/custom-designs", async (req: Request, res: Response) => {
   }
 });
 
+//-- OBTENER DISEÑOS PERSONALIZADOS DEL USUARIO AUTENTICADO
+app.get(
+  "/api/user-designs",
+  verifyToken,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const ppResult = await pool.query(
+        `SELECT pp.*, p.tipo_producto, p.talla, p.color as color_name
+         FROM PRODUCTO_PERSONALIZADO pp
+         LEFT JOIN PRODUCTO p ON pp.id_producto = p.id_producto
+         WHERE pp.id_usuario = $1
+         ORDER BY pp.created_at DESC`,
+        [req.customer!.id]
+      );
+      
+      const designs = [];
+      for (const row of ppResult.rows) {
+        const layersResult = await pool.query(
+          `SELECT * FROM DISENO_PERSONALIZADO WHERE id_producto_perso = $1`,
+          [row.id_producto_perso]
+        );
+        
+        let type = row.tipo_producto || (row.nombre_producto_perso.toLowerCase().includes("hoodie") ? "hoodie" : "shirt");
+        let size = row.talla || "M";
+        let colorName = row.color_name || "Negro";
+        if (row.descripcion) {
+          const matchSize = row.descripcion.match(/Talla:\s*([A-Z]+)/i);
+          if (matchSize) size = matchSize[1];
+          const matchColor = row.descripcion.match(/Color:\s*([a-zA-ZáéíóúÁÉÍÓÚñÑ]+)/i);
+          if (matchColor) colorName = matchColor[1];
+        }
+        
+        const COLOR_MAP: Record<string, string> = {
+          'Negro': '#222222',
+          'Blanco': '#f5f5f5',
+          'Gris': '#8a8d91',
+          'Rojo': '#a3333d',
+          'Azul': '#2b4162',
+          'Ocre': '#b58b4c',
+          'Amarillo': '#e0c265',
+          'Verde': '#4a5e42',
+        };
+        const hex = COLOR_MAP[colorName] || "#222222";
+        
+        const layers = layersResult.rows.map((l: any) => ({
+          id: l.id_diseno_perso.toString(),
+          type: l.tipo,
+          content: l.contenido,
+          dbId: l.id_diseno,
+          name: l.tipo === "db_design" ? `Design ${l.id_diseno}` : (l.tipo === "text" ? "Custom Text" : "Custom Image"),
+          scale: parseFloat(l.escala),
+          x: parseFloat(l.pos_x),
+          y: parseFloat(l.pos_y),
+          side: l.lado || "front",
+          color: l.color
+        }));
+        
+        designs.push({
+          id: row.id_producto_perso,
+          name: row.nombre_producto_perso,
+          type,
+          size,
+          activeColor: { name: colorName, hex },
+          layers,
+          date: row.created_at ? row.created_at.toISOString() : new Date().toISOString()
+        });
+      }
+      
+      res.json(designs);
+    } catch (error) {
+      console.error("Error loading user designs:", error);
+      res.status(500).json({ error: "Error al cargar los diseños" });
+    }
+  }
+);
+
+//-- GUARDAR DISEÑO PERSONALIZADO PARA EL USUARIO AUTENTICADO
+app.post(
+  "/api/user-designs",
+  verifyToken,
+  async (req: AuthRequest, res: Response) => {
+    const { name, type, size, activeColor, layers } = req.body;
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+      
+      const baseProductRes = await client.query(
+        "SELECT id_producto, precio FROM PRODUCTO WHERE talla = $1 AND color = $2 AND tipo_producto = $3 LIMIT 1",
+        [size, activeColor.name, type]
+      );
+      
+      const baseProductId = baseProductRes.rows[0]?.id_producto || null;
+      const basePrice = baseProductRes.rows[0]?.precio || (type === "shirt" ? 25.0 : 45.0);
+      
+      let designPrice = 0;
+      for (const l of layers) {
+        if (l.type === "db_design") designPrice += 5.0;
+        else if (l.type === "custom_image") designPrice += 3.0;
+        else if (l.type === "text") designPrice += 2.0;
+      }
+      const totalPrice = Number(basePrice) + designPrice;
+      
+      const firstDbDesign = layers.find((l: any) => l.type === "db_design");
+      const idDiseno = firstDbDesign ? firstDbDesign.dbId : null;
+      
+      const desc = `Color: ${activeColor.name}, Layers: ${layers.length}, Talla: ${size}`;
+      const urlImagen = type === "shirt" ? "/assets/Img/shirtCategorie.jpg" : "/assets/Img/hoodieCategorie.jpg";
+
+      const ppResult = await client.query(
+        `INSERT INTO PRODUCTO_PERSONALIZADO 
+         (id_producto, id_diseno, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_usuario) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id_producto_perso`,
+        [
+          baseProductId,
+          idDiseno,
+          name || `My Custom ${type === "shirt" ? "Shirt" : "Hoodie"}`,
+          desc,
+          totalPrice,
+          100,
+          urlImagen,
+          req.customer!.id
+        ]
+      );
+      
+      const ppId = ppResult.rows[0].id_producto_perso;
+      
+      for (const layer of layers) {
+        await client.query(
+          `INSERT INTO DISENO_PERSONALIZADO 
+           (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color, lado) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [
+            ppId,
+            layer.type,
+            layer.content,
+            layer.dbId || null,
+            layer.scale,
+            layer.x,
+            layer.y,
+            layer.color || null,
+            layer.side || "front"
+          ]
+        );
+      }
+      
+      await client.query("COMMIT");
+      
+      res.status(201).json({
+        id: ppId,
+        name: name || `My Custom ${type === "shirt" ? "Shirt" : "Hoodie"}`,
+        type,
+        size,
+        activeColor,
+        layers,
+        date: new Date().toISOString()
+      });
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Error saving user design:", error);
+      res.status(500).json({ error: "Error al guardar el diseño" });
+    } finally {
+      client.release();
+    }
+  }
+);
+
+//-- ELIMINAR DISEÑO PERSONALIZADO DEL USUARIO AUTENTICADO
+app.delete(
+  "/api/user-designs/:id",
+  verifyToken,
+  async (req: AuthRequest, res: Response) => {
+    const { id } = req.params;
+    try {
+      const result = await pool.query(
+        "DELETE FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso = $1 AND id_usuario = $2",
+        [parseInt(id as string, 10), req.customer!.id]
+      );
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: "Diseño no encontrado o no pertenece al usuario" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting user design:", error);
+      res.status(500).json({ error: "Error al eliminar el diseño" });
+    }
+  }
+);
+
+//-- SOBREESCRIBIR (ACTUALIZAR) DISEÑO PERSONALIZADO EXISTENTE DEL USUARIO
+app.put(
+  "/api/user-designs/:id",
+  verifyToken,
+  async (req: AuthRequest, res: Response) => {
+    const { id } = req.params;
+    const { name, type, size, activeColor, layers } = req.body;
+    
+    const client = await pool.connect();
+    try {
+      // Verificar propiedad del diseño
+      const verifyRes = await client.query(
+        "SELECT id_producto_perso FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso = $1 AND id_usuario = $2",
+        [parseInt(id as string, 10), req.customer!.id]
+      );
+
+      if (verifyRes.rowCount === 0) {
+        return res.status(404).json({ error: "Diseño no encontrado o no autorizado" });
+      }
+
+      await client.query("BEGIN");
+
+      // Buscar producto base
+      const baseProductRes = await client.query(
+        "SELECT id_producto, precio FROM PRODUCTO WHERE talla = $1 AND color = $2 AND tipo_producto = $3 LIMIT 1",
+        [size, activeColor.name, type]
+      );
+      
+      const baseProductId = baseProductRes.rows[0]?.id_producto || null;
+      const basePrice = baseProductRes.rows[0]?.precio || (type === "shirt" ? 25.0 : 45.0);
+      
+      let designPrice = 0;
+      for (const l of layers) {
+        if (l.type === "db_design") designPrice += 5.0;
+        else if (l.type === "custom_image") designPrice += 3.0;
+        else if (l.type === "text") designPrice += 2.0;
+      }
+      const totalPrice = Number(basePrice) + designPrice;
+      
+      const firstDbDesign = layers.find((l: any) => l.type === "db_design");
+      const idDiseno = firstDbDesign ? firstDbDesign.dbId : null;
+      
+      const desc = `Color: ${activeColor.name}, Layers: ${layers.length}, Talla: ${size}`;
+      const urlImagen = type === "shirt" ? "/assets/Img/shirtCategorie.jpg" : "/assets/Img/hoodieCategorie.jpg";
+
+      // 1. Actualizar PRODUCTO_PERSONALIZADO
+      await client.query(
+        `UPDATE PRODUCTO_PERSONALIZADO 
+         SET id_producto = $1, id_diseno = $2, nombre_producto_perso = $3, descripcion = $4, precio_producto_perso = $5, url_imagen = $6
+         WHERE id_producto_perso = $7`,
+        [
+          baseProductId,
+          idDiseno,
+          name || `My Custom ${type === "shirt" ? "Shirt" : "Hoodie"}`,
+          desc,
+          totalPrice,
+          urlImagen,
+          parseInt(id as string, 10)
+        ]
+      );
+
+      // 2. Eliminar capas antiguas
+      await client.query(
+        "DELETE FROM DISENO_PERSONALIZADO WHERE id_producto_perso = $1",
+        [parseInt(id as string, 10)]
+      );
+
+      // 3. Insertar capas nuevas
+      for (const layer of layers) {
+        await client.query(
+          `INSERT INTO DISENO_PERSONALIZADO 
+           (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color, lado) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [
+            parseInt(id as string, 10),
+            layer.type,
+            layer.content,
+            layer.dbId || null,
+            layer.scale,
+            layer.x,
+            layer.y,
+            layer.color || null,
+            layer.side || "front"
+          ]
+        );
+      }
+
+      await client.query("COMMIT");
+
+      res.json({
+        id: parseInt(id as string, 10),
+        name: name || `My Custom ${type === "shirt" ? "Shirt" : "Hoodie"}`,
+        type,
+        size,
+        activeColor,
+        layers,
+        date: new Date().toISOString()
+      });
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Error updating user design:", error);
+      res.status(500).json({ error: "Error al actualizar el diseño" });
+    } finally {
+      client.release();
+    }
+  }
+);
+
 //-- PROXY DE IMAGENES PARA EVITAR CORS EN WEBGL
 app.get("/api/proxy-image", async (req: Request, res: Response) => {
   const imageUrl = req.query.url as string;
@@ -673,7 +969,7 @@ app.get(
   async (req: Request, res: Response) => {
     try {
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO ORDER BY id_producto_perso",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño FROM PRODUCTO_PERSONALIZADO ORDER BY id_producto_perso",
       );
       res.json(result.rows);
     } catch (error) {
@@ -692,7 +988,7 @@ app.get(
     try {
       const id = parseInt(req.params.id as string);
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
         [id],
       );
 
@@ -782,8 +1078,8 @@ app.post(
     try {
       // Verificar stock de cada producto
       for (const item of items) {
-        // Si el frontend envía productData con un id_diseño, es un producto customizado nuevo. No comprobamos stock.
-        if (item.productData && item.productData.id_diseño !== undefined) {
+        // Si el frontend envía productData con capas (layers), es un producto customizado nuevo. No comprobamos stock.
+        if (item.productData && item.productData.layers !== undefined) {
           continue;
         }
 
@@ -806,11 +1102,57 @@ app.post(
         await client.query("BEGIN");
 
         // 1. Insertar la dirección en la tabla DIRECCION y obtener su ID
+        let addrObj = {
+          calle: "Sin calle",
+          num_portal: "S/N",
+          codigopostal: "00000",
+          ciudad: "Sin ciudad",
+          provincia: "Sin provincia",
+          comunidad_autonoma: "Sin comunidad",
+          pais: "España",
+          piso: null as string | null,
+          puerta: null as string | null
+        };
+
+        if (typeof address === "object" && address !== null) {
+          addrObj = {
+            calle: address.calle || "Sin calle",
+            num_portal: address.num_portal || "S/N",
+            codigopostal: address.codigopostal || "00000",
+            ciudad: address.ciudad || "Sin ciudad",
+            provincia: address.provincia || "Sin provincia",
+            comunidad_autonoma: address.comunidad_autonoma || "Sin comunidad",
+            pais: address.pais || "España",
+            piso: address.piso || null,
+            puerta: address.puerta || null
+          };
+        } else if (typeof address === "string" && address.trim() !== "") {
+          addrObj.calle = address;
+        }
+
         const addressResult = await client.query(
-          "INSERT INTO DIRECCION (id_Usuario, calle) VALUES ($1, $2) RETURNING id_Direccion",
-          [req.customer!.id, address || "Sin dirección"]
+          `INSERT INTO DIRECCION 
+           (calle, num_portal, codigopostal, ciudad, provincia, comunidad_autonoma, pais, piso, puerta) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_Direccion`,
+          [
+            addrObj.calle,
+            addrObj.num_portal,
+            addrObj.codigopostal,
+            addrObj.ciudad,
+            addrObj.provincia,
+            addrObj.comunidad_autonoma,
+            addrObj.pais,
+            addrObj.piso,
+            addrObj.puerta
+          ]
         );
         const addressId = addressResult.rows[0].id_direccion || addressResult.rows[0].id_Direccion;
+
+        // Asociar la dirección con el usuario en la tabla relacional
+        await client.query(
+          "INSERT INTO USUARIO_DIRECCION (id_usuario, id_direccion) VALUES ($1, $2)",
+          [req.customer!.id, addressId]
+        );
 
         // 2. Crear el pedido usando el addressId real
         const orderResult = await client.query(
@@ -826,11 +1168,11 @@ app.post(
             // Es un producto personalizado con múltiples capas, lo insertamos en la BD primero
             const insertCustom = await client.query(
               `INSERT INTO PRODUCTO_PERSONALIZADO 
-               (id_producto, id_diseño, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen) 
+               (id_producto, id_diseno, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen) 
                VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_producto_perso`,
               [
                 item.productData.id_producto || null,
-                item.productData.id_diseño,
+                item.productData.id_diseno,
                 item.productData.nombre_producto_perso,
                 item.productData.descripcion,
                 item.productData.precio_producto_perso,
@@ -845,8 +1187,8 @@ app.post(
             for (const layer of layers) {
               await client.query(
                 `INSERT INTO DISENO_PERSONALIZADO 
-                  (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+                  (id_producto_perso, tipo, contenido, id_diseno, escala, pos_x, pos_y, color, lado) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
                 [
                   actualProductId,
                   layer.type,
@@ -855,7 +1197,8 @@ app.post(
                   layer.scale,
                   layer.x,
                   layer.y,
-                  layer.color || null
+                  layer.color || null,
+                  layer.side || 'front'
                 ]
               );
             }
@@ -868,7 +1211,7 @@ app.post(
           }
 
           await client.query(
-            "INSERT INTO LINEA_PRODUCTO (id_Pedido, id_Producto, cant_Producto, precio_u, descripcion) VALUES ($1,$2,$3,$4,$5)",
+            "INSERT INTO LINEA_PRODUCTO (id_Pedido, id_producto_perso, cant_Producto, precio_u, descripcion) VALUES ($1,$2,$3,$4,$5)",
             [orderId, actualProductId, item.quantity, item.unitPrice, item.productData?.descripcion || ''],
           );
         }
@@ -941,7 +1284,7 @@ app.get(
       const itemsResult = await pool.query(
         `SELECT l.cant_Producto as quantity, l.precio_U as unit_price, (l.cant_Producto * l.precio_U) AS subtotal,
               COALESCE(pr.nombre_producto_perso, l.Descripcion) as name, '' as image_url
-       FROM LINEA_PRODUCTO l LEFT JOIN PRODUCTO_PERSONALIZADO pr ON pr.id_producto_perso = l.Id_Producto
+       FROM LINEA_PRODUCTO l LEFT JOIN PRODUCTO_PERSONALIZADO pr ON pr.id_producto_perso = l.id_producto_perso
        WHERE l.Id_Pedido = $1`,
         [orderId],
       );
@@ -960,12 +1303,13 @@ app.get(
   async (req: Request, res: Response) => {
     try {
       const result = await pool.query(
-        `SELECT p.id_pedido as id, p.id_usuario as customer_id, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at, p.fecha_recibido as received_at,
+        `SELECT p.id_pedido as id, p.id_usuario as customer_id, u.nombre_usuario as customer_name, p.estado_pedido as status, d.calle as address, p.fecha_realizado as created_at, p.fecha_recibido as received_at,
               COALESCE(SUM(l.cant_Producto * l.precio_U), 0) AS total
        FROM PEDIDO p 
        LEFT JOIN LINEA_PRODUCTO l ON l.id_pedido = p.id_pedido
        LEFT JOIN DIRECCION d ON p.id_direccion = d.id_direccion
-       GROUP BY p.id_pedido, d.calle ORDER BY p.fecha_realizado DESC`,
+       LEFT JOIN USUARIO u ON p.id_usuario = u.id_usuario
+       GROUP BY p.id_pedido, d.calle, u.nombre_usuario ORDER BY p.fecha_realizado DESC`,
       );
       res.json(result.rows);
     } catch (error) {

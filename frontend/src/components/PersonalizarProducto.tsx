@@ -1,10 +1,13 @@
 import React, { useState, useRef, useMemo, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows, Center, useTexture, Text, useGLTF } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows, Center, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 import '../styles/PersonalizarProducto.css';
 import type { Product, CartItem } from '../../types';
+import shirtImg from '../assets/Img/shirtCategorie.jpg';
+import hoodieImg from '../assets/Img/hoodieCategorie.jpg';
 
 // Types for Customization
 type GarmentType = 'shirt' | 'hoodie';
@@ -89,6 +92,9 @@ const StylizedGarment = ({ type, color, layers }: { type: GarmentType; color: st
     return 2.5 / (Math.max(size.x, size.y, size.z) || 1);
   }, [clonedScene]);
 
+  // Image cache to avoid re-fetching on every repaint
+  const imageCache = useRef<Map<string, HTMLImageElement>>(new Map());
+
   // Paint canvas: garment color + design layers at correct UV positions
   // UV layout: front=top-left quadrant (RED), back=top-right quadrant (GREEN) for BOTH models
   useEffect(() => {
@@ -124,10 +130,14 @@ const StylizedGarment = ({ type, color, layers }: { type: GarmentType; color: st
             ? `http://localhost:3000/api/proxy-image?url=${encodeURIComponent(layer.content)}`
             : layer.content;
           try {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.src = url;
-            await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = rej; });
+            let img = imageCache.current.get(url);
+            if (!img) {
+              img = new Image();
+              img.crossOrigin = 'anonymous';
+              img.src = url;
+              await new Promise<void>((res, rej) => { img!.onload = () => res(); img!.onerror = rej; });
+              imageCache.current.set(url, img);
+            }
             const sz = layer.scale * 200;
             ctx.drawImage(img, px - sz / 2, py - sz / 2, sz, sz);
           } catch (e) {
@@ -173,20 +183,31 @@ interface Props {
 const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { customer } = useUser();
   const [type, setType] = useState<GarmentType>('shirt');
   const [size, setSize] = useState<SizeType>('M');
   const [activeColor, setActiveColor] = useState<ColorType>({ name: 'Negro', hex: '#1a1a1a' });
   const [layers, setLayers] = useState<Layer[]>([]);
   const [fileMap, setFileMap] = useState<Record<string, File>>({}); // Store original files for lazy upload
+  const [minimizedLayers, setMinimizedLayers] = useState<Record<string, boolean>>({});
+
+  const toggleMinimize = (id: string) => {
+    setMinimizedLayers(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  // Sort layers: expanded first, minimized last
+  const sortedLayers = [...layers].sort((a, b) => {
+    const aMin = minimizedLayers[a.id] ? 1 : 0;
+    const bMin = minimizedLayers[b.id] ? 1 : 0;
+    return aMin - bMin;
+  });
 
   const [dbProducts, setDbProducts] = useState<DBProduct[]>([]);
   const [dbDesigns, setDbDesigns] = useState<DBDesign[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [savedDesigns, setSavedDesigns] = useState<any[]>(() => {
-    const saved = localStorage.getItem('saved_custom_designs');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [savedDesigns, setSavedDesigns] = useState<any[]>([]);
+  const [activeDesignId, setActiveDesignId] = useState<number | null>(null);
 
   React.useEffect(() => {
     Promise.all([
@@ -216,6 +237,18 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
       setLoading(false);
     });
   }, [location.search]);
+
+  // Fetch authenticated user's custom designs from database
+  React.useEffect(() => {
+    if (customer) {
+      fetch('http://localhost:3000/api/user-designs', { credentials: 'include' })
+        .then(res => res.ok ? res.json() : [])
+        .then(data => setSavedDesigns(data))
+        .catch(err => console.error("Error loading user designs:", err));
+    } else {
+      setSavedDesigns([]);
+    }
+  }, [customer]);
 
   // Instead of dynamically checking base products for sizes/colors, we use the constraints
   React.useEffect(() => {
@@ -339,12 +372,12 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
       const customProduct: any = {
         id_producto_perso: customId,
-        id_diseño: firstDbDesign ? firstDbDesign.dbId : undefined,
+        id_diseno: firstDbDesign ? firstDbDesign.dbId : undefined,
         nombre_producto_perso: `Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
         descripcion: `Color: ${activeColor.name}, Layers: ${updatedLayers.length}, Talla: ${size}`,
         precio_producto_perso: totalPrice,
         cantidad_u: 100,
-        url_imagen: type === 'shirt' ? '/assets/Img/shirtCategorie.jpg' : '/assets/Img/hoodieCategorie.jpg',
+        url_imagen: type === 'shirt' ? shirtImg : hoodieImg,
         layers: updatedLayers
       };
 
@@ -355,6 +388,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
         const cart: CartItem[] = saved ? JSON.parse(saved) : [];
         cart.push({ product: customProduct, quantity: 1, selectedSize: size });
         sessionStorage.setItem("cart", JSON.stringify(cart));
+        window.dispatchEvent(new Event("cartUpdated"));
       }
 
       alert("Customized product successfully added to cart.");
@@ -368,26 +402,71 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   };
 
   const handleSaveDesign = async () => {
+    if (!customer) {
+      alert("Please log in to save your design.");
+      navigate("/login");
+      return;
+    }
+
+    let overwrite = false;
+    if (activeDesignId) {
+      overwrite = window.confirm(
+        "You are currently editing a saved design.\n\n" +
+        "Click 'OK' to OVERWRITE your existing design, or 'Cancel' to save it as a NEW design."
+      );
+    }
+
     setLoading(true);
     try {
       const updatedLayers = await uploadPendingLayers();
       setLayers(updatedLayers); // Update state to replace blob URLs
       
-      const newDesign = {
-        id: Date.now(),
+      const payload = {
         name: `My Custom ${type === 'shirt' ? 'Shirt' : 'Hoodie'}`,
         type,
         size,
         activeColor,
-        layers: updatedLayers,
-        date: new Date().toISOString()
+        layers: updatedLayers
       };
-      
-      const updatedDesigns = [...savedDesigns, newDesign];
-      setSavedDesigns(updatedDesigns);
-      localStorage.setItem('saved_custom_designs', JSON.stringify(updatedDesigns));
-      
-      alert("Design saved successfully!");
+
+      if (overwrite && activeDesignId) {
+        // OVERWRITE EXISTING DESIGN
+        const res = await fetch(`http://localhost:3000/api/user-designs/${activeDesignId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to overwrite design on server");
+        }
+
+        const updatedDesign = await res.json();
+        setSavedDesigns(prev => prev.map(d => d.id === activeDesignId ? updatedDesign : d));
+        alert("Design updated successfully!");
+      } else {
+        // SAVE AS NEW DESIGN
+        const res = await fetch('http://localhost:3000/api/user-designs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to save design to server");
+        }
+
+        const savedDesign = await res.json();
+        setSavedDesigns(prev => [savedDesign, ...prev]);
+        setActiveDesignId(savedDesign.id);
+        alert("Design saved successfully!");
+      }
     } catch (err) {
       console.error(err);
       alert("Error saving design.");
@@ -428,12 +507,38 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
     setSize(design.size);
     setActiveColor(design.activeColor);
     setLayers(design.layers);
+    setActiveDesignId(design.id);
   };
 
-  const deleteSavedDesign = (id: number) => {
-    const updated = savedDesigns.filter(d => d.id !== id);
-    setSavedDesigns(updated);
-    localStorage.setItem('saved_custom_designs', JSON.stringify(updated));
+  const deleteSavedDesign = async (id: number) => {
+    if (!customer) return;
+
+    if (!window.confirm("Are you sure you want to delete this design?")) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:3000/api/user-designs/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete design");
+      }
+
+      setSavedDesigns(prev => prev.filter(d => d.id !== id));
+      if (activeDesignId === id) {
+        setActiveDesignId(null);
+      }
+      alert("Design deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting design.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -448,31 +553,193 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
       </div>
 
       <div className="personalize-content">
-        {/* 3D Viewer */}
-        <div className="model-preview">
-          <div className="model-badge">Live 3D View</div>
-          <Canvas shadows camera={{ position: [0, 0, 4.5], fov: 50 }}>
-            <ambientLight intensity={0.5} />
-            <spotLight position={[5, 5, 5]} angle={0.15} penumbra={1} intensity={1} castShadow />
-            <pointLight position={[-5, 5, -5]} intensity={0.5} />
+        {/* Left Column: 3D Viewer + Layer Editor */}
+        <div className="personalize-left-col">
+          <div className="model-preview">
+            <div className="model-badge">Live 3D View</div>
+            <Canvas shadows camera={{ position: [0, 0, 4.5], fov: 50 }}>
+              <ambientLight intensity={0.5} />
+              <spotLight position={[5, 5, 5]} angle={0.15} penumbra={1} intensity={1} castShadow />
+              <pointLight position={[-5, 5, -5]} intensity={0.5} />
 
-            <StylizedGarment type={type} color={activeColor.hex} layers={layers} />
+              <Suspense fallback={null}>
+                <StylizedGarment type={type} color={activeColor.hex} layers={layers} />
+              </Suspense>
 
-            <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2} far={4} />
-            <OrbitControls
-              enablePan={false}
-              enableZoom={true}
-              minDistance={1}
-              maxDistance={20}
-            />
-            <Environment preset="city" />
-          </Canvas>
-          <div className="model-controls-overlay">
-            <span style={{ fontSize: '0.8rem', color: '#ccc' }}>* Drag to rotate, scroll to zoom</span>
+              <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2} far={4} />
+              <OrbitControls
+                enablePan={false}
+                enableZoom={true}
+                minDistance={1}
+                maxDistance={20}
+              />
+              <Suspense fallback={null}>
+                <Environment preset="city" />
+              </Suspense>
+            </Canvas>
+            <div className="model-controls-overlay">
+              <span style={{ fontSize: '0.8rem', color: '#ccc' }}>* Drag to rotate, scroll to zoom</span>
+            </div>
           </div>
+
+          {/* Active Layers — below 3D viewer */}
+          {layers.length > 0 && (
+            <div className="layers-panel">
+              <h3 className="layers-panel-title">Active Layers</h3>
+              <div className="layers-list">
+                {sortedLayers.map(layer => {
+                  const isMin = !!minimizedLayers[layer.id];
+                  return (
+                    <div key={layer.id} className={`layer-item ${isMin ? 'layer-minimized' : 'layer-expanded'}`}>
+                      {/* Header — always visible */}
+                      <div className="layer-header">
+                        <div className="layer-header-info">
+                          <span className={`layer-type-badge layer-type-${layer.type}`}>
+                            {layer.type === 'db_design' ? '🎨' : layer.type === 'custom_image' ? '🖼️' : '✏️'}
+                          </span>
+                          <strong className="layer-name">{layer.name}</strong>
+                          <span className="layer-side-badge">{layer.side.toUpperCase()}</span>
+                        </div>
+                        <div className="layer-header-actions">
+                          <button
+                            className="layer-toggle-btn"
+                            onClick={() => toggleMinimize(layer.id)}
+                            title={isMin ? 'Expand' : 'Minimize'}
+                          >
+                            {isMin ? '▢' : '▁'}
+                          </button>
+                          <button className="layer-remove-btn" onClick={() => removeLayer(layer.id)}>✕</button>
+                        </div>
+                      </div>
+
+                      {/* Controls — only when expanded */}
+                      {!isMin && (
+                        <div className="layer-controls">
+                          {layer.type === 'text' && (
+                            <div className="layer-text-edit">
+                              <input type="text" value={layer.content} onChange={e => updateLayer(layer.id, { content: e.target.value })} className="layer-text-input" placeholder="Enter text..." />
+                              <input type="color" value={layer.color} onChange={e => updateLayer(layer.id, { color: e.target.value })} className="layer-color-input" title="Text color" />
+                            </div>
+                          )}
+
+                          {/* Side toggle — visual buttons */}
+                          <div className="layer-side-toggle">
+                            <button
+                              className={`side-btn ${layer.side === 'front' ? 'side-active' : ''}`}
+                              onClick={() => updateLayer(layer.id, { side: 'front' })}
+                            >
+                              <span className="side-icon">👕</span> Front
+                            </button>
+                            <button
+                              className={`side-btn ${layer.side === 'back' ? 'side-active' : ''}`}
+                              onClick={() => updateLayer(layer.id, { side: 'back' })}
+                            >
+                              <span className="side-icon">🔄</span> Back
+                            </button>
+                          </div>
+
+                          {/* 2D Position Pad — drag to place */}
+                          <div className="layer-position-section">
+                            <label className="position-label">Position</label>
+                            <div
+                              className="position-pad"
+                              onMouseDown={(e) => {
+                                const pad = e.currentTarget;
+                                const rect = pad.getBoundingClientRect();
+                                const setPos = (clientX: number, clientY: number) => {
+                                  const nx = ((clientX - rect.left) / rect.width) * 3 - 1.5;
+                                  const ny = -(((clientY - rect.top) / rect.height) * 4 - 2.0);
+                                  updateLayer(layer.id, {
+                                    x: Math.max(-1.5, Math.min(1.5, nx)),
+                                    y: Math.max(-2.0, Math.min(2.0, ny))
+                                  });
+                                };
+                                setPos(e.clientX, e.clientY);
+                                const onMove = (ev: MouseEvent) => setPos(ev.clientX, ev.clientY);
+                                const onUp = () => {
+                                  window.removeEventListener('mousemove', onMove);
+                                  window.removeEventListener('mouseup', onUp);
+                                };
+                                window.addEventListener('mousemove', onMove);
+                                window.addEventListener('mouseup', onUp);
+                              }}
+                            >
+                              {/* Garment silhouette outline */}
+                              <div className="pad-silhouette">
+                                <div className="pad-silhouette-body" />
+                              </div>
+                              {/* Crosshair lines */}
+                              <div className="pad-crosshair-h" style={{ top: `${50 - (layer.y / 4.0) * 100}%` }} />
+                              <div className="pad-crosshair-v" style={{ left: `${((layer.x + 1.5) / 3.0) * 100}%` }} />
+                              {/* Draggable dot */}
+                              <div
+                                className="position-dot"
+                                style={{
+                                  left: `${((layer.x + 1.5) / 3.0) * 100}%`,
+                                  top: `${50 - (layer.y / 4.0) * 100}%`
+                                }}
+                              >
+                                <div className="dot-ring" style={{ width: `${layer.scale * 18}px`, height: `${layer.scale * 18}px` }} />
+                              </div>
+                            </div>
+                            <div className="position-manual-row">
+                              <div className="position-input-group">
+                                <label>X</label>
+                                <input
+                                  type="number"
+                                  className="position-number-input"
+                                  value={layer.x.toFixed(2)}
+                                  min={-1.5}
+                                  max={1.5}
+                                  step={0.05}
+                                  onChange={e => {
+                                    const v = parseFloat(e.target.value);
+                                    if (!isNaN(v)) updateLayer(layer.id, { x: Math.max(-1.5, Math.min(1.5, v)) });
+                                  }}
+                                />
+                              </div>
+                              <div className="position-input-group">
+                                <label>Y</label>
+                                <input
+                                  type="number"
+                                  className="position-number-input"
+                                  value={layer.y.toFixed(2)}
+                                  min={-2.0}
+                                  max={2.0}
+                                  step={0.05}
+                                  onChange={e => {
+                                    const v = parseFloat(e.target.value);
+                                    if (!isNaN(v)) updateLayer(layer.id, { y: Math.max(-2.0, Math.min(2.0, v)) });
+                                  }}
+                                />
+                              </div>
+                              <button className="position-reset-btn" onClick={() => updateLayer(layer.id, { x: 0, y: 0 })}>⟲ Center</button>
+                            </div>
+                          </div>
+
+                          {/* Scale slider with visual indicator */}
+                          <div className="layer-scale-section">
+                            <div className="scale-header">
+                              <label>Scale</label>
+                              <span className="scale-value">{layer.scale.toFixed(1)}×</span>
+                            </div>
+                            <div className="scale-slider-wrap">
+                              <span className="scale-icon scale-small">A</span>
+                              <input type="range" min="0.1" max="4" step="0.1" value={layer.scale} onChange={e => updateLayer(layer.id, { scale: parseFloat(e.target.value) })} />
+                              <span className="scale-icon scale-large">A</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Controls Panel */}
+        {/* Right Column: Controls Panel */}
         <div className="options-panel">
 
           <div className="option-group">
@@ -539,62 +806,54 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
             </div>
           </div>
 
-          {layers.length > 0 && (
-            <div className="option-group">
-              <h3>Active Layers</h3>
-              <div className="layers-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                {layers.map(layer => (
-                  <div key={layer.id} className="layer-item" style={{ border: '1px solid #444', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                      <strong style={{ fontSize: '0.9rem' }}>{layer.name}</strong>
-                      <button onClick={() => removeLayer(layer.id)} style={{ background: '#8b0000', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px' }}>X</button>
-                    </div>
-
-                    {layer.type === 'text' && (
-                      <div style={{ marginBottom: '10px', display: 'flex', gap: '5px' }}>
-                        <input type="text" value={layer.content} onChange={e => updateLayer(layer.id, { content: e.target.value })} style={{ flex: 1, padding: '5px', borderRadius: '4px', border: 'none' }} />
-                        <input type="color" value={layer.color} onChange={e => updateLayer(layer.id, { color: e.target.value })} style={{ width: '30px', padding: '0', border: 'none', background: 'none' }} />
-                      </div>
-                    )}
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <label style={{ fontSize: '0.8rem' }}>Side: {layer.side.toUpperCase()}</label>
-                        <button
-                          onClick={() => updateLayer(layer.id, { side: layer.side === 'front' ? 'back' : 'front' })}
-                          style={{ background: '#444', color: 'white', border: '1px solid #666', borderRadius: '3px', cursor: 'pointer', padding: '2px 8px', fontSize: '0.7rem' }}
-                        >
-                          Flip to {layer.side === 'front' ? 'Back' : 'Front'}
-                        </button>
-                      </div>
-
-                      <label style={{ fontSize: '0.8rem' }}>Scale: {layer.scale.toFixed(1)}</label>
-                      <input type="range" min="0.1" max="4" step="0.1" value={layer.scale} onChange={e => updateLayer(layer.id, { scale: parseFloat(e.target.value) })} />
-
-                      <label style={{ fontSize: '0.8rem' }}>X Pos: {layer.x.toFixed(2)}</label>
-                      <input type="range" min="-1.5" max="1.5" step="0.05" value={layer.x} onChange={e => updateLayer(layer.id, { x: parseFloat(e.target.value) })} />
-
-                      <label style={{ fontSize: '0.8rem' }}>Y Pos: {layer.y.toFixed(2)}</label>
-                      <input type="range" min="-2.0" max="2.0" step="0.05" value={layer.y} onChange={e => updateLayer(layer.id, { y: parseFloat(e.target.value) })} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className="price-display">
             <span>Total:</span>
             <span>€{totalPrice.toFixed(2)}</span>
           </div>
 
-          <div className="action-buttons">
+          {activeDesignId && (
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: '#222',
+              border: '1px dashed #4a5e42',
+              borderRadius: '12px',
+              padding: '0.8rem 1rem',
+              marginBottom: '1rem',
+              fontSize: '0.9rem'
+            }}>
+              <span style={{ color: '#ccc' }}>
+                ✏️ Editing: <strong style={{ color: '#fff' }}>{savedDesigns.find(d => d.id === activeDesignId)?.name || 'Custom Design'}</strong>
+              </span>
+              <button 
+                onClick={() => {
+                  setActiveDesignId(null);
+                  setLayers([]);
+                }}
+                style={{
+                  background: '#333',
+                  color: '#ff4444',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '4px 10px',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                Start New
+              </button>
+            </div>
+          )}
+
+          <div className="action-buttons" style={{ flexDirection: 'column' }}>
             <button className="add-cart-btn" onClick={handleAddToCart}>
               Add to Cart
             </button>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
               <button className="option-btn" onClick={handleSaveDesign} style={{ flex: 1 }}>
-                Save Design
+                {customer ? 'Save Design' : '🔒 Log In to Save'}
               </button>
               <button className="option-btn" onClick={handleShareDesign} style={{ flex: 1 }}>
                 Share Design
