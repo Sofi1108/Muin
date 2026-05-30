@@ -45,6 +45,7 @@ import AdminDesignsPanel from "./components/AdminDesignsPanel";
 import AdminCustomDesignsPanel from "./components/AdminCustomDesignsPanel";
 import AdminOrdersPanel from "./components/AdminOrdersPanel";
 import CookieConsent from "./components/CookieConsent";
+import CommunityPage from "./components/CommunityPage";
 
 import type { Product, CartItem } from "../types";
 
@@ -350,6 +351,12 @@ function App() {
             }
           />
 
+          <Route
+            path="/community"
+            element={
+              <CommunityPage />
+            }
+          />
           <Route path="/checkout" element={<CheckoutPage cart={cart} setCart={setCart} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

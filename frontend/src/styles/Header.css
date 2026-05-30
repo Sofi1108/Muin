@@ -98,6 +98,21 @@ nav {
   transform: scale(1.27);
 }
 
+#community-icon {
+  font-size: 2.5rem;
+  color: white;
+  transition:
+    color 0.3s,
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  text-decoration: none;
+}
+#community-icon:hover {
+  color: #820000;
+  text-shadow: #1f1f1f 0px 0px 0.2rem;
+  transform: scale(1.27);
+}
+
 @media (max-width: 48rem) {
   header {
     padding: 1rem 3%;
@@ -112,5 +127,8 @@ nav {
   #profile-icon {
     font-size: 2rem;
     margin-left: 10px;
+  }
+  #community-icon {
+    font-size: 2rem;
   }
 }

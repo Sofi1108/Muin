@@ -28,7 +28,9 @@ export default function LoginPage() {
       })
       .then((data) => {
         setCustomer(data.customer);
-        navigate("/");
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get("redirect");
+        navigate(redirect || "/");
       })
       .catch((err) => setError(err.message));
   };

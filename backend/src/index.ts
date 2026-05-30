@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { registerTicketRoutes } from "./tickets.js";
+import { registerCommunityRoutes } from "./community.js";
 import { pool } from "./db.js";
 import multer from "multer";
 import path from "path";
@@ -1458,6 +1459,7 @@ app.patch(
   },
 );
 registerTicketRoutes(app);
+registerCommunityRoutes(app);
 
 // ─── CALENDAR EVENTS ─────────────────────────────────────────────────────────
 

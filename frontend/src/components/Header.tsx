@@ -45,6 +45,14 @@ function Header({ cart, onAddToCart, onDecreaseQuantity }: HeaderProps) {
       />
       <Logo onSelect={() => navigate("/")} />
       <nav className="nav-icons">
+        <div
+          className="material-symbols-outlined"
+          id="community-icon"
+          onClick={() => navigate("/community")}
+          style={{ cursor: "pointer" }}
+        >
+          public
+        </div>
         <Profile />
         <CartSummary
           items={cart}
