@@ -1461,7 +1461,7 @@ registerTicketRoutes(app);
 
 // ─── CALENDAR EVENTS ─────────────────────────────────────────────────────────
 
-// GET /api/calendar/events — Devuelve eventos públicos + propios privados
+// GET /api/calendar/events -- Devuelve eventos públicos + propios privados
 app.get(
   "/api/calendar/events",
   verifyToken,
