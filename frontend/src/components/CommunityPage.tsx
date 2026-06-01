@@ -73,11 +73,17 @@ export default function CommunityPage() {
     if (searchParams.get("create") === "true") {
       if (customer) {
         setShowCreateForm(true);
+        const link = searchParams.get("designLink");
+        if (link) {
+          setDescripcion(`¡He diseñado un producto personalizado en el estudio de diseño! 🎨✨\n\nPuedes ver mi diseño, editarlo y crear tu propia versión usando este enlace:\n${link}`);
+        }
         // Clear parameter from URL silently
         setSearchParams({}, { replace: true });
       } else {
         // Not authenticated yet, go to login
-        navigate("/login?redirect=/community?create=true");
+        const link = searchParams.get("designLink");
+        const redirectUrl = `/community?create=true${link ? `&designLink=${link}` : ""}`;
+        navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
       }
     }
   }, [customer, searchParams]);
@@ -371,12 +377,17 @@ export default function CommunityPage() {
             {posts.slice(0, limit).map((post) => {
               const isLiked = customer ? post.usuarios_megusta.includes(customer.name) : false;
               return (
-                <div className="post-card" key={post.id_publicacion}>
+                <div 
+                  className="post-card clickable-post-card" 
+                  key={post.id_publicacion}
+                  onClick={() => openComments(post)}
+                  style={{ cursor: 'pointer' }}
+                >
                   {/* Delete button (Trashcan) */}
                   {canDelete(post) && (
                     <button
                       className="btn-delete-post"
-                      onClick={() => setPostToDelete(post)}
+                      onClick={(e) => { e.stopPropagation(); setPostToDelete(post); }}
                       title="Eliminar publicación"
                     >
                       <span className="material-symbols-outlined">delete</span>
@@ -406,7 +417,7 @@ export default function CommunityPage() {
                     {/* Heart button for Liking */}
                     <button
                       className={`btn-interaction btn-like ${isLiked ? "liked" : ""}`}
-                      onClick={() => handleToggleLike(post.id_publicacion)}
+                      onClick={(e) => { e.stopPropagation(); handleToggleLike(post.id_publicacion); }}
                     >
                       <span className="material-symbols-outlined">
                         {isLiked ? "favorite" : "favorite_border"}
@@ -417,7 +428,7 @@ export default function CommunityPage() {
                     {/* Speech bubble comments button */}
                     <button
                       className="btn-interaction btn-comment"
-                      onClick={() => openComments(post)}
+                      onClick={(e) => { e.stopPropagation(); openComments(post); }}
                     >
                       <span className="material-symbols-outlined">chat_bubble</span>
                       <span className="interaction-count">{post.comments_count}</span>
@@ -442,78 +453,90 @@ export default function CommunityPage() {
       {/* COMMENTS MODAL */}
       {selectedPost && (
         <div className="modal-overlay animate-fade-in" onClick={() => setSelectedPost(null)}>
-          <div className="comments-modal-card" onClick={(e) => e.stopPropagation()}>
-            {/* Modal Header */}
-            <div className="modal-header">
-              <h3>COMENTARIOS</h3>
-              <button className="btn-close-modal" onClick={() => setSelectedPost(null)}>
-                <span className="material-symbols-outlined">close</span>
-              </button>
-            </div>
-
-            {/* Reference Post Summary */}
-            <div className="modal-post-summary">
-              <div className="post-card-header">
-                <span className="post-author">@{selectedPost.nombre_usuario}</span>
-                <span className="post-date">{formatDate(selectedPost.fecha_publicacion)}</span>
+          <div className="comments-modal-card split-modal" onClick={(e) => e.stopPropagation()}>
+            
+            {/* LEFT COLUMN: Post Detail Info */}
+            <div className="modal-left-column">
+              <div className="post-card-header" style={{ paddingRight: 0, marginBottom: '1.25rem' }}>
+                <span className="post-author" style={{ fontSize: '1.1rem', color: '#ffffff' }}>@{selectedPost.nombre_usuario}</span>
+                <span className="post-date" style={{ fontSize: '0.8rem', color: '#a6a6a6', marginTop: '4px' }}>{formatDate(selectedPost.fecha_publicacion)}</span>
               </div>
-              <p className="summary-desc">{selectedPost.descripcion}</p>
-            </div>
-
-            {/* Comments List Container */}
-            <div className="comments-list-container">
-              {loadingComments ? (
-                <div className="loading-spinner-small">Cargando comentarios...</div>
-              ) : commentError ? (
-                <div className="comment-error-box">{commentError}</div>
-              ) : comments.length === 0 ? (
-                // EXACT REQUIREMENT: MUST show "no hay mensajes actualmente"
-                <div className="no-comments-msg">no hay mensajes actualmente</div>
-              ) : (
-                <div className="comments-list">
-                  {comments.map((comment) => (
-                    <div className="comment-item" key={comment.id_comentario}>
-                      <div className="comment-item-header">
-                        <span className="comment-author">@{comment.nombre_usuario}</span>
-                        <span className="comment-date">{formatDate(comment.fecha_comentario)}</span>
-                      </div>
-                      <p className="comment-text">{comment.comentario}</p>
-                    </div>
-                  ))}
+              
+              {selectedPost.imagen && (
+                <div className="modal-post-image">
+                  <img src={selectedPost.imagen} alt="Publicación" />
                 </div>
               )}
+              
+              <div className="modal-post-desc">
+                <p>{selectedPost.descripcion}</p>
+              </div>
             </div>
-
-            {/* Add Comment Section - Speech Bubble Visual Style */}
-            <div className="modal-add-comment-section">
-              {commentError && <div className="comment-validation-error">{commentError}</div>}
-              <form onSubmit={handleAddComment} className="add-comment-form">
-                <input
-                  type="text"
-                  className="comment-input"
-                  placeholder={
-                    customer
-                      ? "Añadir comentario (máx 150 caracteres)..."
-                      : "Debes iniciar sesión para comentar..."
-                  }
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  disabled={!customer}
-                  maxLength={150}
-                  required
-                />
-                
-                {/* Visual bubble styled submit button */}
-                <button
-                  type="submit"
-                  className="btn-add-comment-bubble"
-                  disabled={!customer || !newComment.trim()}
-                  title="Añadir comentario"
-                >
-                  <span className="material-symbols-outlined">send</span>
-                  <span className="btn-label-text">Añadir comentario</span>
+            
+            {/* RIGHT COLUMN: Comments List & Add Form */}
+            <div className="modal-right-column">
+              <div className="modal-header">
+                <h3>COMENTARIOS</h3>
+                <button className="btn-close-modal" onClick={() => setSelectedPost(null)}>
+                  <span className="material-symbols-outlined">close</span>
                 </button>
-              </form>
+              </div>
+
+              {/* Comments List Container */}
+              <div className="comments-list-container">
+                {loadingComments ? (
+                  <div className="loading-spinner-small">Cargando comentarios...</div>
+                ) : commentError ? (
+                  <div className="comment-error-box">{commentError}</div>
+                ) : comments.length === 0 ? (
+                  // EXACT REQUIREMENT: MUST show "no hay mensajes actualmente"
+                  <div className="no-comments-msg">no hay mensajes actualmente</div>
+                ) : (
+                  <div className="comments-list">
+                    {comments.map((comment) => (
+                      <div className="comment-item" key={comment.id_comentario}>
+                        <div className="comment-item-header">
+                          <span className="comment-author">@{comment.nombre_usuario}</span>
+                          <span className="comment-date">{formatDate(comment.fecha_comentario)}</span>
+                        </div>
+                        <p className="comment-text">{comment.comentario}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Add Comment Section - Speech Bubble Visual Style */}
+              <div className="modal-add-comment-section">
+                {commentError && <div className="comment-validation-error">{commentError}</div>}
+                <form onSubmit={handleAddComment} className="add-comment-form">
+                  <input
+                    type="text"
+                    className="comment-input"
+                    placeholder={
+                      customer
+                        ? "Añadir comentario (máx 150 caracteres)..."
+                        : "Debes iniciar sesión para comentar..."
+                    }
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    disabled={!customer}
+                    maxLength={150}
+                    required
+                  />
+                  
+                  {/* Visual bubble styled submit button */}
+                  <button
+                    type="submit"
+                    className="btn-add-comment-bubble"
+                    disabled={!customer || !newComment.trim()}
+                    title="Añadir comentario"
+                  >
+                    <span className="material-symbols-outlined">send</span>
+                    <span className="btn-label-text">Añadir comentario</span>
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>

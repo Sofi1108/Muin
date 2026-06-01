@@ -209,6 +209,11 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
   const [savedDesigns, setSavedDesigns] = useState<any[]>([]);
   const [activeDesignId, setActiveDesignId] = useState<number | null>(null);
 
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareLink, setShareLink] = useState("");
+  const [sharePublishError, setSharePublishError] = useState<string | null>(null);
+  const [isReadOnly, setIsReadOnly] = useState(false);
+
   React.useEffect(() => {
     Promise.all([
       fetch('http://localhost:3000/api/base-products').then(res => res.ok ? res.json() : []),
@@ -227,6 +232,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
           if (decoded.s) setSize(decoded.s);
           if (decoded.cn && decoded.c) setActiveColor({ name: decoded.cn, hex: decoded.c });
           if (decoded.l) setLayers(decoded.l);
+          setIsReadOnly(true);
         } catch (e) {
           console.error("Error decoding shared design", e);
         }
@@ -477,6 +483,7 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
   const handleShareDesign = async () => {
     setLoading(true);
+    setSharePublishError(null);
     try {
       const updatedLayers = await uploadPendingLayers();
       setLayers(updatedLayers);
@@ -493,13 +500,19 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
       const shareUrl = `${window.location.origin}${window.location.pathname}?design=${base64Config}`;
       
       await navigator.clipboard.writeText(shareUrl);
-      alert("Design link copied to clipboard!");
+      setShareLink(shareUrl);
+      setShowShareModal(true);
     } catch (err) {
       console.error(err);
       alert("Error sharing design.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePublishToCommunity = () => {
+    setShowShareModal(false);
+    navigate(`/community?create=true&designLink=${encodeURIComponent(shareLink)}`);
   };
 
   const loadSavedDesign = (design: any) => {
@@ -543,6 +556,56 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
   if (loading) {
     return <div className="personalize-container"><div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>Loading data from database...</div></div>;
+  }
+
+  if (isReadOnly) {
+    return (
+      <div className="readonly-container animate-fade-in">
+        <div className="readonly-header">
+          <h1>Diseño Compartido</h1>
+          <p>Estás visualizando una creación personalizada de nuestra comunidad.</p>
+        </div>
+        
+        <div className="readonly-content">
+          <div className="model-preview readonly-preview">
+            <div className="model-badge">Vista 3D Interactiva</div>
+            <Canvas shadows camera={{ position: [0, 0, 4.5], fov: 50 }}>
+              <ambientLight intensity={0.5} />
+              <spotLight position={[5, 5, 5]} angle={0.15} penumbra={1} intensity={1} castShadow />
+              <pointLight position={[-5, 5, -5]} intensity={0.5} />
+
+              <Suspense fallback={null}>
+                <StylizedGarment type={type} color={activeColor.hex} layers={layers} />
+              </Suspense>
+
+              <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2} far={4} />
+              <OrbitControls
+                enablePan={false}
+                enableZoom={true}
+                minDistance={1}
+                maxDistance={20}
+              />
+              <Suspense fallback={null}>
+                <Environment preset="city" />
+              </Suspense>
+            </Canvas>
+            <div className="model-controls-overlay">
+              <span style={{ fontSize: '0.8rem', color: '#ccc' }}>* Arrastra para rotar, usa la rueda para hacer zoom</span>
+            </div>
+          </div>
+          
+          <div className="readonly-actions">
+            <button className="btn-create-own" onClick={() => {
+              setIsReadOnly(false);
+              setLayers([]);
+              navigate('/personalize', { replace: true });
+            }}>
+              Personalizar mi propia versión
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -885,6 +948,41 @@ const PersonalizarProducto: React.FC<Props> = ({ onAddToCart }) => {
 
         </div>
       </div>
+
+      {/* COMMUNITY SHARE MODAL POPUP */}
+      {showShareModal && (
+        <div className="share-modal-overlay" onClick={() => setShowShareModal(false)}>
+          <div className="share-modal-card animate-fade-in" onClick={(e) => e.stopPropagation()}>
+            <div className="share-modal-header">
+              <h3>¡Enlace copiado al portapapeles!</h3>
+              <button className="share-modal-close" onClick={() => setShowShareModal(false)}>✕</button>
+            </div>
+            
+            <div className="share-modal-body">
+              <div className="share-success-icon">🔗</div>
+              <p className="share-modal-main-text">El enlace de tu diseño personalizado ya está copiado en el portapapeles.</p>
+              
+              <div className="share-community-invite-box">
+                <p className="invite-question">¿Quieres subir tu diseño a nuestra comunidad?</p>
+                {sharePublishError && (
+                  <div className="share-modal-error-box">
+                    {sharePublishError}
+                  </div>
+                )}
+                <div className="share-modal-actions">
+                  <button className="btn-share-yes" onClick={handlePublishToCommunity}>
+                    Sí, quiero publicarlo
+                  </button>
+                  <button className="btn-share-no" onClick={() => setShowShareModal(false)}>
+                    No, no estoy interesado
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

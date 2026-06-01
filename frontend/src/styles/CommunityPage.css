@@ -452,7 +452,7 @@
 .comment-author {
   font-weight: bold;
   font-size: 0.8rem;
-  color: #820000;
+  color: #ffffff;
 }
 
 .comment-date {
@@ -727,3 +727,92 @@
     padding: 1.25rem;
   }
 }
+
+/* ─── Split screen Comments Modal Styles ─── */
+
+.comments-modal-card.split-modal {
+  max-width: 960px;
+  width: 95%;
+  height: 85vh;
+  max-height: 680px;
+  flex-direction: row;
+}
+
+.modal-left-column {
+  flex: 1.1;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2rem;
+  overflow-y: auto;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.modal-post-image {
+  width: 100%;
+  max-height: 320px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.modal-post-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #e2e2e2;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.modal-right-column {
+  flex: 0.9;
+  display: flex;
+  flex-direction: column;
+  background: #181818;
+  height: 100%;
+  min-width: 0;
+}
+
+/* Make card hover state look clickable */
+.post-card.clickable-post-card {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .comments-modal-card.split-modal {
+    flex-direction: column;
+    max-width: 500px;
+    height: 90vh;
+    max-height: 800px;
+  }
+  
+  .modal-left-column {
+    flex: none;
+    max-height: 45%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+  
+  .modal-post-image {
+    max-height: 160px;
+  }
+  
+  .modal-right-column {
+    flex: 1;
+  }
+}
+

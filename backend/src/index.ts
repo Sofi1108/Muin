@@ -272,6 +272,8 @@ app.get("/api/debug/user/:username", async (req: Request, res: Response) => {
 // DEBUG: Actualizar contraseña de usuario
 app.post(
   "/api/debug/update-password/:username",
+  verifyToken,
+  requireRole("admin"),
   async (req: Request, res: Response) => {
     const { newPassword } = req.body;
 
@@ -372,7 +374,7 @@ app.post("/api/auth/logout", (req: Request, res: Response) => {
 app.get("/api/products", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO",
+      "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, nota_media, total_resenas FROM PRODUCTO_PERSONALIZADO WHERE id_usuario IS NULL",
     );
     res.json(result.rows);
   } catch (error) {
@@ -822,7 +824,7 @@ app.post(
 app.get("/api/products/shirts", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen, PP.nota_media, PP.total_resenas FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'shirt' OR P.tipo_producto = 'shirt' ORDER BY PP.Id_Producto_Perso;");
+      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen, PP.nota_media, PP.total_resenas FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE (P.Nombre_Producto = 'shirt' OR P.tipo_producto = 'shirt') AND PP.id_usuario IS NULL ORDER BY PP.Id_Producto_Perso;");
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No shirts found" });
@@ -839,7 +841,7 @@ app.get("/api/products/shirts", async (req: Request, res: Response) => {
 app.get("/api/products/hoodies", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen, PP.nota_media, PP.total_resenas FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE P.Nombre_Producto = 'hoodie' OR P.tipo_producto = 'hoodie' ORDER BY PP.Id_Producto_Perso;");
+      "SELECT PP.Id_Producto_Perso, PP.Nombre_Producto_Perso, PP.Descripcion, PP.Precio_Producto_Perso, PP.Cantidad_U, PP.url_imagen, PP.nota_media, PP.total_resenas FROM PRODUCTO_PERSONALIZADO PP INNER JOIN PRODUCTO P ON PP.Id_Producto = P.Id_Producto WHERE (P.Nombre_Producto = 'hoodie' OR P.tipo_producto = 'hoodie') AND PP.id_usuario IS NULL ORDER BY PP.Id_Producto_Perso;");
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No hoodies found" });
     }
@@ -970,7 +972,7 @@ app.get(
   async (req: Request, res: Response) => {
     try {
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño FROM PRODUCTO_PERSONALIZADO ORDER BY id_producto_perso",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseno FROM PRODUCTO_PERSONALIZADO ORDER BY id_producto_perso",
       );
       res.json(result.rows);
     } catch (error) {
@@ -989,7 +991,7 @@ app.get(
     try {
       const id = parseInt(req.params.id as string);
       const result = await pool.query(
-        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseño FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
+        "SELECT id_producto_perso, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_producto, id_diseno FROM PRODUCTO_PERSONALIZADO WHERE id_producto_perso=$1",
         [id],
       );
 
@@ -1169,8 +1171,8 @@ app.post(
             // Es un producto personalizado con múltiples capas, lo insertamos en la BD primero
             const insertCustom = await client.query(
               `INSERT INTO PRODUCTO_PERSONALIZADO 
-               (id_producto, id_diseno, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen) 
-               VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_producto_perso`,
+               (id_producto, id_diseno, nombre_producto_perso, descripcion, precio_producto_perso, cantidad_u, url_imagen, id_usuario) 
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id_producto_perso`,
               [
                 item.productData.id_producto || null,
                 item.productData.id_diseno,
@@ -1178,7 +1180,8 @@ app.post(
                 item.productData.descripcion,
                 item.productData.precio_producto_perso,
                 item.quantity,
-                item.productData.url_imagen
+                item.productData.url_imagen,
+                req.customer!.id
               ]
             );
             actualProductId = insertCustom.rows[0].id_producto_perso;
@@ -1498,10 +1501,12 @@ const isHolidayOrSunday = (dateStr: string): boolean => {
   const date = new Date(year, month, day);
   if (date.getDay() === 0) return true;
   const holidays: Record<number, number[]> = {
-    7: [15],
-    9: [12],
-    10: [2],
-    11: [7, 8, 25]
+    0: [1, 6],       // Enero: 1 (Año Nuevo), 6 (Reyes)
+    4: [1],          // Mayo: 1 (Día del Trabajo)
+    7: [15],         // Agosto: 15 (Asunción)
+    9: [12],         // Octubre: 12 (Fiesta Nacional)
+    10: [1],         // Noviembre: 1 (Todos los Santos)
+    11: [6, 8, 25]   // Diciembre: 6 (Constitución), 8 (Inmaculada), 25 (Navidad)
   };
   return holidays[month]?.includes(day) || false;
 };
