@@ -452,3 +452,31 @@
     overflow-y: auto;
   }
 }
+
+/* --- DARK MODE REFINE --- */
+.dark-mode .btn-muin-white-outline {
+  background-color: #820000 !important;
+  background: #820000 !important;
+  color: #ffffff !important;
+  border-color: #820000 !important;
+}
+
+.dark-mode .btn-muin-white-outline:hover {
+  background-color: #a30000 !important;
+  background: #a30000 !important;
+  color: #ffffff !important;
+  border-color: #a30000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(130, 0, 0, 0.3) !important;
+}
+
+.dark-mode .status-icon-box {
+  background-color: #2c2c2c !important;
+  border-color: #555555 !important;
+}
+
+.dark-mode .status-icon-box span {
+  color: #ffffff !important;
+}
+
+

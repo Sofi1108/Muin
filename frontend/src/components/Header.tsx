@@ -13,9 +13,17 @@ interface HeaderProps {
   cart: CartItem[];
   onAddToCart: (product: Product) => void;
   onDecreaseQuantity: (productId: number) => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
-function Header({ cart, onAddToCart, onDecreaseQuantity }: HeaderProps) {
+function Header({
+  cart,
+  onAddToCart,
+  onDecreaseQuantity,
+  isDarkMode,
+  onToggleDarkMode,
+}: HeaderProps) {
   const navigate = useNavigate();
   const PORT = 3000;
   const ROUTE = `http://localhost:${PORT}/`;
@@ -45,6 +53,19 @@ function Header({ cart, onAddToCart, onDecreaseQuantity }: HeaderProps) {
       />
       <Logo onSelect={() => navigate("/")} />
       <nav className="nav-icons">
+        <div 
+          className={`theme-toggle-container ${isDarkMode ? 'dark' : 'light'}`} 
+          onClick={onToggleDarkMode}
+        >
+          <div className="theme-toggle-knob">
+            <span className="material-symbols-outlined theme-toggle-icon">
+              {isDarkMode ? 'nights_stay' : 'light_mode'}
+            </span>
+          </div>
+          <span className="theme-toggle-label">
+            {isDarkMode ? 'NIGHTMODE' : 'DAYMODE'}
+          </span>
+        </div>
         <div
           className="material-symbols-outlined"
           id="community-icon"

@@ -11,6 +11,7 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     Nombre: "",
     Apellido: "",
@@ -22,14 +23,33 @@ export default function ProfilePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/orders/my", { credentials: "include" })
-      .then((res) => res.json())
+    const token = localStorage.getItem("token");
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    fetch("http://localhost:3000/api/orders/my", {
+      credentials: "include",
+      headers,
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || `Error ${res.status}`);
+        }
+        return data;
+      })
       .then((data) => {
         const ordersList = Array.isArray(data) ? data : [];
         setOrders(ordersList);
+        setOrdersError(null);
         if (ordersList.length > 0) setSelectedOrder(ordersList[0]);
       })
-      .catch((err) => console.error("Error al cargar pedidos:", err));
+      .catch((err) => {
+        console.error("Error al cargar pedidos:", err);
+        setOrdersError(err.message);
+      });
   }, []);
 
   const handleLogout = async () => {
@@ -39,6 +59,7 @@ export default function ProfilePage() {
         credentials: "include",
       });
       if (response.ok) {
+        localStorage.removeItem("token");
         setCustomer(null);
         navigate("/");
       }
@@ -209,7 +230,11 @@ export default function ProfilePage() {
         {/* TABLA DE PEDIDOS RECIENTES (Código B Integrado) */}
         <div className="profile-orders-table-container">
           <h3 className="recent-orders-title">Recent Orders</h3>
-          {orders.length === 0 ? (
+          {ordersError ? (
+            <p className="orders-error" style={{ color: "#ff5252", fontWeight: "bold" }}>
+              Error al cargar pedidos: {ordersError}
+            </p>
+          ) : orders.length === 0 ? (
             <p className="orders-empty">No tienes pedidos todavía.</p>
           ) : (
             <table className="orders-table">

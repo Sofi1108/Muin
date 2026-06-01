@@ -1,4 +1,5 @@
 import { HashLink as Link } from "react-router-hash-link";
+import "../styles/auth-pages.css";
 import "../styles/contact-page-form.css";
 export default function ContactPage() {
   return (

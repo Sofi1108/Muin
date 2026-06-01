@@ -16,7 +16,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
+    const token = localStorage.getItem("token");
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    fetch("http://localhost:3000/api/auth/me", {
+      credentials: "include",
+      headers,
+    })
       .then((res) => {
         if (!res.ok) throw new Error("No autenticado");
         return res.json();

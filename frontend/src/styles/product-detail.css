@@ -108,6 +108,7 @@
   width: 55px;
   height: 45px;
   background: white;
+  color: #000000;
   border: 1.5px solid var(--muin-border);
   border-radius: 8px;
   font-weight: 900;
@@ -117,7 +118,7 @@
 
 .size-btn.active {
   background: var(--muin-red);
-  color: white;
+  color: #000000 !important;
   border-color: var(--muin-red);
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(130, 0, 0, 0.3);
@@ -176,8 +177,9 @@
 .btn-buy-now {
   width: 100%;
   height: 56px;
-  background: transparent;
-  border: 2px solid var(--muin-black);
+  background: #820000;
+  color: white;
+  border: none;
   border-radius: 14px;
   font-weight: 900;
   text-transform: uppercase;
@@ -187,13 +189,14 @@
   white-space: nowrap;
   font-size: 0.85rem;
   order: 2;
+  box-shadow: 0 4px 12px rgba(130, 0, 0, 0.15);
 }
 
 .btn-buy-now:hover {
-  background: var(--muin-black);
+  background: #a30000;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 20px rgba(130, 0, 0, 0.3);
 }
 
 /* --- EXTRA INFO --- */

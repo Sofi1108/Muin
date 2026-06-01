@@ -72,7 +72,12 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const token = req.cookies?.token ?? "";
+  let token = req.cookies?.token ?? "";
+
+  // FALLBACK: Verificar también el encabezado de Autorización si la cookie fue bloqueada/omitida
+  if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
   if (!token) {
     res.status(401).json({ error: "Token requerido. Por favor, inicia sesión." });
@@ -225,6 +230,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
 
   res.json({
     message: "Login correcto",
+    token,
     customer: {
       id: customer.id_usuario,
       name: customer.nombre_usuario,

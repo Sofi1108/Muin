@@ -345,3 +345,67 @@
     margin-bottom: 2rem;
   }
 }
+
+/* --- DARK MODE REFINE --- */
+.dark-mode .checkout-container {
+  background-color: #3A3A3A !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .terms-checkbox-container label {
+  color: #ffffff !important;
+}
+
+.dark-mode .terms-checkbox-container label a {
+  color: #ffffff !important;
+}
+
+.dark-mode .order-summary-section {
+  background: #3A3A3A !important;
+  border-color: #555555 !important;
+}
+
+.dark-mode .summary-item {
+  background: #3A3A3A !important;
+  border-color: #555555 !important;
+}
+
+.dark-mode .total-box {
+  background: #3A3A3A !important;
+  border-color: #555555 !important;
+}
+
+.dark-mode .grand-total {
+  border-top-color: #555555 !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .summary-title,
+.dark-mode .item-info-mini h4,
+.dark-mode .total-row {
+  color: #ffffff !important;
+}
+
+.dark-mode .item-info-mini p,
+.dark-mode .total-box p {
+  color: #cccccc !important;
+}
+
+.dark-mode .btn-pay-now {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.dark-mode .btn-pay-now:hover:not(:disabled) {
+  background: #e0e0e0 !important;
+  background-color: #e0e0e0 !important;
+  color: #000000 !important;
+}
+
+.dark-mode .btn-pay-now:disabled {
+  background: #555555 !important;
+  color: #888888 !important;
+  cursor: not-allowed !important;
+}
+

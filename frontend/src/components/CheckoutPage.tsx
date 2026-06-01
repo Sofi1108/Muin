@@ -176,7 +176,7 @@ const CheckoutPage = ({ cart = [], setCart }: { cart: CartItem[]; setCart?: Reac
 
           <form onSubmit={handlePayment} className="muin-form">
             <div className="address-section" style={{ borderTop: "1px solid #eee", paddingTop: "1.5rem", marginTop: "1rem" }}>
-              <h3 style={{ fontSize: "1rem", fontWeight: 900, marginBottom: "1.5rem", textTransform: "uppercase", color: "#1a1a1a" }}>SHIPPING ADDRESS</h3>
+              <h3 style={{ fontSize: "1rem", fontWeight: 900, marginBottom: "1.5rem", textTransform: "uppercase", color: "var(--primary)" }}>SHIPPING ADDRESS</h3>
               
               <div className="input-group">
                 <label>STREET *</label>

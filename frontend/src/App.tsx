@@ -66,6 +66,20 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
   const loadProducts = (): void => {
     fetch(`${ROUTE}api/products`)
       .then((res) => res.json())
@@ -123,6 +137,8 @@ function App() {
         cart={cart}
         onAddToCart={addToCart}
         onDecreaseQuantity={decreaseQuantity}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
       />
 
       <main className="main-content">

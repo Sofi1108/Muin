@@ -6,14 +6,36 @@ import "../styles/auth.css";
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
   useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/orders/my", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setOrders(Array.isArray(data) ? data : []))
-      .catch((err) => console.error(err));
+    const token = localStorage.getItem("token");
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    fetch("http://localhost:3000/api/orders/my", {
+      credentials: "include",
+      headers,
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || `Error ${res.status}`);
+        }
+        return data;
+      })
+      .then((data) => {
+        setOrders(Array.isArray(data) ? data : []);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Error al cargar historial:", err);
+        setError(err.message);
+      });
   }, []);
 
   return (
@@ -22,7 +44,11 @@ export default function OrderHistory() {
         ← Volver al catálogo
       </button>
       <h2>Mis Pedidos</h2>
-      {orders.length === 0 ? (
+      {error ? (
+        <p className="orders-error" style={{ color: "#ff5252", fontWeight: "bold" }}>
+          Error al cargar pedidos: {error}
+        </p>
+      ) : orders.length === 0 ? (
         <p className="orders-empty">No tienes pedidos todavía.</p>
       ) : (
         <table className="orders-table">

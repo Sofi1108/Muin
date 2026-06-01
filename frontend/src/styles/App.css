@@ -176,3 +176,536 @@ body {
     letter-spacing: 0.5rem !important;
   }
 }
+
+/* --- DARK MODE CONFIGURATION --- */
+:root.dark-mode,
+.dark-mode {
+  --primary: #ffffff;
+  --border: #555555;
+  --gray-light: #3A3A3A;
+  --accent: #ffffff;
+  
+  /* Muin specific overrides */
+  --muin-black: #ffffff;
+  --muin-gray-light: #3A3A3A;
+  --muin-gray-text: #cccccc;
+  --muin-border: #555555;
+  --muin-white: #3A3A3A;
+  --muin-red: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --surface: #3A3A3A;
+  --panel-bg: #3A3A3A;
+  --secondary-bg: #3A3A3A;
+  --text-color: #ffffff;
+}
+
+/* Global overrides when dark mode is active */
+.dark-mode body,
+.dark-mode #app-wrapper,
+.dark-mode .main-content,
+.dark-mode .profile-page-container,
+.dark-mode .community-page,
+.dark-mode .community-container,
+.dark-mode .personalize-container,
+.dark-mode .personalize-section,
+.dark-mode .checkout-page,
+.dark-mode .checkout-container,
+.dark-mode .contact-page,
+.dark-mode .about-us-container,
+.dark-mode .careers-container,
+.dark-mode .login-page-container,
+.dark-mode .register-page-container,
+.dark-mode .not-found-container,
+.dark-mode .product-detail-container,
+.dark-mode .cookie-consent-modal,
+.dark-mode .cookie-consent-banner,
+.dark-mode .policy-container,
+.dark-mode .muin-carousel-section,
+.dark-mode .auth-container,
+.dark-mode .about-container,
+.dark-mode #about-header {
+  background-color: #3A3A3A !important;
+  color: #ffffff !important;
+}
+
+/* Background of elements that are white (#ffffff) to dark gray (#3A3A3A) */
+.dark-mode .product-card,
+.dark-mode .cart-popup-muin,
+.dark-mode .info-capsule,
+.dark-mode .edit-profile-modal,
+.dark-mode .comments-modal,
+.dark-mode .modal-content,
+.dark-mode .comment-input-area textarea,
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode .form-group input,
+.dark-mode .checkout-form-section,
+.dark-mode .order-summary-section,
+.dark-mode .intranet-card,
+.dark-mode .ticket-card,
+.dark-mode .news-card,
+.dark-mode .about-card,
+.dark-mode .career-card,
+.dark-mode .card,
+.dark-mode .panel,
+.dark-mode .modal,
+.dark-mode .dropdown-menu {
+  background-color: #3A3A3A !important;
+  color: #ffffff !important;
+  border-color: #555555 !important;
+}
+
+/* Ensure all borders in dark mode are soft gray */
+.dark-mode *,
+.dark-mode *::before,
+.dark-mode *::after {
+  border-color: #555555 !important;
+}
+
+/* Ensure white text is white, but swap white backgrounds */
+.dark-mode #cart-icon {
+  color: #ffffff !important;
+}
+
+/* Red elements to white */
+/* For backgrounds, text color becomes #3A3A3A for legibility */
+.dark-mode .btn-intranet-red,
+.dark-mode #edit-icon:hover,
+.dark-mode .btn-save,
+.dark-mode .accent-text,
+.dark-mode .red-button,
+.dark-mode .custom-version-btn,
+.dark-mode .share-btn,
+.dark-mode .hero-btn,
+.dark-mode .btn-create-own {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #3A3A3A !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* For outline/hover states where red becomes white */
+.dark-mode .btn-muin-black {
+  border-color: #ffffff !important;
+}
+
+/* Buttons keep changing to red #820000 when hovered in dark mode */
+.dark-mode button:hover:not(:disabled),
+.dark-mode .btn-muin-black:hover,
+.dark-mode .checkout-btn-muin:hover,
+.dark-mode .btn-create-own:hover,
+.dark-mode .btn-submit-careers:hover,
+.dark-mode .btn-muin-black-full:hover,
+.dark-mode .btn-muin-back:hover,
+.dark-mode .comming-soon-btn:hover,
+.dark-mode .btn-add-corner:hover:not(:disabled),
+.dark-mode .btn-buy-now:hover,
+.dark-mode .cart-btn-muin-wrapper button:hover:not(:disabled) {
+  background-color: #820000 !important;
+  background: #820000 !important;
+  color: #ffffff !important;
+  border-color: #820000 !important;
+  box-shadow: 0 8px 20px rgba(130, 0, 0, 0.3) !important;
+}
+
+/* Cart count badge is red #820000 with white text in dark mode */
+.dark-mode .cart-badge-muin {
+  background-color: #820000 !important;
+  background: #820000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+/* Hardcoded red text or icons to white */
+.dark-mode .link-red,
+.dark-mode .price-text,
+.dark-mode .text-red,
+.dark-mode .out-of-stock-label,
+.dark-mode .highlight,
+.dark-mode .btn-muin-white-outline:hover {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+/* Icons turn red #820000 when hovered in dark mode */
+.dark-mode #community-icon:hover,
+.dark-mode #profile-icon:hover,
+.dark-mode #cart-icon:hover,
+.dark-mode .cart-icon-wrapper:hover #cart-icon,
+.dark-mode .logo-container:hover .logo-kanji,
+.dark-mode .logo-container:hover .logo-text,
+.dark-mode .material-symbols-outlined:hover {
+  color: #820000 !important;
+  background-color: transparent !important;
+  transition: color 0.3s ease !important;
+}
+
+/* Black elements to white background / white text */
+.dark-mode .checkout-btn-muin,
+.dark-mode .btn-add-corner {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+.dark-mode .checkout-btn-muin:hover,
+.dark-mode .btn-add-corner:hover:not(:disabled) {
+  background: #e0e0e0 !important;
+  background-color: #e0e0e0 !important;
+  color: #000000 !important;
+}
+
+/* ProductCard & ProductCarousel Specific Elements in Dark Mode */
+.dark-mode h1,
+.dark-mode h2.product-name,
+.dark-mode .product-name,
+.dark-mode .section-title {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.dark-mode .personalize-header h1 {
+  background: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.dark-mode .back-link:hover {
+  color: #ffffff !important;
+}
+
+.dark-mode .nav-btn {
+  border-color: #555555 !important;
+  background-color: #3A3A3A !important;
+}
+.dark-mode .nav-btn span {
+  color: #ffffff !important;
+}
+.dark-mode .nav-btn:hover {
+  background-color: #ffffff !important;
+}
+.dark-mode .nav-btn:hover span {
+  color: #3A3A3A !important;
+}
+
+.dark-mode .stock-btn,
+.dark-mode .edit-btn,
+.dark-mode .delete-btn {
+  color: #ffffff !important;
+}
+.dark-mode .stock-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #00e5ff !important;
+}
+.dark-mode .edit-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffb74d !important;
+}
+.dark-mode .delete-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ff5252 !important;
+}
+
+/* Soften light-gray or dark texts in dark mode */
+.dark-mode .product-price,
+.dark-mode .item-price-unit,
+.dark-mode .item-count,
+.dark-mode .item-subtotal,
+.dark-mode .qty-selector span,
+.dark-mode .cart-total-display span,
+.dark-mode .info-capsule label,
+.dark-mode .form-group label {
+  color: #cccccc !important;
+}
+
+/* Adjust community page specific elements */
+.dark-mode .community-header h1,
+.dark-mode .post-author,
+.dark-mode .comment-author,
+.dark-mode .comment-text,
+.dark-mode .post-description {
+  color: #ffffff !important;
+}
+
+/* Switch capsule button style matching visual specification */
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  width: 130px;
+  height: 36px;
+  border-radius: 18px;
+  cursor: pointer;
+  padding: 3px;
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 15px;
+}
+
+/* Day Mode Capsule */
+.theme-toggle-container.light {
+  background-color: #f0f0f0;
+  border: 1px solid #dcdcdc;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.theme-toggle-container.light .theme-toggle-label {
+  color: #000000;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-left: 10px;
+}
+
+/* Night Mode Capsule */
+.theme-toggle-container.dark {
+  background-color: #1a1a1a;
+  border: 2px solid #000000;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.theme-toggle-container.dark .theme-toggle-label {
+  color: #ffffff;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-right: 10px;
+}
+
+/* Circular Knob */
+.theme-toggle-knob {
+  width: 28px;
+  height: 28px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-toggle-icon {
+  font-size: 1.1rem !important;
+  color: #000000 !important;
+  font-weight: bold;
+}
+
+/* Accessories & Sales Pages in Dark Mode */
+.dark-mode .comming-soon-wrapper {
+  background-color: #3A3A3A !important;
+  background: #3A3A3A !important;
+}
+
+.dark-mode .comming-soon-card {
+  background: rgba(58, 58, 58, 0.8) !important;
+  background-color: #3A3A3A !important;
+  border-color: #555555 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .comming-soon-header {
+  color: #ffffff !important;
+}
+
+.dark-mode .comming-soon-wrapper .divider {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+.dark-mode .comming-soon-message {
+  color: #cccccc !important;
+}
+
+.dark-mode .comming-soon-btn {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #3A3A3A !important;
+}
+
+.dark-mode .comming-soon-btn:hover {
+  background: #e0e0e0 !important;
+  background-color: #e0e0e0 !important;
+  color: #3A3A3A !important;
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Community Post Cards in Dark Mode - Kept Symmetrical & Readable in White */
+.dark-mode .post-card {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-color: #e0e0e0 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark-mode .post-card .post-author {
+  color: #000000 !important;
+}
+
+.dark-mode .post-card .post-date {
+  color: #666666 !important;
+}
+
+.dark-mode .post-card .post-body {
+  color: #333333 !important;
+}
+
+.dark-mode .post-card .btn-delete-post {
+  color: #666666 !important;
+}
+.dark-mode .post-card .btn-delete-post:hover {
+  color: #ff3333 !important;
+}
+
+.dark-mode .post-card .btn-interaction {
+  color: #555555 !important;
+}
+
+.dark-mode .post-card .btn-interaction:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #000000 !important;
+}
+
+.dark-mode .post-card .btn-like.liked {
+  color: #ff3b30 !important;
+}
+
+.dark-mode .post-card .post-card-footer {
+  border-top-color: #eeeeee !important;
+}
+
+/* Comments Modal Card & Columns in Dark Mode (White Layout) */
+.dark-mode .comments-modal-card {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-color: #e0e0e0 !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+.dark-mode .modal-left-column {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-right: 1px solid #eeeeee !important;
+  color: #000000 !important;
+}
+
+.dark-mode .modal-right-column {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Modal Header & Close Button */
+.dark-mode .comments-modal-card .modal-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid #eeeeee !important;
+}
+
+.dark-mode .comments-modal-card .modal-header h3 {
+  color: #000000 !important;
+}
+
+.dark-mode .comments-modal-card .btn-close-modal {
+  color: #666666 !important;
+}
+.dark-mode .comments-modal-card .btn-close-modal:hover {
+  color: #000000 !important;
+}
+
+/* Left Column Elements */
+.dark-mode .modal-post-image {
+  background: #f5f5f5 !important;
+  border-color: #eeeeee !important;
+}
+
+.dark-mode .modal-post-desc {
+  color: #333333 !important;
+}
+
+/* Right Column Comments List & Items */
+.dark-mode .comments-list .comment-item {
+  background: #f9f9f9 !important;
+  border-color: #eeeeee !important;
+}
+
+.dark-mode .comment-item .comment-author {
+  color: #000000 !important;
+}
+
+.dark-mode .comment-item .comment-date {
+  color: #666666 !important;
+}
+
+.dark-mode .comment-item .comment-text {
+  color: #333333 !important;
+}
+
+.dark-mode .no-comments-msg {
+  color: #666666 !important;
+}
+
+/* Comments Addition Section */
+.dark-mode .modal-add-comment-section {
+  background: #f9f9f9 !important;
+  border-top: 1px solid #eeeeee !important;
+}
+
+.dark-mode .comment-input {
+  background: #ffffff !important;
+  border-color: #cccccc !important;
+  color: #000000 !important;
+}
+
+.dark-mode .comment-input::placeholder {
+  color: #8c8c8c !important;
+}
+
+.dark-mode .comment-input:focus {
+  border-color: #000000 !important;
+}
+
+.dark-mode .btn-add-comment-bubble {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+.dark-mode .btn-add-comment-bubble:hover {
+  background: #333333 !important;
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border-color: #333333 !important;
+}
+
+/* About Us & Contact Pages Specific Overrides in Dark Mode */
+.dark-mode .japanese-bg {
+  color: #4a4a4a !important;
+}
+
+.dark-mode .nindo-box {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #3A3A3A !important;
+}
+
+.dark-mode .nindo-box * {
+  color: #3A3A3A !important;
+}
+
+.dark-mode .auth-title {
+  color: #ffffff !important;
+}
+
+.dark-mode .auth-subtitle {
+  color: #cccccc !important;
+}
+
+
+
+

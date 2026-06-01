@@ -27,6 +27,9 @@ export default function LoginPage() {
         return data;
       })
       .then((data) => {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
         setCustomer(data.customer);
         const params = new URLSearchParams(window.location.search);
         const redirect = params.get("redirect");
