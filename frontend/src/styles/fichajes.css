@@ -301,3 +301,25 @@
     font-size: 1.5rem;
   }
 }
+
+/* --- DARK MODE OVERRIDES --- */
+.dark-mode .clock-button-in {
+  background: #820000 !important;
+  color: #FFFFFF !important;
+}
+
+.dark-mode .clock-button-in:hover {
+  background: #970606 !important;
+  color: #FFFFFF !important;
+}
+
+.dark-mode .clock-button-out {
+  background: #820000 !important;
+  color: #FFFFFF !important;
+}
+
+.dark-mode .clock-button-out:hover {
+  background: #970606 !important;
+  color: #FFFFFF !important;
+}
+

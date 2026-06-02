@@ -94,8 +94,8 @@
 .btn-muin-red-solid {
   width: 100%;
   padding: 1.5rem;
-  background: var(--accent);
-  color: white;
+  background: #820000 !important;
+  color: #FFFFFF !important;
   border: none;
   border-radius: var(--br-main);
   font-family: var(--font-title);
@@ -109,8 +109,10 @@
 }
 
 .btn-muin-red-solid:hover {
-  background: var(--accent-strong);
+  background: #970606 !important;
+  color: #FFFFFF !important;
 }
+
 
 .admin-list {
   display: flex;

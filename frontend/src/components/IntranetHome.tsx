@@ -291,8 +291,23 @@ const IntranetHome = () => {
       setFormError("El título es obligatorio.");
       return;
     }
+    if (form.hora_evento) {
+      const parts = form.hora_evento.split(":");
+      if (parts.length === 2) {
+        const h = parseInt(parts[0]);
+        const m = parseInt(parts[1]);
+        if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+          setFormError("La hora introducida no es válida (los minutos deben estar entre 00 y 59).");
+          return;
+        }
+      } else {
+        setFormError("El formato de la hora no es válido.");
+        return;
+      }
+    }
     setSaving(true);
     setFormError("");
+
     try {
       let fecha: string;
       if (editingEvent) {

@@ -260,6 +260,13 @@
   font-weight: 700;
 }
 
+.dark-mode .calendar-day.sunday {
+  background-color: #820000 !important;
+  border-color: #820000 !important;
+  color: #FFFFFF !important;
+}
+
+
 .calendar-day.empty {
   position: static;
   z-index: auto;
@@ -268,6 +275,12 @@
   background: #f5f5f5 !important;
   border-color: #e8e8e8 !important;
 }
+
+.dark-mode .calendar-day.empty {
+  background: #2d2d2d !important;
+  border-color: #444444 !important;
+}
+
 
 /* --- GRIDS & UTILS --- */
 .grid-two {

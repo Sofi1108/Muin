@@ -88,32 +88,34 @@ export const IntranetWorkCapsules = () => {
                   <tr>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", fontWeight: "bold" }}>Disciplinario</td>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)" }}>Incumplimiento grave del trabajador.</td>
-                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "darkred", fontWeight: "bold" }}>0 € (Solo finiquito).</td>
+                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "var(--accent)", fontWeight: "bold" }}>0 € (Solo finiquito).</td>
                   </tr>
                   <tr>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", fontWeight: "bold" }}>Objetivo</td>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)" }}>Causas ETOP justificadas.</td>
-                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "darkred", fontWeight: "bold" }}>20 días/año (máx. 12 mens.)</td>
+                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "var(--accent)", fontWeight: "bold" }}>20 días/año (máx. 12 mens.)</td>
                   </tr>
                   <tr>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", fontWeight: "bold" }}>Improcedente</td>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)" }}>Sin causa legal o defecto de forma.</td>
-                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "darkred", fontWeight: "bold" }}>33 días/año (máx. 24 mens.)*</td>
+                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "var(--accent)", fontWeight: "bold" }}>33 días/año (máx. 24 mens.)*</td>
                   </tr>
                   <tr>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", fontWeight: "bold" }}>Nulo</td>
                     <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)" }}>Discriminación o violación de derechos.</td>
-                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "darkred", fontWeight: "bold" }}>Readmisión obligatoria.</td>
+                    <td style={{ padding: "1rem", borderBottom: "1px solid var(--border)", color: "var(--accent)", fontWeight: "bold" }}>Readmisión obligatoria.</td>
                   </tr>
+
                 </tbody>
               </table>
             </div>
             <p style={{ fontStyle: "italic", fontSize: "0.85rem", marginTop: "1rem", color: "var(--text-secondary)" }}>
               *Jurisprudencia Mayo 2026: Los tribunales aplican indemnizaciones adicionales si los 33 días son insuficientes, bajo la Carta Social Europea.
             </p>
-            <div style={{ padding: "1rem", border: "1px dashed var(--border)", marginTop: "1rem", borderRadius: "8px", color: "darkred", backgroundColor: "var(--surface)" }}>
+            <div className="temporal-notice">
               <strong>AVISO</strong> Fin de Contrato Temporal: 12 días por año al finalizar (circunstancias producción/sustitución).
             </div>
+
           </section>
 
           {/* 2. Información acerca del despido improcedente */}
@@ -260,8 +262,9 @@ export const IntranetWorkCapsules = () => {
                   <li><strong>Para el trabajador (Demanda):</strong> Tienes <strong>SOLO 20 DÍAS HÁBILES</strong> (sin contar sábados, domingos ni festivos) desde el día siguiente a la fecha de efectos del despido para reclamar (Papeleta de Conciliación ante el SMAC o similar).</li>
                 </ul>
               </div>
-              <div className="infographic-card" style={{ borderLeft: "4px solid #ef4444" }}>
-                <h4 style={{ color: "#ef4444" }}>CONSEJO FINAL</h4>
+              <div className="infographic-card" style={{ borderLeft: "4px solid var(--accent)" }}>
+                <h4 style={{ color: "var(--accent)" }}>CONSEJO FINAL</h4>
+
                 <p>
                   Las palabras se las lleva el viento. No te fíes de acuerdos verbales de pasillo y busca asesoramiento legal de inmediato el mismo día que te den la carta.
                 </p>

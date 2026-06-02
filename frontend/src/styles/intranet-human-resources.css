@@ -168,13 +168,15 @@
 }
 
 .course-btn.enroll {
-  background: var(--text-primary);
-  color: #FFFFFF;
+  background: #820000 !important;
+  color: #FFFFFF !important;
 }
 
 .course-btn.enroll:hover {
-  background: #000000;
+  background: #970606 !important;
+  color: #FFFFFF !important;
 }
+
 
 .course-btn.unenroll {
   background: var(--accent);

@@ -97,6 +97,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 1.5rem;
+  border-radius: 4px;
 }
 
 .news-card-title {
@@ -146,6 +147,7 @@
   text-transform: uppercase;
   margin-bottom: 1.5rem;
   letter-spacing: 0.05em;
+  border-radius: 4px;
 }
 
 .article-header h3 {

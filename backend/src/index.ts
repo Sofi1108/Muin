@@ -1517,6 +1517,15 @@ const isHolidayOrSunday = (dateStr: string): boolean => {
   return holidays[month]?.includes(day) || false;
 };
 
+const isValidTimeFormat = (timeStr: string | null | undefined): boolean => {
+  if (!timeStr) return true;
+  const parts = timeStr.split(":");
+  if (parts.length < 2) return false;
+  const h = parseInt(parts[0]);
+  const m = parseInt(parts[1]);
+  return !isNaN(h) && !isNaN(m) && h >= 0 && h <= 23 && m >= 0 && m <= 59;
+};
+
 // POST /api/calendar/events — Crea un nuevo evento
 app.post(
   "/api/calendar/events",
@@ -1530,7 +1539,11 @@ app.post(
     if (isHolidayOrSunday(fecha_evento)) {
       return res.status(400).json({ error: "No se permiten eventos en domingos ni días festivos" });
     }
+    if (hora_evento && !isValidTimeFormat(hora_evento)) {
+      return res.status(400).json({ error: "La hora introducida no es válida (los minutos deben estar entre 00 y 59)" });
+    }
     try {
+
       const result = await pool.query(
         `INSERT INTO EVENTO (id_usuario, titulo, descripcion, fecha_evento, hora_evento, es_publico)
          VALUES ($1, $2, $3, $4, $5, $6)
@@ -1566,7 +1579,11 @@ app.put(
     if (isHolidayOrSunday(fecha_evento)) {
       return res.status(400).json({ error: "No se permiten eventos en domingos ni días festivos" });
     }
+    if (hora_evento && !isValidTimeFormat(hora_evento)) {
+      return res.status(400).json({ error: "La hora introducida no es válida (los minutos deben estar entre 00 y 59)" });
+    }
     try {
+
       // Solo el creador puede editar
       const check = await pool.query(
         "SELECT id_usuario FROM EVENTO WHERE id_evento = $1",

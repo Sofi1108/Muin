@@ -178,3 +178,18 @@
   background: var(--accent);
   transform: translateY(-2px);
 }
+
+.temporal-notice {
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  margin-top: 1rem;
+  border-radius: 8px;
+  color: #820000;
+  background-color: var(--surface);
+  font-weight: 500;
+}
+
+.dark-mode .temporal-notice {
+  color: #FFFFFF !important;
+}
+

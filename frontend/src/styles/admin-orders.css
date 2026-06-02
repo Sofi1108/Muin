@@ -220,3 +220,14 @@
   color: #888;
   font-size: 0.9rem;
 }
+
+/* --- DARK MODE OVERRIDES --- */
+.dark-mode .admin-orders-table th {
+  color: #FFFFFF !important;
+  border-bottom-color: #555555 !important;
+}
+
+.dark-mode .admin-orders-table td {
+  color: #FFFFFF !important;
+  border-bottom-color: #555555 !important;
+}

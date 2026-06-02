@@ -53,3 +53,15 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* --- DARK MODE OVERRIDES --- */
+.dark-mode .ticket-form .primary-button {
+  background: #820000 !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .ticket-form .primary-button:hover {
+  background: #970606 !important;
+  color: #ffffff !important;
+}
+
